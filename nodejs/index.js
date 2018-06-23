@@ -24,6 +24,9 @@ naoetu.bind = function(pBind,pFunc){return function(){return pFunc.apply(pBind,a
 var express = require('express');
 var app = express();
 
+//設定ファイルの読み込み
+require('dotenv').config();
+
 //バリデーション(HTTPパラメタチェック)使用
 var validator = require('express-validator');
 app.use(validator());
@@ -37,10 +40,10 @@ naoetu.ini = {
 //mySql使用
 naoetu.mysql      = require('mysql');
 naoetu.connection = naoetu.mysql.createConnection({
-    host     : 'localhost',
-    user     : '*******',
-    password : '*******',
-    database : '*******'
+    host     : naoetu.env.DB_HOST,
+    user     : naoetu.env.DB_USER,
+    password : naoetu.env.DB_PASS,
+    database : naoetu.env.DB_NAME
 });
 var _pool = naoetu.mysql.createPoolCluster();
 _pool.add(naoetu.ini.ConMaster, naoetu.connection);
