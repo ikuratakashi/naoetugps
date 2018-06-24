@@ -13,8 +13,37 @@ if(typeof(naoetu)=='undefined')naoetu=function(){};
 //
 //========================================================================
 
+//---------------------------------------------
+//
 //バインド
+//
+//---------------------------------------------
 naoetu.bind = function(pBind,pFunc){return function(){return pFunc.apply(pBind,arguments);};}
+
+//---------------------------------------------
+//
+//ログ出力クラス作成
+//
+//---------------------------------------------
+naoetu.clsLog = function(){return this.initialize.apply(this,arguments);};
+naoetu.clsLog.prototype = {
+    initialize : function(pLevel,pIsOut){
+        this.level = pLevel;
+        this.isOut = pIsOut;
+    },
+    out : function(plevel,pMsg){
+        if(plevel <= thie.level){
+            console.log(pMsg);
+        }
+    }
+}
+
+//---------------------------------------------
+//
+//ログ出力設定
+//
+//---------------------------------------------
+naoetu.log = new naoetu.clsLog(3,true);
 
 //========================================================================
 //
@@ -37,10 +66,10 @@ naoetu.ini = {
     ConMaster : "MASTER"
 }
 
-console.log("DB_HOST=" + process.env.DB_HOST);
+naoetu.log.out(3,"DB_HOST=" + process.env.DB_HOST);
 
 //mySql使用 
-naoetu.mysql      = require('mysql');
+naoetu.mysql   = require('mysql');
 naoetu.ConConf = {
     host     : process.env.DB_HOST,
     user     : process.env.DB_USER,
@@ -59,7 +88,7 @@ naoetu.ConConf = {
 //       console.error('error connecting: ' + err.stack);
 //       return;
 //     }
-//     console.log('connected as id ' + naoetu.connection.threadId);
+//     naoetu.log.out(3,'connected as id ' + naoetu.connection.threadId);
 // });
 
 //========================================================================
@@ -145,56 +174,56 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
 
         //コネクションの確立
-        console.log('Step コネクションの確立...開始');
+        naoetu.log.out(3,'Step コネクションの確立...開始');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
         this.masterConnection.connect(function(err) {
             //接続時のエラー
             if (err) {
-                console.log('Error clsGps.writeGps DB接続失敗.');
+                naoetu.log.out(3,'Error clsGps.writeGps DB接続失敗.');
                 console.error(err);
                 return;
             }else{
-                console.log('Error clsGps.writeGps DB接続成功.');
+                naoetu.log.out(3,'Error clsGps.writeGps DB接続成功.');
             }
         });
-        console.log('Step コネクションの確立...終了');
+        naoetu.log.out(3,'Step コネクションの確立...終了');
 
         //トランザクション実行後のコールバック
         var _TranCallback = function(pErr, pCon){
             if(pErr){
-                console.log('Error clsGps.writeGps トランザクション開始失敗.');
+                naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始失敗.');
             }else{
-                console.log('Error clsGps.writeGps トランザクション開始成功.');
+                naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始成功.');
 
                 //SQL実行後のコールバック
                 var _SqlCallback = function(err,results,fields){
                     if(err){
                         //エラー時 → ロールバック
-                        console.log('Error clsGps.writeGps SQL実行失敗.');
+                        naoetu.log.out(3,'Error clsGps.writeGps SQL実行失敗.');
                         this.masterConnection.rollback(function(err) {
                             if(err){
-                                console.log('Error clsGps.writeGps ロールバック失敗.');
+                                naoetu.log.out(3,'Error clsGps.writeGps ロールバック失敗.');
                                 console.error(err);
                                 //throw err;
                             }
                         });
                     }else{
                         //正常時 → コミット
-                        console.log('OK clsGps.writeGps SQL実行成功.');
+                        naoetu.log.out(3,'OK clsGps.writeGps SQL実行成功.');
                         this.masterConnection.commit(function(err) {
                             if (err) { 
-                                console.log('Error clsGps.writeGps コミット失敗.');
+                                naoetu.log.out(3,'Error clsGps.writeGps コミット失敗.');
                                 master.rollback(function(err) {
                                     if(err){
-                                        console.log('Error clsGps.writeGps コミット失敗時のロールバック失敗.');
+                                        naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック失敗.');
                                         console.error(err);
                                         //throw err;
                                     }else{
-                                        console.log('Error clsGps.writeGps コミット失敗時のロールバック成功.');
+                                        naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック成功.');
                                     }
                                 });
                             }else{
-                                console.log('Error clsGps.writeGps コミット成功.');
+                                naoetu.log.out(3,'Error clsGps.writeGps コミット成功.');
                             }
                         });
                     }
@@ -213,9 +242,9 @@ naoetu.clsGps.prototype = {
         }
 
         //トランザクション開始
-        console.log('Step トランザクション...開始');
+        naoetu.log.out(3,'Step トランザクション...開始');
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
-        console.log('Step トランザクション...開始');
+        naoetu.log.out(3,'Step トランザクション...開始');
 
     }
 
@@ -227,5 +256,5 @@ naoetu.clsGps.prototype = {
 //
 //========================================================================
 app.listen(50001,() => {
-    console.log('Start server port:50001')
+    naoetu.log.out(3,'Start server port:50001')
 })
