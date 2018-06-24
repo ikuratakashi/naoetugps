@@ -32,8 +32,10 @@ naoetu.clsLog.prototype = {
         this.isOut = pIsOut;
     },
     out : function(plevel,pMsg){
-        if(plevel <= thie.level){
-            console.log(pMsg);
+        if(this.isOut == true){
+            if(plevel <= this.level){
+                console.log(pMsg);
+            }
         }
     }
 }
