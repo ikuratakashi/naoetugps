@@ -145,6 +145,7 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
 
         //コネクションの確立
+        console.log('Step コネクションの確立...開始');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
         this.masterConnection.connect(function(err) {
             //接続時のエラー
@@ -156,6 +157,7 @@ naoetu.clsGps.prototype = {
                 console.log('Error clsGps.writeGps DB接続成功.');
             }
         });
+        console.log('Step コネクションの確立...終了');
 
         //トランザクション実行後のコールバック
         var _TranCallback = function(pErr, pCon){
@@ -211,7 +213,9 @@ naoetu.clsGps.prototype = {
         }
 
         //トランザクション開始
+        console.log('Step トランザクション...開始');
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
+        console.log('Step トランザクション...開始');
 
     }
 
