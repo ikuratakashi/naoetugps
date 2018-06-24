@@ -185,7 +185,7 @@ naoetu.clsGps.prototype = {
                 console.error(err);
                 return;
             }else{
-                naoetu.log.out(3,'Error clsGps.writeGps DB接続成功.');
+                naoetu.log.out(3,'OK clsGps.writeGps DB接続成功.');
             }
         });
         naoetu.log.out(3,'Step コネクションの確立...終了');
@@ -195,7 +195,7 @@ naoetu.clsGps.prototype = {
             if(pErr){
                 naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始失敗.');
             }else{
-                naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始成功.');
+                naoetu.log.out(3,'OK clsGps.writeGps トランザクション開始成功.');
 
                 //SQL実行後のコールバック
                 var _SqlCallback = function(err,results,fields){
@@ -232,7 +232,7 @@ naoetu.clsGps.prototype = {
                 }
 
                 //SQL実行
-                pCon.query("insert into TBL_GPS ? ",
+                pCon.query("insert into TBL_GPS set ? ",
                     {
                         posX   : this.paramGps.posX,
                         posY   : this.paramGps.posY,
@@ -246,7 +246,7 @@ naoetu.clsGps.prototype = {
         //トランザクション開始
         naoetu.log.out(3,'Step トランザクション...開始');
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
-        naoetu.log.out(3,'Step トランザクション...開始');
+        naoetu.log.out(3,'Step トランザクション...終了');
 
     }
 
