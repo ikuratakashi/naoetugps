@@ -40,10 +40,10 @@ naoetu.ini = {
 //mySql使用 
 naoetu.mysql      = require('mysql');
 naoetu.connection = naoetu.mysql.createConnection({
-    host     : naoetuini.env.DB_HOST,
-    user     : naoetuini.env.DB_USER,
-    password : naoetuini.env.DB_PASS,
-    database : naoetuini.env.DB_NAME
+    host     : process.env.DB_HOST,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_NAME
 });
 var _pool = naoetu.mysql.createPoolCluster();
 _pool.add(naoetu.ini.ConMaster, naoetu.connection);
