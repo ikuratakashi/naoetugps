@@ -222,11 +222,11 @@ naoetu.clsGps.prototype = {
                                         console.error(err);
                                         //throw err;
                                     }else{
-                                        naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック成功.');
+                                        naoetu.log.out(3,'OK clsGps.writeGps コミット失敗時のロールバック成功.');
                                     }
                                 });
                             }else{
-                                naoetu.log.out(3,'Error clsGps.writeGps コミット成功.');
+                                naoetu.log.out(3,'OK clsGps.writeGps コミット成功.');
                             }
                         });
                     }
