@@ -37,7 +37,7 @@ naoetu.ini = {
     ConMaster : "MASTER"
 }
 
-//mySql使用
+//mySql使用 
 naoetu.mysql      = require('mysql');
 naoetu.connection = naoetu.mysql.createConnection({
     host     : naoetuini.env.DB_HOST,
