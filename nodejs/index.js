@@ -41,15 +41,12 @@ console.log("DB_HOST=" + process.env.DB_HOST);
 
 //mySql使用 
 naoetu.mysql      = require('mysql');
-naoetu.connection = naoetu.mysql.createConnection({
+naoetu.ConConf = {
     host     : process.env.DB_HOST,
     user     : process.env.DB_USER,
     password : process.env.DB_PASS,
     database : process.env.DB_NAME
-});
-var _pool = naoetu.mysql.createPoolCluster();
-_pool.add(naoetu.ini.ConMaster, naoetu.connection);
-app.set(naoetu.ini.ConPool, _pool);
+};
 
 
 //========================================================================
@@ -57,13 +54,13 @@ app.set(naoetu.ini.ConPool, _pool);
 //DB接続テスト
 //
 //========================================================================
-naoetu.connection.connect(function(err) {
-    if (err) {
-      console.error('error connecting: ' + err.stack);
-      return;
-    }
-    console.log('connected as id ' + naoetu.connection.threadId);
-});
+// naoetu.connection.connect(function(err) {
+//     if (err) {
+//       console.error('error connecting: ' + err.stack);
+//       return;
+//     }
+//     console.log('connected as id ' + naoetu.connection.threadId);
+// });
 
 //========================================================================
 //
@@ -72,31 +69,38 @@ naoetu.connection.connect(function(err) {
 //========================================================================
 
 //---------------------------------------------
-// ルート
+// メイン　ルート
 //---------------------------------------------
 app.get('/',(req,res)=>{
     res.send('welcome to express!')
 })
 
 //---------------------------------------------
-// GPS情報取得
+// GPS情報取得　ルート
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
 
     var posX = req.query.x;
     var posY = req.query.y;
+    var typeId = req.query.type;
+
     req.check('x',{'ErrNo':'0001','description':'x座標が実数ではありません。'}).isFloat();
     req.check('y',{'ErrNo':'0001','description':'y座標が実数ではありません。'}).isFloat();
+    req.check('type',{'ErrNo':'0002','description':'データタイプが数値ではありません。'}).isInt();
 
     req.getValidationResult().then((result)=>{
         if(!result.isEmpty()){
             //エラーあり
-            res.send('err gps! x=' + posX + 'y=' + posY);
+            res.send('err gps!');
         }else{
             //エラーなし
-            var paramGps = new naoetu.clsParamGps(posX,posY);
-            res.send('welcome to gps! x=' + posX + 'y=' + posY);
-            writeDb(paramGps);
+            var paramGps = new naoetu.clsParamGps(posX,posY,typeId);
+            res.send('welcome to gps! x=' + posX + ' y=' + posY + ' type=' + typeId);
+
+            //GPS情報の保存
+            var gps = new naoetu.clsGps();
+            gps.writeGps(paramGps);
+
         }
     });
 
@@ -104,33 +108,29 @@ app.get('/gpswrite',(req,res)=>{
 
 //========================================================================
 //
+// 処理
+//
+//========================================================================
+
+//---------------------------------------------
+//
 //GPSパラメタクラス作成
 //
-//========================================================================
+//---------------------------------------------
 naoetu.clsParamGps = function(){return this.initialize.apply(this,arguments);};
 naoetu.clsParamGps.prototype = {
-    initialize : function(pPosX,pPosY){
+    initialize : function(pPosX,pPosY,pTypeId){
         this.posX = pPosX;
         this.posY = pPosY;
+        this.typeId = pTypeId;
     }
 }
 
-//========================================================================
-//
-//DB接続パラメタクラス作成
-//
-//========================================================================
-naoetu.clsParamDb = function(){return this.initialize.apply(this,arguments);};
-naoetu.clsParamDb.prototype = {
-    initialize : function(){
-    }
-}
-
-//========================================================================
+//---------------------------------------------
 //
 //GPS情報クラス
 //
-//========================================================================
+//---------------------------------------------
 naoetu.clsGps = function(){return this.initialize.apply(this,arguments);};
 naoetu.clsGps.prototype = {
     initialize : function(){
@@ -144,46 +144,74 @@ naoetu.clsGps.prototype = {
 
         this.paramGps = pGps;
 
-        var _dbPool = app.get(naoetu.ini.ConPool);
-        var _masterPool = _dbPool.of(naoetu.ini.ConMaster);
-        this.masterConnection = naoetu.mysql.createConnection(_masterPool);
-
-        //接続後のコールバック
-        var _con = function(pErr, pCon){
-            if(pErr){
+        //コネクションの確立
+        this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
+        this.masterConnection.connect(function(err) {
+            //接続時のエラー
+            if (err) {
                 console.log('Error clsGps.writeGps DB接続失敗.');
+                console.error(err);
+                return;
             }else{
                 console.log('Error clsGps.writeGps DB接続成功.');
+            }
+        });
+
+        //トランザクション実行後のコールバック
+        var _TranCallback = function(pErr, pCon){
+            if(pErr){
+                console.log('Error clsGps.writeGps トランザクション開始失敗.');
+            }else{
+                console.log('Error clsGps.writeGps トランザクション開始成功.');
+
                 //SQL実行後のコールバック
-                var _cb = function(err,results,fields){
+                var _SqlCallback = function(err,results,fields){
                     if(err){
+                        //エラー時 → ロールバック
                         console.log('Error clsGps.writeGps SQL実行失敗.');
-                        this.masterConnection.rollback(function() {
-                            console.error(err);
-                            throw err;
+                        this.masterConnection.rollback(function(err) {
+                            if(err){
+                                console.log('Error clsGps.writeGps ロールバック失敗.');
+                                console.error(err);
+                                //throw err;
+                            }
                         });
                     }else{
+                        //正常時 → コミット
                         console.log('OK clsGps.writeGps SQL実行成功.');
                         this.masterConnection.commit(function(err) {
                             if (err) { 
-                                master.rollback(function() {
-                                    throw err;
+                                console.log('Error clsGps.writeGps コミット失敗.');
+                                master.rollback(function(err) {
+                                    if(err){
+                                        console.log('Error clsGps.writeGps コミット失敗時のロールバック失敗.');
+                                        console.error(err);
+                                        //throw err;
+                                    }else{
+                                        console.log('Error clsGps.writeGps コミット失敗時のロールバック成功.');
+                                    }
                                 });
+                            }else{
+                                console.log('Error clsGps.writeGps コミット成功.');
                             }
                         });
                     }
                 }
+
                 //SQL実行
                 pCon.query("insert into TBL_GPS ? ",
                     {
-                        posX:this.paramGps.posX,
-                        posY:this.paramGps.posY
+                        posX   : this.paramGps.posX,
+                        posY   : this.paramGps.posY,
+                        typeId : this.paramGps.typeId
                     },
-                    naoetu.bind(this,_cb)
+                    naoetu.bind(this,_SqlCallback)
                 );
             }
         }
-        this.masterConnection.beginTransaction(naoetu.bind(this,_con));
+
+        //トランザクション開始
+        this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
 
     }
 
