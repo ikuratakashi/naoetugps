@@ -191,13 +191,14 @@ naoetu.clsGps.prototype = {
         naoetu.log.out(3,'Step コネクションの確立...終了');
 
         //トランザクション実行後のコールバック
-        var _TranCallback = function(pErr, pCon){
+        var _TranCallback = function(pErr){
+
             if(pErr){
                 naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始失敗.');
             }else{
                 naoetu.log.out(3,'OK clsGps.writeGps トランザクション開始成功.');
 
-                //SQL実行後のコールバック
+                //SQL実行後のコールバック定義 <
                 var _SqlCallback = function(err,results,fields){
                     if(err){
                         //エラー時 → ロールバック
@@ -230,9 +231,12 @@ naoetu.clsGps.prototype = {
                         });
                     }
                 }
+                //SQL実行後のコールバック定義 >
 
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //SQL実行
-                pCon.query("insert into TBL_GPS set ? ",
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                this.masterConnection.query("insert into TBL_GPS set ? ",
                     {
                         posX   : this.paramGps.posX,
                         posY   : this.paramGps.posY,
