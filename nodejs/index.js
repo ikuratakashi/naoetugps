@@ -205,7 +205,7 @@ naoetu.clsGps.prototype = {
         });
         naoetu.log.out(3,'Step コネクションの確立...終了');
 
-        //トランザクション実行後のコールバック
+        //トランザクション実行後のコールバック <
         var _TranCallback = function(pErr){
 
             if(pErr){
@@ -222,7 +222,9 @@ naoetu.clsGps.prototype = {
                     if(err){
                         //エラー時 → ロールバック
                         naoetu.log.out(3,'Error clsGps.writeGps SQL実行失敗.');
-                        this.masterConnection.rollback(function(err) {
+
+                        //DBコネクション時のコールバック定義 <
+                        var _masterConnection = function(err) {
                             if(err){
                                 naoetu.log.out(3,'Error clsGps.writeGps ロールバック失敗.');
                                 console.error(err);
@@ -232,14 +234,22 @@ naoetu.clsGps.prototype = {
                                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                 this.onFaile();
                             }
-                        });
+                        }
+                        //DBコネクション時のコールバック定義 >
+
+                        this.masterConnection.rollback(naoetu.bind(this,_masterConnection));
+
                     }else{
                         //正常時 → コミット
                         naoetu.log.out(3,'OK clsGps.writeGps SQL実行成功.');
-                        this.masterConnection.commit(function(err) {
+
+                        //コミット時のコールバック定義 <
+                        var _commit = function(err) {
                             if (err) { 
                                 naoetu.log.out(3,'Error clsGps.writeGps コミット失敗.');
-                                master.rollback(function(err) {
+
+                                //ロールバック時のコールバック定義 <
+                                var _roolback = function(err) {
                                     if(err){
                                         naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック失敗.');
                                         console.error(err);
@@ -255,7 +265,11 @@ naoetu.clsGps.prototype = {
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                         this.onFaile();
                                     }
-                                });
+                                }
+                                //ロールバック時のコールバック定義 >
+
+                                master.rollback(naoetu.bind(this,_roolback));
+
                             }else{
                                 naoetu.log.out(3,'OK clsGps.writeGps コミット成功.');
 
@@ -265,7 +279,11 @@ naoetu.clsGps.prototype = {
                                 this.onSuccess();
 
                             }
-                        });
+                        }
+                        //コミット時のコールバック定義 >
+
+                        this.masterConnection.commit(naoetu.bind(this,_commit));
+
                     }
                 }
                 //SQL実行後のコールバック定義 >
@@ -283,6 +301,7 @@ naoetu.clsGps.prototype = {
                 );
             }
         }
+        //トランザクション実行後のコールバック >
 
         //トランザクション開始
         naoetu.log.out(3,'Step トランザクション...開始');
