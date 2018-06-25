@@ -131,7 +131,7 @@ app.get('/gpswrite',(req,res)=>{
             //GPS情報の保存
             var gps = new naoetu.clsGps();
             gps.onSuccess = function(){
-                this.response.json({ 'foo': 'bar' });
+                //this.response.json({ 'foo': 'bar' });
             };
             gps.writeGps(paramGps,res);
 
