@@ -130,7 +130,10 @@ app.get('/gpswrite',(req,res)=>{
 
             //GPS情報の保存
             var gps = new naoetu.clsGps();
-            gps.writeGps(paramGps);
+            gps.onSuccess = function(){
+                res.json({ 'foo': 'bar' });
+            };
+            gps.writeGps(paramGps,res);
 
         }
     });
@@ -167,13 +170,25 @@ naoetu.clsGps.prototype = {
     initialize : function(){
         this.paramGps = false;
         this.masterConnection = false;
+        this.response = false;
+    },
+    //-----------------------------
+    // 書き込み成功時のメソッド
+    //-----------------------------
+    onSuccess : function(){
+    },
+    //-----------------------------
+    // 書き込み失敗時のメソッド
+    //-----------------------------
+    onFaile : function(){
     },
     //-----------------------------
     // GPS情報をテーブルへ書き込む
     //-----------------------------
-    writeGps : function(pGps){
+    writeGps : function(pGps,pRes){
 
         this.paramGps = pGps;
+        this.response = pRes;
 
         //コネクションの確立
         naoetu.log.out(3,'Step コネクションの確立...開始');
@@ -195,6 +210,10 @@ naoetu.clsGps.prototype = {
 
             if(pErr){
                 naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始失敗.');
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                //処理失敗時の処理実行
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                this.onFaile();
             }else{
                 naoetu.log.out(3,'OK clsGps.writeGps トランザクション開始成功.');
 
@@ -208,6 +227,10 @@ naoetu.clsGps.prototype = {
                                 naoetu.log.out(3,'Error clsGps.writeGps ロールバック失敗.');
                                 console.error(err);
                                 //throw err;
+                                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                //処理失敗時の処理実行
+                                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                this.onFaile();
                             }
                         });
                     }else{
@@ -220,13 +243,27 @@ naoetu.clsGps.prototype = {
                                     if(err){
                                         naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック失敗.');
                                         console.error(err);
+                                        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                        //処理失敗時の処理実行
+                                        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                        this.onFaile();
                                         //throw err;
                                     }else{
                                         naoetu.log.out(3,'OK clsGps.writeGps コミット失敗時のロールバック成功.');
+                                        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                        //処理失敗時の処理実行
+                                        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                        this.onFaile();
                                     }
                                 });
                             }else{
                                 naoetu.log.out(3,'OK clsGps.writeGps コミット成功.');
+
+                                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                //処理成功時の処理実行
+                                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                                this.onSuccess();
+
                             }
                         });
                     }
