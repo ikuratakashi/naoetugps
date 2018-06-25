@@ -126,12 +126,12 @@ app.get('/gpswrite',(req,res)=>{
         }else{
             //エラーなし
             var paramGps = new naoetu.clsParamGps(posX,posY,typeId);
-            res.send('welcome to gps! x=' + posX + ' y=' + posY + ' type=' + typeId);
+            //res.send('welcome to gps! x=' + posX + ' y=' + posY + ' type=' + typeId);
 
             //GPS情報の保存
             var gps = new naoetu.clsGps();
             gps.onSuccess = function(){
-                //this.response.json({ 'foo': 'bar' });
+                this.response.json({ 'foo': 'bar' });
             };
             gps.writeGps(paramGps,res);
 
