@@ -122,7 +122,7 @@ app.get('/gpswrite',(req,res)=>{
     req.getValidationResult().then((result)=>{
         if(!result.isEmpty()){
             //エラーあり
-            res.send('err gps!');
+            res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
             //エラーなし
             var paramGps = new naoetu.clsParamGps(posX,posY,typeId);
@@ -132,12 +132,12 @@ app.get('/gpswrite',(req,res)=>{
 
             //成功時のレスポンス
             gps.onSuccess = function(){
-                this.response.json({result:{err:""}});
+                this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
             };
 
             //失敗時のレスポンス
             gps.onFaile = function(){
-                this.response.json({result:{err:"1"}});
+                this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
             };
 
             //書き込み実行
