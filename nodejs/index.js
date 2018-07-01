@@ -111,8 +111,8 @@ app.get('/',(req,res)=>{
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
 
-    var posX = req.query.x;
-    var posY = req.query.y;
+    var posLng= req.query.lng;
+    var posLat = req.query.lat;
     var typeId = req.query.type;
 
     req.check('x',{'ErrNo':'0001','description':'x座標が実数ではありません。'}).isFloat();
@@ -125,7 +125,7 @@ app.get('/gpswrite',(req,res)=>{
             res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
             //エラーなし
-            var paramGps = new naoetu.clsParamGps(posX,posY,typeId);
+            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId);
 
             //GPS情報の保存
             var gps = new naoetu.clsGps();
@@ -161,9 +161,9 @@ app.get('/gpswrite',(req,res)=>{
 //---------------------------------------------
 naoetu.clsParamGps = function(){return this.initialize.apply(this,arguments);};
 naoetu.clsParamGps.prototype = {
-    initialize : function(pPosX,pPosY,pTypeId){
-        this.posX = pPosX;
-        this.posY = pPosY;
+    initialize : function(pPosLng,pPosLat,pTypeId){
+        this.posLng = pPosLng;
+        this.posLat = pPosLat;
         this.typeId = pTypeId;
     }
 }
@@ -301,8 +301,8 @@ naoetu.clsGps.prototype = {
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 this.masterConnection.query("insert into TBL_GPS set ? ",
                     {
-                        posX   : this.paramGps.posX,
-                        posY   : this.paramGps.posY,
+                        posX   : this.paramGps.posLng,
+                        posY   : this.paramGps.posLat,
                         typeId : this.paramGps.typeId
                     },
                     naoetu.bind(this,_SqlCallback)

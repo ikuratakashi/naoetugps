@@ -1,49 +1,97 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap Sample</title>
-    <!-- BootstrapのCSS読み込み -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>NaoetuGPS</title>
+
+    <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
-    <!-- jQuery読み込み -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- BootstrapのJS読み込み -->
-    <script src="./js/bootstrap.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <!--link href="jumbotron.css" rel="stylesheet"-->
   </head>
   <body>
-    <div class="container" style="background-color:red">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>名前</th>
-              <th>メールアドレス</th>
-              <th>電話番号</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-                <td>煌木 太郎</td>
-                <td>taro.kirameki@example.com</td>
-                <td>09011112222</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-                <td>煌木 次郎</td>
-                <td>jiro.kirameki@example.com</td>
-                <td>09033334444</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-                <td>煌木 花子</td>
-                <td>hanako.kirameki@example.com</td>
-                <td>09055556666</td>
-            </tr>
-          </tbody>
-        </table>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">NaoetuGPS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">TEST <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
       </div>
+    </nav>
+
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">NaoetuGPS</h1>
+          <p>山車の位置を地図上で表示する（現在は開発中）</p>
+          <div name="mapshow">ここに地図が表示される予定</div>
+        </div>
+      </div>
+
+      <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+          <div class="col-md-10">
+            <h2>位置発信</h2>
+            <div name="mapsend">
+              <div name="mapsend-map" id="mapsend-map" style="width:100%;height:300px;"></div>
+              <form name="mapsend-navi">
+                  <div class="form-group">
+                      <label for="posLng">X</label>
+                      <input type="text" class="form-control" id="posLng" placeholder="">
+                  </div>
+                  <div class="form-group">
+                      <label for="posLat">Y</label>
+                      <input type="text" class="form-control" id="posLat" placeholder="">
+                  </div>
+                  <div class="form-group">
+                      <label for="TypeList">種類</label>
+                      <select class="form-control" id="TypeList"></select>
+                  </div>
+                  <button type="submit" id="SendBtn" class="btn btn-primary">送信する</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div> <!-- /container -->
+
+    </main>
+
+    <footer class="container">
+      <p>&copy; ArukISoft. 2013-2018</p>
+    </footer>
+
+    <!-- NaoetuGps core JavaScript
+    ================================================== -->
+    <!-- NaoetuGps -->
+    <script src="jsmy/naoetu.js"></script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="./js/bootstrap.min.js"></script>
+
+    <!-- etc JavaScript
+    ================================================== -->
+    <!-- Google Map -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=naoetumap.initMap"></script>
+
   </body>
 </html>
+
