@@ -111,7 +111,7 @@ app.get('/',(req,res)=>{
 })
 
 //---------------------------------------------
-// GPS情報取得　ルート
+// GPS情報書き込み
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
 
@@ -129,7 +129,7 @@ app.get('/gpswrite',(req,res)=>{
             res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
             //エラーなし
-            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId);
+            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
 
             //GPS情報の保存
             var gps = new naoetu.clsGps();
@@ -151,6 +151,41 @@ app.get('/gpswrite',(req,res)=>{
     });
 
 })
+//---------------------------------------------
+// GPS情報読み込み
+//---------------------------------------------
+app.get('/gpsread',(req,res)=>{
+    var mode = req.query.mode;
+    var type = req.query.type;
+    req.check('mode',{'ErrNo':'0003','description':'データタイプが数値ではありません。'}).isInt();
+    req.check('type',{'ErrNo':'0004','description':'データタイプが数値ではありません。'}).isInt();
+    req.getValidationResult().then((result)=>{
+        if(!result.isEmpty()){
+            //エラーあり
+            res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
+        }else{
+            //エラーなし
+            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
+
+            //GPS情報の保存
+            var gps = new naoetu.clsGps();
+
+            //成功時のレスポンス
+            gps.onSuccess = function(pData){
+                this.response.json({result:{err:0,description:"GPS情報 読み込み成功",fields:pData}});
+            };
+
+            //失敗時のレスポンス
+            gps.onFaile = function(){
+                this.response.json({result:{err:-2,description:"GPS情報 読み込み失敗"}});
+            };
+
+            //読み込み実行
+            gps.readGps(paramGps,res);
+
+        }
+    });
+});
 
 //========================================================================
 //
@@ -165,10 +200,11 @@ app.get('/gpswrite',(req,res)=>{
 //---------------------------------------------
 naoetu.clsParamGps = function(){return this.initialize.apply(this,arguments);};
 naoetu.clsParamGps.prototype = {
-    initialize : function(pPosLng,pPosLat,pTypeId){
+    initialize : function(pPosLng,pPosLat,pTypeId,pMode){
         this.posLng = pPosLng;
         this.posLat = pPosLat;
         this.typeId = pTypeId;
+        this.mode = pMode;
     }
 }
 
@@ -183,6 +219,9 @@ naoetu.clsGps.prototype = {
         this.paramGps = false;
         this.masterConnection = false;
         this.response = false;
+        this.Type = false;
+        this.MODE_NOMAL = "NOMAL";
+        this.Cnnection = false;
     },
     //-----------------------------
     // 書き込み成功時のメソッド
@@ -322,8 +361,79 @@ naoetu.clsGps.prototype = {
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
         naoetu.log.out(3,'Step トランザクション...終了');
 
-    }
+    },
+    //-----------------------------
+    // テーブルへからGPS情報を取得する
+    //-----------------------------
+    readGps : function(pGps,pRes){
 
+        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.type);
+
+        this.paramGps = pGps;
+        this.response = pRes;
+
+        //コネクションの確立
+        naoetu.log.out(3,'Step コネクションの確立...開始');
+        this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
+        var _ConnectionCallBack = function(err,con){
+            
+            //コネクション退避
+            this.Cnnection = con;
+
+            //接続時のエラー
+            if (err) {
+                naoetu.log.out(3,'Error clsGps.readGps DB接続失敗.');
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                //処理失敗時の処理実行
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                this.onFaile();
+                return;
+            }else{
+                naoetu.log.out(3,'OK clsGps.readGps DB接続成功.');
+            }
+
+            //通常取得
+            var sql = "";
+            var sqlParam = [];
+            if(this.paramGps.mode == this.MODE_NOMAL){
+                sqlParam = [this.paramGps.type];
+                sql = "Select * from TBL_GPS Where type = ? Order By add_date DESC";
+            }else{
+                sqlParam = [this.paramGps.type];
+                sql = "Select * from TBL_GPS Where type = ? ";
+            }
+
+            //コールバック定義
+            var _callBack = function(err,results,fields){
+
+                if(err){
+                    naoetu.log.out(3,'OK clsGps.readGps SQL実行失敗.');
+                    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                    //処理失敗時の処理実行
+                    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                    this.onFaile();
+                    return;
+                }else{
+                    naoetu.log.out(3,'OK clsGps.readGps SQL実行成功.');
+                }
+
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                //処理成功時の処理実行
+                //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                this.onSuccess(fields);
+
+                //コネクションの解放
+                this.Cnnection.release();
+
+            };
+
+            //SQL実行
+            con.query(sql,sqlParam,naoetu.bind(this,_callBack));
+        };
+        this.masterConnection.getConnection(naoetu.bind(this,_ConnectionCallBack));
+        naoetu.log.out(3,'Step コネクションの確立...終了');
+
+    }
 }
 
 //========================================================================
