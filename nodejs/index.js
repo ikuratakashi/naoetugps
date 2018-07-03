@@ -370,7 +370,7 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
         this.response = pRes;
         
-        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.type);
+        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.typeId);
 
         //コネクションの確立
         naoetu.log.out(3,'Step コネクションの確立...開始');
