@@ -391,7 +391,7 @@ naoetu.clsGps.prototype = {
 
             //通常取得
             var sql = "";
-            var sqlParam = [];
+            var sqlParam = {};
             if(this.paramGps.mode == this.MODE_NOMAL){
                 sqlParam = {typeId:this.paramGps.type};
                 sql = "Select * from TBL_GPS Where ? Order By add_date DESC";
@@ -417,6 +417,7 @@ naoetu.clsGps.prototype = {
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理成功時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+                naoetu.log.out(3,'検索結果のレコード数:' + results.length);
                 this.onSuccess(results);
 
             };
