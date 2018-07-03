@@ -419,9 +419,6 @@ naoetu.clsGps.prototype = {
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 this.onSuccess(fields);
 
-                //コネクションの解放
-                this.masterConnection.release();
-
             };
 
             //SQL実行
