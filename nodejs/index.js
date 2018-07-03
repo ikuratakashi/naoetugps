@@ -417,7 +417,7 @@ naoetu.clsGps.prototype = {
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理成功時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-                this.onSuccess(fields);
+                this.onSuccess(results);
 
             };
 
