@@ -111,12 +111,12 @@ app.get('/',(req,res)=>{
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
 
-    var posLng= req.query.lng;
+    var posLng = req.query.lng;
     var posLat = req.query.lat;
     var typeId = req.query.type;
 
-    req.check('x',{'ErrNo':'0001','description':'x座標が実数ではありません。'}).isFloat();
-    req.check('y',{'ErrNo':'0001','description':'y座標が実数ではありません。'}).isFloat();
+    req.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
+    req.check('lat',{'ErrNo':'0001','description':'緯度yが実数ではありません。'}).isFloat();
     req.check('type',{'ErrNo':'0002','description':'データタイプが数値ではありません。'}).isInt();
 
     req.getValidationResult().then((result)=>{
