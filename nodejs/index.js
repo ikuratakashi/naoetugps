@@ -62,6 +62,10 @@ require('dotenv').config();
 var validator = require('express-validator');
 app.use(validator());
 
+//クロスサイト制限を外す設定
+var cors = require('cors');
+app.use(cors());
+
 //共通設定
 naoetu.ini = {
     ConPool   : "pool",
