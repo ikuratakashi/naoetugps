@@ -128,7 +128,7 @@ app.get('/gpswrite',(req,res)=>{
             //エラーあり
             res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
-            //エラーなし
+            //エラーなし pPosLng,pPosLat,pTypeId,pMode
             var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
 
             //GPS情報の保存
@@ -161,10 +161,10 @@ app.get('/gpsread',(req,res)=>{
     req.check('type',{'ErrNo':'0004','description':'データタイプが数値ではありません。'}).isInt();
     req.getValidationResult().then((result)=>{
         if(!result.isEmpty()){
-            //エラーあり
+            //エラーあり 
             res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
-            //エラーなし
+            //エラーなし pPosLng,pPosLat,pTypeId,pMode
             var paramGps = new naoetu.clsParamGps(0,0,type,mode);
 
             //GPS情報の保存
