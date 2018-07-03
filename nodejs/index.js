@@ -157,7 +157,7 @@ app.get('/gpswrite',(req,res)=>{
 app.get('/gpsread',(req,res)=>{
     var mode = req.query.mode;
     var type = req.query.type;
-    req.check('mode',{'ErrNo':'0003','description':'データタイプが数値ではありません。'}).isInt();
+    req.check('mode',{'ErrNo':'0003','description':'データタイプがアルファベットではありません。'}).isAlpha();
     req.check('type',{'ErrNo':'0004','description':'データタイプが数値ではありません。'}).isInt();
     req.getValidationResult().then((result)=>{
         if(!result.isEmpty()){
