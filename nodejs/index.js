@@ -375,11 +375,8 @@ naoetu.clsGps.prototype = {
         //コネクションの確立
         naoetu.log.out(3,'Step コネクションの確立...開始');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
-        var _ConnectionCallBack = function(err,con){
+        var _ConnectionCallBack = function(err){
             
-            //コネクション退避
-            this.Cnnection = con;
-
             //接続時のエラー
             if (err) {
                 naoetu.log.out(3,'Error clsGps.readGps DB接続失敗.');
@@ -423,14 +420,14 @@ naoetu.clsGps.prototype = {
                 this.onSuccess(fields);
 
                 //コネクションの解放
-                this.Cnnection.release();
+                this.masterConnection.release();
 
             };
 
             //SQL実行
-            con.query(sql,sqlParam,naoetu.bind(this,_callBack));
+            this.masterConnection.query(sql,sqlParam,naoetu.bind(this,_callBack));
         };
-        this.masterConnection.getConnection(naoetu.bind(this,_ConnectionCallBack));
+        this.masterConnection.connect(naoetu.bind(this,_ConnectionCallBack));
         naoetu.log.out(3,'Step コネクションの確立...終了');
 
     }
