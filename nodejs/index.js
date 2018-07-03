@@ -367,10 +367,10 @@ naoetu.clsGps.prototype = {
     //-----------------------------
     readGps : function(pGps,pRes){
 
-        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.type);
-
         this.paramGps = pGps;
         this.response = pRes;
+        
+        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.type);
 
         //コネクションの確立
         naoetu.log.out(3,'Step コネクションの確立...開始');
@@ -393,11 +393,11 @@ naoetu.clsGps.prototype = {
             var sql = "";
             var sqlParam = [];
             if(this.paramGps.mode == this.MODE_NOMAL){
-                sqlParam = [this.paramGps.type];
-                sql = "Select * from TBL_GPS Where type = ? Order By add_date DESC";
+                sqlParam = {typeId:this.paramGps.type};
+                sql = "Select * from TBL_GPS Where ? Order By add_date DESC";
             }else{
-                sqlParam = [this.paramGps.type];
-                sql = "Select * from TBL_GPS Where type = ? ";
+                sqlParam = {typeId:this.paramGps.type};
+                sql = "Select * from TBL_GPS Where ? ";
             }
 
             //コールバック定義
