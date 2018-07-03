@@ -393,10 +393,10 @@ naoetu.clsGps.prototype = {
             var sql = "";
             var sqlParam = {};
             if(this.paramGps.mode == this.MODE_NOMAL){
-                sqlParam = {typeId:this.paramGps.type};
+                sqlParam = {typeId : this.paramGps.typeId};
                 sql = "Select * from TBL_GPS Where ? Order By add_date DESC";
             }else{
-                sqlParam = {typeId:this.paramGps.type};
+                sqlParam = {typeId : this.paramGps.typeId};
                 sql = "Select * from TBL_GPS Where ? ";
             }
 
