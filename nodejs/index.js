@@ -165,7 +165,7 @@ app.get('/gpsread',(req,res)=>{
             res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
         }else{
             //エラーなし
-            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
+            var paramGps = new naoetu.clsParamGps(0,0,type,mode);
 
             //GPS情報の保存
             var gps = new naoetu.clsGps();
