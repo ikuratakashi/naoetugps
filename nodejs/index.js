@@ -202,7 +202,7 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
         this.response = pRes;
 
-        naoetu.log.out(3,'パラメタ' + this.paramGps);
+        naoetu.log.out(3,'パラメタ ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
 
         //コネクションの確立
         naoetu.log.out(3,'Step コネクションの確立...開始');
