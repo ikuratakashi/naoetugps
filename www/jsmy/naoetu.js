@@ -57,12 +57,14 @@ naoetu.map.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // コンストラクタ
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    initialize : function(pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName){
+    initialize : function(pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName){
 
         this.MapObj = false;
         this.defPos = false;
         this.imgCenter = false;
         this.makCenter = false;
+        this.isSend = pIsSend;      //座標送信機能の有無
+        this.isViewer = pIsViewer;  //ビューワー機能の有無
 
         //地図の初期ズーム番号
         this.defZoom = pDefZoom;
@@ -74,23 +76,49 @@ naoetu.map.prototype = {
         this.TypeListName = pTypeListName;  //(Element Id) GPSタイプのリスト
         this.SendBtnName = pSendBtnName;    //(Element Id) 送信ボタン
 
-        //各種イベントの設定
+        //各種イベントの設定 
         ////座標送信ボタン pNaoetuObj,pLatName,pLngName,pTypeName,pSendName
-        this.mapAjaxSendBtn = new naoetu.mapAjax(this,this.outNameLat,this.outNameLng,this.TypeListName,this.SendBtnName);
-        this.mapAjaxSendBtn.SetEvent();
+        if(this.isSend){
+            this.mapAjaxSendBtn = new naoetu.mapAjax(this,this.outNameLat,this.outNameLng,this.TypeListName,this.SendBtnName);
+            this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.SendPos);
+        }
+        ////表示関連
+        if(this.isViewer){
+            this.mapAjaxSendBtn = new naoetu.mapAjax(this,false,false,this.TypeListName,this.SendBtnName);
+            this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.getPosDatas);
+        }
 
         //マーカータイプのリスト
-        this.typeList = new Array();
-        this.typeList.push({TypeId:"0",Name:"自分"});
-        this.typeList.push({TypeId:"1",Name:"御幸町"});
-        var eleSelect = document.getElementById(this.TypeListName);
-        for(i=0;i<this.typeList.length;i++){
-            var buf = this.typeList[i];
-            var option = document.createElement('option');
-            option.setAttribute('value', buf.TypeId);
-            option.innerHTML = buf.Name;
-            eleSelect.appendChild(option);
+        ///位置の送信用
+        if(pIsSend == true){
+            this.typeList = new Array();
+            this.typeList.push({TypeId:"0",Name:"自分"});
+            this.typeList.push({TypeId:"1",Name:"御幸町"});
+            var eleSelect = document.getElementById(this.TypeListName);
+            for(i=0;i<this.typeList.length;i++){
+                var buf = this.typeList[i];
+                var option = document.createElement('option');
+                option.setAttribute('value', buf.TypeId);
+                option.innerHTML = buf.Name;
+                eleSelect.appendChild(option);
+            }
         }
+        ///位置の表示用
+        if(pIsViewer == true){
+            this.typeList = new Array();
+            this.typeList.push({TypeId:"-1",Name:"全て"});
+            this.typeList.push({TypeId:"0",Name:"自分"});
+            this.typeList.push({TypeId:"1",Name:"御幸町"});
+            var eleSelect = document.getElementById(this.TypeListName);
+            for(i=0;i<this.typeList.length;i++){
+                var buf = this.typeList[i];
+                var option = document.createElement('option');
+                option.setAttribute('value', buf.TypeId);
+                option.innerHTML = buf.Name;
+                eleSelect.appendChild(option);
+            }
+        }
+
 
         //中心マーカー関連
         ////画像
@@ -138,15 +166,15 @@ naoetu.map.prototype = {
         this.MapObj.addListener("dragend",naoetu.bind(this,this.onMapDragEnd));
         this.MapObj.addListener("bounds_changed",naoetu.bind(this,this.onMapBoundsChanged));
 
-        //マーカーの作成
-        this.Markers["test"] = new naoetu.marker("img/type1.png","img/type1.png","img/type1.png","img/type1.png");
+        //マーカーの作成 テスト
+        this.Markers["item1"] = new naoetu.marker("img/type1.png","img/type1.png","img/type1.png","img/type1.png");
 
         //マーカにマップオブジェクトを設定する
         for(var key in this.Markers) {
             this.Markers[key].SetMapObject(this.MapObj);
         }
 
-        this.Markers["test"].SetPosition(this.gpsYasaka);
+        //this.Markers["test"].SetPosition(this.gpsYasaka);
 
 
     },
@@ -174,8 +202,12 @@ naoetu.map.prototype = {
     //-----------------------------    
     ShowCenter : function(){
         var center = this.MapObj.getCenter();
-        document.getElementById(this.outNameLat).value = center.lat();
-        document.getElementById(this.outNameLng).value = center.lng();
+        if(this.outNameLat != ""){
+            document.getElementById(this.outNameLat).value = center.lat();
+        }
+        if(this.outNameLng != ""){
+            document.getElementById(this.outNameLng).value = center.lng();
+        }
         naoetu.log.out(1,"onMapDragEnd x=" + center.lat() + "/" + "Y=" + center.lng() );
     },
     //-----------------------------    
@@ -365,20 +397,25 @@ naoetu.mapAjax.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // コンストラクタ
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    initialize : function(pNaoetuObj,pLatName,pLngName,pTypeName,pSendName){
+    initialize : function(pNaoetuObj,pLatName,pLngName,pTypeName,pButtonName){
+
         this.MainObj = pNaoetuObj;
 
         this.LatName  = pLatName;
         this.LngName  = pLngName;
         this.TypeName = pTypeName;
-        this.SendName = pSendName;
+        this.ButtonName = pButtonName;
+        this.SetEventFunction = false;
+        this.ResultFunction = false;
 
     },
     //-----------------------------
-    // 位置情報の送信
+    // イベントの設定
     //-----------------------------
-    SetEvent : function(){
-        $("#" + this.SendName).on("click",naoetu.bind(this,this.SendPos));
+    SetEvent : function(pSetEventFunction,pResultFunction){
+        this.SetEventFunction = pSetEventFunction;
+        this.ResultFunction = pResultFunction;
+        $("#" + this.ButtonName).on("click",naoetu.bind(this,this.SetEventFunction));
         return false;
     },
     //-----------------------------
@@ -398,23 +435,187 @@ naoetu.mapAjax.prototype = {
         };
 
         var ajaxObj = $.ajax('http://27.120.99.9:50001/gpswrite',ajaxParam)
-            .done(naoetu.bind(this,this.AjaxDone)) //成功
-            .fail(naoetu.bind(this,this.AjaxFail)) //失敗
-            .always(naoetu.bind(this,this.AjaxAlways)); //成功でも失敗でも
+            .done(naoetu.bind(this,this.onAjaxDoneSendPos)) //成功
+            .fail(naoetu.bind(this,this.onAjaxFailSendPos)) //失敗
+            .always(naoetu.bind(this,this.onAjaxAlwaysSendPos)); //成功でも失敗でも
 
     },
     //Ajaxの戻り値 ... 成功時
-    AjaxDone : function(pRes){
-        console.log('AjaxDone');
+    onAjaxDoneSendPos : function(pRes){
+        console.log('AjaxDone' + pRes);
     },
     //Ajaxの戻り値 ... 失敗時
-    AjaxFail : function(pRes){
+    onAjaxFailSendPos : function(pRes){
         console.log('AjaxFail');
     },
     //Ajaxの戻り値 ... どんな時も、どんな時も♪
-    AjaxAlways : function(pRes){
+    onAjaxAlwaysSendPos : function(pRes){
         console.log('AjaxAlways');
+    },
+    //-----------------------------
+    // 位置情報の取得
+    //-----------------------------
+    getPosDatas : function(){
+
+        var type = document.getElementById(this.TypeName).value;
+        var ajaxParam = {};
+        ajaxParam = {
+            type: 'get',
+            data: {mode:"NOMAL",type:type},
+            dataType: 'json'
+        };
+
+        var ajaxObj = $.ajax('http://27.120.99.9:50001/gpsread',ajaxParam)
+            .done(naoetu.bind(this,this.onAjaxDoneGetPosData)) //成功
+            .fail(naoetu.bind(this,this.onAjaxFailGetPosData)) //失敗
+            .always(naoetu.bind(this,this.onAjaxAlwaysGetPosData)); //成功でも失敗でも
+
+    },
+    //Ajaxの戻り値 ... 成功時
+    onAjaxDoneGetPosData : function(pRes){
+        console.log('AjaxDone' + pRes);
+        this.getPosDatasShow(pRes.fields);
+    },
+    //Ajaxの戻り値 ... 失敗時
+    onAjaxFailGetPosData : function(pRes){
+        console.log('AjaxFail');
+    },
+    //Ajaxの戻り値 ... どんな時も、どんな時も♪
+    onAjaxAlwaysGetPosData : function(pRes){
+        console.log('AjaxAlways');
+    },
+    //地図への表示
+    getPosDatasShow : function(){
+        //処理内容が大きい為、別途記載
+    }
+}
+//------------------------------------------
+//
+//
+//
+//地図への表示
+//
+//
+//
+//------------------------------------------
+naoetu.mapAjax.getPosDatasShow = function(pFields){
+    if(pFields.length <= 0){
+        return;
+    }
+
+    //pFieldsの内容----------------------
+    var tmpFields = {
+        fields : [
+                    {
+                        unid : 0,
+                        posX : 0,
+                        posY : 0,
+                        typeId : 0,
+                        add_date : ""
+                    },
+                    {繰り返し:""}
+                ]
+    }
+    //----------------------------------
+
+    var befTypeId = "";
+    var nowTypeId = "";
+    var TypeGroup = [];
+    if(pFields.length > 0){
+        nowTypeId = pFields[0].typeId;
+    }
+    for(var i=0;i<pFields.length;i++){
+
+        var bufFields = pFields[i];
+
+        if(nowTypeId != befTypeId){
+            //TypeIdが変わる毎に描画オブジェクト群を作成する
+            TypeGroup[nowTypeId] = new Array();
+        }
+
+        var _dataType = "";
+
+        //ポイントの追加
+        if(i == 0){
+            ////最初の地点
+            _dataType = "POINTN";
+        }else if(i == pFields.length){
+            ////最後の地点
+            _dataType = "POINTP";
+        }else{
+            ////途中の地点
+            _dataType = "POINTL";
+        }
+        ////追加
+        TypeGroup[nowTypeId].push({
+            dataType : _dataType,
+            unid : bufFields.unid,
+            posX : bufFields.posX,
+            posY : bufFields.posY,
+            typeId : bufFields.pTypeId,
+            add_date : bufFields.add_date
+        });
+
+        //ラインの追加
+        var isLineAdd = false;
+        if(i >= 1 && i == pFields.length){
+            //最後のライン
+            _dataType = "LINEP";
+            befField = pFields[i-1];
+            isLineAdd = true;
+        }else if(i >= 1){
+            //途中のライン
+            _dataType = "LINEL";
+            befField = pFields[i-1];
+            isLineAdd = true;
+        }
+        if(isLineAdd == true){
+            TypeGroup[nowTypeId].push({
+                dataType : _dataType,
+                unid1 : bufFields.unid,
+                unid2 : bufFields.unid,
+                posX1 : bufFields.posX,
+                posY1 : bufFields.posY,
+                posX2 : bufFields.posX,
+                posY2 : bufFields.posY,
+                typeId : bufFields.pTypeId,
+                add_date1 : bufFields.add_date,
+                add_date2 : bufFields.add_date
+            });
+        }
+
+        nowTypeId = befTypeId;
+    }
+
+}
+
+//---------------------------------------------
+//
+//NaoetuGPSマップ - naoetu.map用 Ajaxクラス
+//
+//---------------------------------------------
+naoetu.maps = function(){return this.initialize.apply(this,arguments);};
+naoetu.maps.prototype = {
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // コンストラクタ
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    initialize : function(){
+        this.naoetumaps = new Array();
+    },
+    //追加
+    add : function(pNaoetuMapObj){
+        this.naoetumaps.push(pNaoetuMapObj);
+    },
+    //実体化
+    initMap : function(){
+        for(var i=0;i < this.naoetumaps.length;i++){
+            this.naoetumaps[i].initMap();
+        }
     }
 }
 
-var naoetumap = new naoetu.map(false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn");
+var naoetumaps = new naoetu.maps();
+//                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName
+naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn"));
+naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn"));
+

@@ -35,9 +35,15 @@
       <div class="jumbotron">
         <div class="container">
           <h1 class="display-3">NaoetuGPS</h1>
-          <p>山車の位置を地図上で表示する（現在は開発中）</p>
-          <div name="mapshow">ここに地図が表示される予定</div>
-        </div>
+          <div name="mapviewer-map" id="mapviewer-map" style="width:100%;height:300px;"></div>
+          <form name="mapsend-navi">
+              <div class="form-group">
+                  <label for="TypeListViewer">種類</label>
+                  <select class="form-control" id="TypeListViewer"></select>
+              </div>
+              <button type="button" id="DataGetBtn" class="btn btn-primary">更新する</button>
+          </form>
+    </div>
       </div>
 
       <div class="container">
@@ -90,7 +96,7 @@
     <!-- etc JavaScript
     ================================================== -->
     <!-- Google Map -->
-    <script src="https://maps.googleapis.com/maps/api/js?callback=naoetumap.initMap&key=AIzaSyBot8cACK5aXhcn17fJJ4oGklzMD1XKrYg"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=naoetumaps.initMap&key=AIzaSyBot8cACK5aXhcn17fJJ4oGklzMD1XKrYg"></script>
 
   </body>
 </html>

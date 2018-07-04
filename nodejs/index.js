@@ -394,7 +394,7 @@ naoetu.clsGps.prototype = {
             var sqlParam = {};
             if(this.paramGps.mode == this.MODE_NOMAL){
                 sqlParam = {typeId : this.paramGps.typeId};
-                sql = "Select * from TBL_GPS Where ? Order By add_date DESC";
+                sql = "Select * from TBL_GPS Where ? Order By add_date DESC LIMIT 6"; //上位6件の取得
             }else{
                 sqlParam = {typeId : this.paramGps.typeId};
                 sql = "Select * from TBL_GPS Where ? ";
