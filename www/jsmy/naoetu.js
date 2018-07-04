@@ -407,6 +407,7 @@ naoetu.mapAjax.prototype = {
         this.ButtonName = pButtonName;
         this.SetEventFunction = false;
         this.ResultFunction = false;
+        this.PosDataParse = false;
 
     },
     //-----------------------------
@@ -474,7 +475,38 @@ naoetu.mapAjax.prototype = {
     //Ajaxの戻り値 ... 成功時
     onAjaxDoneGetPosData : function(pRes){
         console.log('AjaxDone' + pRes);
-        this.getPosDatasShow(pRes.fields);
+
+        //ちょっとゴチャゴチャっとしてしまった...(´・ω・`)ウゥ
+        //他の処理を止めたくなかったからDeferred使って直列処理にしたらthisが不安定になってしまた
+        //その不安定さを回避するのにゴチャゴチャになってしまったゼ
+
+        //直列処理
+        ////パース処理
+        var bufFunction1 = function(pThis){
+            var def = $.Deferred();
+            var FunctionSub = function(){
+                this.PosDataParse = this.getPosDataParse(pRes.result.fields);
+                def.resolve();
+            }
+            setTimeout(naoetu.bind(pThis,FunctionSub),1);
+            return def.promise();
+        }
+        ////描画処理
+        var bufFunction2 = function(){
+            var def = $.Deferred();
+            var FunctionSub = function(){
+                this.getPosDatasShow(this.PosDataParse);
+                def.resolve();
+            }
+            setTimeout(naoetu.bind(this,FunctionSub),1);
+            return def.promise();
+        }
+        ////処理実行
+        var bufFunction = function(){
+            bufFunction1(this).then(naoetu.bind(this,bufFunction2));
+        };
+        setTimeout(naoetu.bind(this,bufFunction),1);
+
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailGetPosData : function(pRes){
@@ -484,23 +516,30 @@ naoetu.mapAjax.prototype = {
     onAjaxAlwaysGetPosData : function(pRes){
         console.log('AjaxAlways');
     },
-    //地図への表示
-    getPosDatasShow : function(){
+    //取得した座標情報をパース
+    getPosDataParse : function(pFields){
         //処理内容が大きい為、別途記載
+        console.log('naoetu.mapAjax.getPosDataParse　空処理');
+    },
+    //地図への表示
+    getPosDatasShow : function(pDatas){
+        //処理内容が大きい為、別途記載
+        console.log('naoetu.mapAjax.getPosDatasShow　空処理');
     }
 }
 //------------------------------------------
 //
 //
 //
-//地図への表示
+//取得した座標情報をパース
 //
 //
 //
 //------------------------------------------
-naoetu.mapAjax.getPosDatasShow = function(pFields){
+naoetu.mapAjax.prototype.getPosDataParse = function(pFields){
+
     if(pFields.length <= 0){
-        return;
+        return false;
     }
 
     //pFieldsの内容----------------------
@@ -530,35 +569,39 @@ naoetu.mapAjax.getPosDatasShow = function(pFields){
 
         if(nowTypeId != befTypeId){
             //TypeIdが変わる毎に描画オブジェクト群を作成する
-            TypeGroup[nowTypeId] = new Array();
+            TypeGroup["type" + nowTypeId] = new Array();
         }
 
         var _dataType = "";
 
-        //ポイントの追加
+        //----------------
+        //先頭ポイントの追加
+        //----------------
+        var isPointAdd = false;
         if(i == 0){
             ////最初の地点
             _dataType = "POINTN";
-        }else if(i == pFields.length){
-            ////最後の地点
-            _dataType = "POINTP";
+            isPointAdd = true;
         }else{
-            ////途中の地点
-            _dataType = "POINTL";
+            isPointAdd = false;
         }
         ////追加
-        TypeGroup[nowTypeId].push({
-            dataType : _dataType,
-            unid : bufFields.unid,
-            posX : bufFields.posX,
-            posY : bufFields.posY,
-            typeId : bufFields.pTypeId,
-            add_date : bufFields.add_date
-        });
+        if(isPointAdd == true){
+            TypeGroup["type" + nowTypeId].push({
+                dataType : _dataType,
+                unid : bufFields.unid,
+                posX : bufFields.posX,
+                posY : bufFields.posY,
+                typeId : bufFields.pTypeId,
+                add_date : bufFields.add_date
+            });
+        }
 
+        //----------------
         //ラインの追加
+        //----------------
         var isLineAdd = false;
-        if(i >= 1 && i == pFields.length){
+        if(i >= 1 && i == pFields.length - 1){
             //最後のライン
             _dataType = "LINEP";
             befField = pFields[i-1];
@@ -570,22 +613,57 @@ naoetu.mapAjax.getPosDatasShow = function(pFields){
             isLineAdd = true;
         }
         if(isLineAdd == true){
-            TypeGroup[nowTypeId].push({
+            TypeGroup["type" + nowTypeId].push({
                 dataType : _dataType,
                 unid1 : bufFields.unid,
-                unid2 : bufFields.unid,
-                posX1 : bufFields.posX,
-                posY1 : bufFields.posY,
-                posX2 : bufFields.posX,
-                posY2 : bufFields.posY,
+                unid2 : befField.unid,
+                pos1 : {
+                    posX:bufFields.posX,
+                    posY:bufFields.posY
+                },
+                pos2 : {
+                    posX:befField.posX,
+                    posY:befField.posY
+                },
                 typeId : bufFields.pTypeId,
                 add_date1 : bufFields.add_date,
-                add_date2 : bufFields.add_date
+                add_date2 : befField.add_date
             });
         }
 
-        nowTypeId = befTypeId;
+        //----------------
+        //途中と最後のポイントの追加
+        //----------------
+        if(i == 0){
+            ////最初の地点
+            isPointAdd = false;
+        }else if(i == pFields.length - 1){
+            ////最後の地点
+            _dataType = "POINTP";
+            isPointAdd = true;
+        }else{
+            ////途中の地点
+            _dataType = "POINTL";
+            isPointAdd = true;
+        }
+        ////追加
+        if(isPointAdd == true){
+            TypeGroup["type" + nowTypeId].push({
+                dataType : _dataType,
+                unid : bufFields.unid,
+                posX : bufFields.posX,
+                posY : bufFields.posY,
+                typeId : bufFields.pTypeId,
+                add_date : bufFields.add_date
+            });
+        }
+
+        befTypeId = nowTypeId;
     }
+
+    console.log("GetGpsData パース 完了");
+
+    return TypeGroup;
 
 }
 
