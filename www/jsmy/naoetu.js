@@ -758,10 +758,10 @@ naoetu.mapDrawObject.prototype = {
         //マーカーの作成
         if(!this.DrawMark){
             this.DrawMark = new naoetu.marker(
-                "img/type%1%.png".replace("%1%",pData.typeId),
-                "img/type%1%.png".replace("%1%",pData.typeId),
-                "img/type%1%.png".replace("%1%",pData.typeId),
-                "img/type%1%.png".replace("%1%",pData.typeId)
+                "img/type%1%WS.png".replace("%1%",pData.typeId),
+                "img/type%1%WN.png".replace("%1%",pData.typeId),
+                "img/type%1%ES.png".replace("%1%",pData.typeId),
+                "img/type%1%EN.png".replace("%1%",pData.typeId)
                 );
 
             //マーカにマップオブジェクトを設定する
