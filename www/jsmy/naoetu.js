@@ -57,7 +57,7 @@ naoetu.map.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // コンストラクタ
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    initialize : function(pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName){
+    initialize : function(pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName){
 
         this.MapObj = false;
         this.defPos = false;
@@ -77,6 +77,7 @@ naoetu.map.prototype = {
         this.mapName = pMapName;            //(Element Id) 地図
         this.TypeListName = pTypeListName;  //(Element Id) GPSタイプのリスト
         this.SendBtnName = pSendBtnName;    //(Element Id) 送信ボタン
+        this.ResultName  = pResultName;     //(Element Id) 実行結果
 
         //各種イベントの設定 
         ////座標送信ボタン pNaoetuObj,pLatName,pLngName,pTypeName,pSendName
@@ -443,6 +444,13 @@ naoetu.mapAjax.prototype = {
     //Ajaxの戻り値 ... 成功時
     onAjaxDoneSendPos : function(pRes){
         console.log('AjaxDone' + pRes);
+        var eleResult = document.getElementById(this.MainObj.ResultName);
+
+        var jikan= new Date();
+        var hour = jikan.getHours();
+        var minute = jikan.getMinutes();
+        var second = jikan.getSeconds();
+        eleResult.innerHTML = " 送信済 " + hour + ":" + minute + ":" + second;
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailSendPos : function(pRes){
@@ -814,6 +822,6 @@ naoetu.mapDrawObject.prototype = {
 
 var naoetumaps = new naoetu.maps();
 //                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName
-naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn"));
-naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn"));
+naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1"));
+naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn",""));
 
