@@ -66,6 +66,8 @@ naoetu.map.prototype = {
         this.isSend = pIsSend;      //座標送信機能の有無
         this.isViewer = pIsViewer;  //ビューワー機能の有無
 
+        this.MapDrawObjects = [];  //地図上に描画しているオブジェクト全て
+
         //地図の初期ズーム番号
         this.defZoom = pDefZoom;
 
@@ -169,11 +171,11 @@ naoetu.map.prototype = {
         //マーカーの作成 テスト
         this.Markers["item1"] = new naoetu.marker("img/type1.png","img/type1.png","img/type1.png","img/type1.png");
 
-        //マーカにマップオブジェクトを設定する
+        //マーカにマップオブジェクトを設定する（この段階ではまだ地図上に描画されない）
         for(var key in this.Markers) {
             this.Markers[key].SetMapObject(this.MapObj);
         }
-
+        //オブジェクトを設定した後は、以下のようにSetPosition()に座標を指定すれば地図上に描画される
         //this.Markers["test"].SetPosition(this.gpsYasaka);
 
 
@@ -524,7 +526,13 @@ naoetu.mapAjax.prototype = {
     //地図への表示
     getPosDatasShow : function(pDatas){
         //処理内容が大きい為、別途記載
-        console.log('naoetu.mapAjax.getPosDatasShow　空処理');
+        console.log('naoetu.mapAjax.getPosDatasShow　地図への表示');
+        for(var key in pDatas) {
+            if(!this.MainObj.MapDrawObjects[key]){
+                this.MainObj.MapDrawObjects[key] =  new naoetu.mapDrawObject(this.MainObj,pDatas[key]);
+            }
+            setTimeout(naoetu.bind(this.MainObj.MapDrawObjects[key],this.MainObj.MapDrawObjects[key].draws),1);
+        }
     }
 }
 //------------------------------------------
@@ -592,7 +600,7 @@ naoetu.mapAjax.prototype.getPosDataParse = function(pFields){
                 unid : bufFields.unid,
                 posX : bufFields.posX,
                 posY : bufFields.posY,
-                typeId : bufFields.pTypeId,
+                typeId : bufFields.typeId,
                 add_date : bufFields.add_date
             });
         }
@@ -625,7 +633,7 @@ naoetu.mapAjax.prototype.getPosDataParse = function(pFields){
                     posX:befField.posX,
                     posY:befField.posY
                 },
-                typeId : bufFields.pTypeId,
+                typeId : bufFields.typeId,
                 add_date1 : bufFields.add_date,
                 add_date2 : befField.add_date
             });
@@ -653,7 +661,7 @@ naoetu.mapAjax.prototype.getPosDataParse = function(pFields){
                 unid : bufFields.unid,
                 posX : bufFields.posX,
                 posY : bufFields.posY,
-                typeId : bufFields.pTypeId,
+                typeId : bufFields.typeId,
                 add_date : bufFields.add_date
             });
         }
@@ -689,6 +697,74 @@ naoetu.maps.prototype = {
         for(var i=0;i < this.naoetumaps.length;i++){
             this.naoetumaps[i].initMap();
         }
+    }
+}
+//---------------------------------------------
+//
+// 地図上に図形を描画
+//
+//---------------------------------------------
+naoetu.mapDrawObject = function(){return this.initialize.apply(this,arguments);};
+naoetu.mapDrawObject.prototype = {
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // コンストラクタ
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    initialize : function(pNaoetuObj,pDrawDataSrc){
+        this.MainObj = pNaoetuObj;
+        this.DrawDataSrc = pDrawDataSrc;
+        this.DrawMark = false;
+        this.DrawSymbols = new Array();
+        this.DrawLines = new Array();
+    },
+    //描画処理
+    draws : function(){
+        //マーカにマップオブジェクトを設定する
+        for(var i=0;i < this.DrawDataSrc.length;i++) {
+            var bufData = this.DrawDataSrc[i];
+            if(bufData.dataType == "POINTN"){
+                //最初のポイント → アイコン
+                this.drawMark(bufData);
+            }else if(bufData.dataType == "POINTL"){
+                //途中のポイント  → シンボル
+                this.drawSymbol(bufData);
+            }else if(bufData.dataType == "POINTP"){
+                //最後のポイント
+                //描画しない
+            }else if(bufData.dataType == "LINEL"){
+                //途中のライン → 実線
+                this.drawLineSolid(bufData);
+            }else if(bufData.dataType == "LINEP"){
+                //最後のライン → 点線
+                this.drawLineDot(bufData);
+            }
+        }
+    },
+    //マーク描画
+    drawMark : function(pData){
+
+        //マーカーの作成
+        if(!this.DrawMark){
+            this.DrawMark = new naoetu.marker(
+                "img/type%1%.png".replace("%1%",pData.typeId),
+                "img/type%1%.png".replace("%1%",pData.typeId),
+                "img/type%1%.png".replace("%1%",pData.typeId),
+                "img/type%1%.png".replace("%1%",pData.typeId)
+                );
+
+            //マーカにマップオブジェクトを設定する
+            this.DrawMark.SetMapObject(this.MainObj.MapObj);
+        }
+        //マーカー描画 or 位置変更
+        this.DrawMark.SetPosition({lat:pData.posY,lng:pData.posX});
+    },
+    //シンボル描画
+    drawSymbol : function(pData){
+    },
+    //ライン(実線)描画
+    drawLineSolid : function(pData){
+    },
+    //ライン(点線)描画
+    drawLineDot : function(pData){
     }
 }
 
