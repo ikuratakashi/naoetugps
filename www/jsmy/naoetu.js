@@ -94,7 +94,6 @@ naoetu.map.prototype = {
         ///位置の送信用
         if(pIsSend == true){
             this.typeList = new Array();
-            this.typeList.push({TypeId:"0",Name:"自分"});
             this.typeList.push({TypeId:"1",Name:"御幸町"});
             var eleSelect = document.getElementById(this.TypeListName);
             for(i=0;i<this.typeList.length;i++){
@@ -108,8 +107,6 @@ naoetu.map.prototype = {
         ///位置の表示用
         if(pIsViewer == true){
             this.typeList = new Array();
-            this.typeList.push({TypeId:"-1",Name:"全て"});
-            this.typeList.push({TypeId:"0",Name:"自分"});
             this.typeList.push({TypeId:"1",Name:"御幸町"});
             var eleSelect = document.getElementById(this.TypeListName);
             for(i=0;i<this.typeList.length;i++){
@@ -528,7 +525,9 @@ naoetu.mapAjax.prototype = {
         //処理内容が大きい為、別途記載
         console.log('naoetu.mapAjax.getPosDatasShow　地図への表示');
         for(var key in pDatas) {
-            if(!this.MainObj.MapDrawObjects[key]){
+            if(this.MainObj.MapDrawObjects[key]){
+                this.MainObj.MapDrawObjects[key].updateData(pDatas[key]);
+            }else{
                 this.MainObj.MapDrawObjects[key] =  new naoetu.mapDrawObject(this.MainObj,pDatas[key]);
             }
             setTimeout(naoetu.bind(this.MainObj.MapDrawObjects[key],this.MainObj.MapDrawObjects[key].draws),1);
@@ -713,17 +712,27 @@ naoetu.mapDrawObject.prototype = {
         this.MainObj = pNaoetuObj;
         this.DrawDataSrc = pDrawDataSrc;
         this.DrawMark = false;
-        this.DrawSymbols = new Array();
-        this.DrawLines = new Array();
+        this.DrawSymbols;
+        this.DrawLinesSolid = false;
+        this.DrawLinesDot = false;
+        this.DrawLineSolidsSrc = new Array();
+        this.DrawLineDotsSrc = new Array();
+    },
+    //データ更新
+    updateData : function(pDrawDataSrc){
+        this.DrawDataSrc = pDrawDataSrc;
     },
     //描画処理
     draws : function(){
+        var BufSolidsSrc = new Array();
+        var BufDotsSrc = new Array();
         //マーカにマップオブジェクトを設定する
         for(var i=0;i < this.DrawDataSrc.length;i++) {
             var bufData = this.DrawDataSrc[i];
             if(bufData.dataType == "POINTN"){
                 //最初のポイント → アイコン
                 this.drawMark(bufData);
+                BufSolidsSrc.push(new google.maps.LatLng(bufData.posY, bufData.posX));
             }else if(bufData.dataType == "POINTL"){
                 //途中のポイント  → シンボル
                 this.drawSymbol(bufData);
@@ -732,16 +741,20 @@ naoetu.mapDrawObject.prototype = {
                 //描画しない
             }else if(bufData.dataType == "LINEL"){
                 //途中のライン → 実線
-                this.drawLineSolid(bufData);
+                BufSolidsSrc.push(new google.maps.LatLng(bufData.pos1.posY, bufData.pos1.posX));
             }else if(bufData.dataType == "LINEP"){
                 //最後のライン → 点線
-                this.drawLineDot(bufData);
+                BufDotsSrc.push(new google.maps.LatLng(bufData.pos1.posY, bufData.pos1.posX));
+                BufDotsSrc.push(new google.maps.LatLng(bufData.pos2.posY, bufData.pos2.posX));
             }
         }
+        //実線描画
+        this.drawLineSolid(BufSolidsSrc);
+        //点線描画
+        this.drawLineDot(BufDotsSrc);
     },
     //マーク描画
     drawMark : function(pData){
-
         //マーカーの作成
         if(!this.DrawMark){
             this.DrawMark = new naoetu.marker(
@@ -761,10 +774,41 @@ naoetu.mapDrawObject.prototype = {
     drawSymbol : function(pData){
     },
     //ライン(実線)描画
-    drawLineSolid : function(pData){
+    drawLineSolid : function(pDataGoogleLatLng){
+        if(this.DrawLinesSolid){
+            //すでに存在した場合は削除
+            this.DrawLinesSolid.setMap(null);
+        }
+        this.DrawLinesSolid = new google.maps.Polyline({
+            path: pDataGoogleLatLng,
+            strokeColor: "blue",
+            strokeWeight: 3,
+            map: this.MainObj.MapObj
+        });
     },
     //ライン(点線)描画
-    drawLineDot : function(pData){
+    drawLineDot : function(pDataGoogleLatLng){
+        if(this.DrawLinesDot){
+            //すでに存在した場合は削除
+            this.DrawLinesDot.setMap(null);
+        }
+        // var lineSymbol = {
+        //     path: 'M 0,-1 0,1',
+        //     strokeOpacity: 0.5,
+        //     scale: 4
+        //   };
+        this.DrawLinesDot = new google.maps.Polyline({
+            path: pDataGoogleLatLng,
+            strokeColor: "blue",
+            strokeWeight: 3,
+            strokeOpacity: 0.5,
+        //    icons: [{
+        //        icon: lineSymbol,
+        //        offset: '0',
+        //        repeat: '13px'
+        //      }],
+            map: this.MainObj.MapObj
+        });
     }
 }
 
