@@ -34,7 +34,19 @@ naoetu.clsLog.prototype = {
     out : function(plevel,pMsg){
         if(this.isOut == true){
             if(plevel <= this.level){
-                console.log(pMsg);
+
+                //タイムスタンプ作成
+                var bufDate= new Date();
+                var year = bufDate.getYear();
+                var month = bufDate.getMonth() + 1;
+                var date = bufDate.getDate();
+                var hour = bufDate.getHours();
+                var minute = bufDate.getMinutes();
+                var second = bufDate.getSeconds();
+                var buf = "[" + year + "/" + month + "/" + date + " " + ('00' + hour).slice(-2) + ":" + ('00' + minute).slice(-2) + ":" + ('00' + second).slice(-2) + "]:";
+                console.log(buf + pMsg);
+
+
             }
         }
     }
@@ -241,51 +253,53 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
         this.response = pRes;
 
-        naoetu.log.out(3,'パラメタ ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
+        naoetu.log.out(3,'parameter ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
 
         //コネクションの確立
-        naoetu.log.out(3,'Step コネクションの確立...開始');
+        naoetu.log.out(3,'Step connection...start');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
         this.masterConnection.connect(function(err) {
             //接続時のエラー
             if (err) {
-                naoetu.log.out(3,'Error clsGps.writeGps DB接続失敗.');
+                naoetu.log.out(3,'Error clsGps.writeGps DB Connect Failde.');
                 console.error(err);
                 return;
             }else{
-                naoetu.log.out(3,'OK clsGps.writeGps DB接続成功.');
+                naoetu.log.out(3,'OK clsGps.writeGps DB Connect Success.');
             }
         });
-        naoetu.log.out(3,'Step コネクションの確立...終了');
+        naoetu.log.out(3,'Step Connection...finish');
 
         //トランザクション実行後のコールバック <
         var _TranCallback = function(pErr){
 
             if(pErr){
-                naoetu.log.out(3,'Error clsGps.writeGps トランザクション開始失敗.');
+                naoetu.log.out(3,'Error clsGps.writeGps transaction Failed.');
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理失敗時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 this.onFaile();
             }else{
-                naoetu.log.out(3,'OK clsGps.writeGps トランザクション開始成功.');
+                naoetu.log.out(3,'OK clsGps.writeGps Transaction Success ... Run SQL Start.');
 
                 //SQL実行後のコールバック定義 <
                 var _SqlCallback = function(err,results,fields){
                     if(err){
                         //エラー時 → ロールバック
-                        naoetu.log.out(3,'Error clsGps.writeGps SQL実行失敗.');
+                        naoetu.log.out(3,'Error clsGps.writeGps SQL Failde ... Run Rollback Start.');
 
                         //DBコネクション時のコールバック定義 <
                         var _masterConnection = function(err) {
                             if(err){
-                                naoetu.log.out(3,'Error clsGps.writeGps ロールバック失敗.');
+                                naoetu.log.out(3,'Error clsGps.writeGps Rollback Failed.');
                                 console.error(err);
                                 //throw err;
                                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                 //処理失敗時の処理実行
                                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                 this.onFaile();
+                            }else{
+                                naoetu.log.out(3,'OK clsGps.writeGps Rollback Success.');
                             }
                         }
                         //DBコネクション時のコールバック定義 >
@@ -294,17 +308,17 @@ naoetu.clsGps.prototype = {
 
                     }else{
                         //正常時 → コミット
-                        naoetu.log.out(3,'OK clsGps.writeGps SQL実行成功.');
+                        naoetu.log.out(3,'OK clsGps.writeGps SQL Success ... Run Commit Start');
 
                         //コミット時のコールバック定義 <
                         var _commit = function(err) {
                             if (err) { 
-                                naoetu.log.out(3,'Error clsGps.writeGps コミット失敗.');
+                                naoetu.log.out(3,'Error clsGps.writeGps Commit Failed ... Run Rollback Start.');
 
                                 //ロールバック時のコールバック定義 <
                                 var _roolback = function(err) {
                                     if(err){
-                                        naoetu.log.out(3,'Error clsGps.writeGps コミット失敗時のロールバック失敗.');
+                                        naoetu.log.out(3,'Error clsGps.writeGps RollBack Failed.');
                                         console.error(err);
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                         //処理失敗時の処理実行
@@ -312,7 +326,7 @@ naoetu.clsGps.prototype = {
                                         this.onFaile();
                                         //throw err;
                                     }else{
-                                        naoetu.log.out(3,'OK clsGps.writeGps コミット失敗時のロールバック成功.');
+                                        naoetu.log.out(3,'OK clsGps.writeGps RollBack Success.');
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                         //処理失敗時の処理実行
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
@@ -324,7 +338,7 @@ naoetu.clsGps.prototype = {
                                 master.rollback(naoetu.bind(this,_roolback));
 
                             }else{
-                                naoetu.log.out(3,'OK clsGps.writeGps コミット成功.');
+                                naoetu.log.out(3,'OK clsGps.writeGps Commit Success.');
 
                                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                 //処理成功時の処理実行
@@ -357,9 +371,9 @@ naoetu.clsGps.prototype = {
         //トランザクション実行後のコールバック >
 
         //トランザクション開始
-        naoetu.log.out(3,'Step トランザクション...開始');
+        naoetu.log.out(3,'Step Transaction...Start');
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
-        naoetu.log.out(3,'Step トランザクション...終了');
+        naoetu.log.out(3,'Step Transaction...End');
 
     },
     //-----------------------------
@@ -373,20 +387,20 @@ naoetu.clsGps.prototype = {
         naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.typeId);
 
         //コネクションの確立
-        naoetu.log.out(3,'Step コネクションの確立...開始');
+        naoetu.log.out(3,'Step Connection...Start');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
         var _ConnectionCallBack = function(err){
             
             //接続時のエラー
             if (err) {
-                naoetu.log.out(3,'Error clsGps.readGps DB接続失敗.');
+                naoetu.log.out(3,'Error clsGps.readGps DB Connection Failed.');
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理失敗時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 this.onFaile();
                 return;
             }else{
-                naoetu.log.out(3,'OK clsGps.readGps DB接続成功.');
+                naoetu.log.out(3,'OK clsGps.readGps DB Connection Success.');
             }
 
             //通常取得
@@ -404,20 +418,20 @@ naoetu.clsGps.prototype = {
             var _callBack = function(err,results,fields){
 
                 if(err){
-                    naoetu.log.out(3,'OK clsGps.readGps SQL実行失敗.');
+                    naoetu.log.out(3,'NG clsGps.readGps SQL Failed.');
                     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                     //処理失敗時の処理実行
                     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                     this.onFaile();
                     return;
                 }else{
-                    naoetu.log.out(3,'OK clsGps.readGps SQL実行成功.');
+                    naoetu.log.out(3,'OK clsGps.readGps SQL Success.');
                 }
 
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理成功時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-                naoetu.log.out(3,'検索結果のレコード数:' + results.length);
+                naoetu.log.out(3,'Search Result Get Record Count :' + results.length);
                 this.onSuccess(results);
 
             };
@@ -426,7 +440,7 @@ naoetu.clsGps.prototype = {
             this.masterConnection.query(sql,sqlParam,naoetu.bind(this,_callBack));
         };
         this.masterConnection.connect(naoetu.bind(this,_ConnectionCallBack));
-        naoetu.log.out(3,'Step コネクションの確立...終了');
+        naoetu.log.out(3,'Step Connection...Finish');
 
     }
 }

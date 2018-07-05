@@ -464,11 +464,15 @@ naoetu.mapAjax.prototype = {
         console.log('AjaxDone' + pRes);
         var eleResult = document.getElementById(this.MainObj.ResultName);
 
-        var jikan= new Date();
-        var hour = jikan.getHours();
-        var minute = jikan.getMinutes();
-        var second = jikan.getSeconds();
-        eleResult.innerHTML = " 送信済 " + hour + ":" + minute + ":" + second;
+        //送信時間の表示
+        var bufDate= new Date();
+        var year = bufDate.getYear();
+        var month = bufDate.getMonth() + 1;
+        var date = bufDate.getDate();
+        var hour = bufDate.getHours();
+        var minute = bufDate.getMinutes();
+        var second = bufDate.getSeconds();
+        eleResult.innerHTML = " 送信済 " + ('00' + hour).slice(-2) + ":" + ('00' + minute).slice(-2) + ":" + ('00' + second).slice(-2);
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailSendPos : function(pRes){
