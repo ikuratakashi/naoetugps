@@ -57,7 +57,7 @@ naoetu.map.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // コンストラクタ
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    initialize : function(pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName){
+    initialize : function(pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName,pMapPanMode){
 
         this.MapObj = false;
         this.defPos = false;
@@ -65,6 +65,7 @@ naoetu.map.prototype = {
         this.makCenter = false;
         this.isSend = pIsSend;      //座標送信機能の有無
         this.isViewer = pIsViewer;  //ビューワー機能の有無
+        this.MapPanMode = pMapPanMode; //マップの移動モード
 
         this.MapDrawObjects = [];  //地図上に描画しているオブジェクト全て
 
@@ -146,7 +147,8 @@ naoetu.map.prototype = {
         //地図初期化
         this.MapObj = new google.maps.Map(document.getElementById(this.mapName),{
             center: this.defPos,
-            zoom: this.defZoom
+            zoom: this.defZoom,
+            gestureHandling : this.MapPanMode
         });
 
         //中央に表示するターゲットスコープの画像設定
@@ -532,6 +534,8 @@ naoetu.mapAjax.prototype = {
     getPosDatasShow : function(pDatas){
         //処理内容が大きい為、別途記載
         console.log('naoetu.mapAjax.getPosDatasShow　地図への表示');
+        var isCenterPosGet = false;
+        var CenterPos = false;
         for(var key in pDatas) {
             if(this.MainObj.MapDrawObjects[key]){
                 this.MainObj.MapDrawObjects[key].updateData(pDatas[key]);
@@ -539,7 +543,24 @@ naoetu.mapAjax.prototype = {
                 this.MainObj.MapDrawObjects[key] =  new naoetu.mapDrawObject(this.MainObj,pDatas[key]);
             }
             setTimeout(naoetu.bind(this.MainObj.MapDrawObjects[key],this.MainObj.MapDrawObjects[key].draws),1);
+            
+            //先頭の座標を取得　地図の中心座標等に使用する
+            if(isCenterPosGet == false){
+                if(pDatas[key].length > 0){
+                    CenterPos = new google.maps.LatLng(pDatas[key][0].posY, pDatas[key][0].posX);
+                }
+                isCenterPosGet = true;
+            }
         }
+
+        //地図の移動
+        if(isCenterPosGet == true){
+            var bufFnction = function(){
+                this.MainObj.MapObj.panTo(CenterPos);
+            }
+            setTimeout(naoetu.bind(this,bufFnction),100);
+        }
+
     }
 }
 //------------------------------------------
@@ -725,6 +746,10 @@ naoetu.mapDrawObject.prototype = {
         this.DrawLinesDot = false;
         this.DrawLineSolidsSrc = new Array();
         this.DrawLineDotsSrc = new Array();
+        this.DrawLinesAnime = false;
+        this.DrawLinesAnimeLineSymbol = false;
+        this.AnimeTimerId = false;
+        
     },
     //データ更新
     updateData : function(pDrawDataSrc){
@@ -734,6 +759,7 @@ naoetu.mapDrawObject.prototype = {
     draws : function(){
         var BufSolidsSrc = new Array();
         var BufDotsSrc = new Array();
+        var BufAnimeLineSrc = new Array();
         //マーカにマップオブジェクトを設定する
         for(var i=0;i < this.DrawDataSrc.length;i++) {
             var bufData = this.DrawDataSrc[i];
@@ -741,12 +767,18 @@ naoetu.mapDrawObject.prototype = {
                 //最初のポイント → アイコン
                 this.drawMark(bufData);
                 BufSolidsSrc.push(new google.maps.LatLng(bufData.posY, bufData.posX));
+                //アニメーション用ポイント追加
+                BufAnimeLineSrc.push(new google.maps.LatLng(bufData.posY, bufData.posX));
             }else if(bufData.dataType == "POINTL"){
                 //途中のポイント  → シンボル
                 this.drawSymbol(bufData);
+                //アニメーション用ポイント追加
+                BufAnimeLineSrc.push(new google.maps.LatLng(bufData.posY, bufData.posX));
             }else if(bufData.dataType == "POINTP"){
                 //最後のポイント
                 //描画しない
+                //アニメーション用ポイント追加
+                BufAnimeLineSrc.push(new google.maps.LatLng(bufData.posY, bufData.posX));
             }else if(bufData.dataType == "LINEL"){
                 //途中のライン → 実線
                 BufSolidsSrc.push(new google.maps.LatLng(bufData.pos1.posY, bufData.pos1.posX));
@@ -760,6 +792,8 @@ naoetu.mapDrawObject.prototype = {
         this.drawLineSolid(BufSolidsSrc);
         //点線描画
         this.drawLineDot(BufDotsSrc);
+        //アニメーションライン描画
+        //this.drawSymbolAnimation(BufAnimeLineSrc.reverse());
     },
     //マーク描画
     drawMark : function(pData){
@@ -817,11 +851,72 @@ naoetu.mapDrawObject.prototype = {
         //      }],
             map: this.MainObj.MapObj
         });
+    },
+    //アニメーションの削除
+    drawSymbolAnimationClear : function(){
+        //描画中のアニメーションを削除する
+        if(this.DrawLinesAnime){
+            this.DrawLinesAnime.setMap(null)
+        }
+        //アニメーションのタイマーを削除
+        if(this.AnimeTimerId){
+            clearInterval(this.AnimeTimerId);
+        }
+    },
+    //アニメーション設定
+    drawSymbolAnimation : function(coordinatesArray){
+        
+        //アニメーションの削除
+        this.drawSymbolAnimationClear();
+
+        //ラインを走るシンボルを定義
+        var symbol = google.maps.SymbolPath.FORWARD_CLOSED_ARROW;
+
+        //ラインを走るシンボル作成
+        this.DrawLinesAnimeLineSymbol = {
+            path:symbol,
+            scale:4,
+            fillColor:"#ff0000",
+            fillOpacity:1,
+            strokeOpacity:1,
+            strokeColor:"#ff0000"
+        };
+
+        //透明のラインを地図へ追加
+        this.DrawLinesAnime = new google.maps.Polyline({
+            geodesic: true,//trueなら大圏コース、falseなら普通の直線コース
+            path: coordinatesArray,
+            icons: [{
+              icon: this.DrawLinesAnimeLineSymbol,
+              offset: '100%'
+            }],
+            strokeOpacity:0,
+            strokeColor:"#ff0000",
+            editable:false,
+            draggable:false,
+            map : this.MainObj.MapObj
+        });
+
+        //アニメーション実行
+        var animateSymbol = function () {
+            var count = 0;
+            var anime = function() {
+                count = (count + 1) % 200;
+                var icons = this.DrawLinesAnime.get('icons');
+                icons[0].offset = (count / 2) + '%';
+                this.DrawLinesAnime.set('icons', icons);
+            };
+            this.AnimeTimerId = window.setInterval(naoetu.bind(this,anime), 20);
+        }
+        setTimeout(naoetu.bind(this,animateSymbol),1);
     }
+
 }
 
 var naoetumaps = new naoetu.maps();
-//                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName
-naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1"));
-naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn",""));
+//                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName,pMapPanMode(cooperative：二本指/greedy:一本指)
+//地図表示側
+naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn","","cooperative"));
+//座標送信側
+naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
 
