@@ -466,7 +466,7 @@ naoetu.mapAjax.prototype = {
 
         //送信時間の表示
         var bufDate= new Date();
-        var year = bufDate.getYear();
+        var year = bufDate.getFullYear();
         var month = bufDate.getMonth() + 1;
         var date = bufDate.getDate();
         var hour = bufDate.getHours();
