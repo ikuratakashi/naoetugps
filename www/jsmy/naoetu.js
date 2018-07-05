@@ -90,6 +90,22 @@ naoetu.map.prototype = {
         if(this.isViewer){
             this.mapAjaxSendBtn = new naoetu.mapAjax(this,false,false,this.TypeListName,this.SendBtnName);
             this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.getPosDatas);
+
+            //座標送信側へ中心位置をコピーするボタンのイベントを貼り付ける
+            var BtnFunction = function(){
+                var _MainObjSend = naoetumaps.getMap("mapsend-map");
+                var _MainObjView = naoetumaps.getMap("mapviewer-map");
+
+                var _CenterPos = false;
+                if(_MainObjView){
+                    _CenterPos = _MainObjView.MapObj.getCenter();
+                }
+                if(_MainObjSend && _CenterPos){
+                    _MainObjSend.MapObj.panTo(_CenterPos);
+                }
+            }
+            $("#PosCopyBtn").on("click",naoetu.bind(this,BtnFunction));
+
         }
 
         //マーカータイプのリスト
@@ -705,30 +721,6 @@ naoetu.mapAjax.prototype.getPosDataParse = function(pFields){
 
 //---------------------------------------------
 //
-//NaoetuGPSマップ - naoetu.map用 Ajaxクラス
-//
-//---------------------------------------------
-naoetu.maps = function(){return this.initialize.apply(this,arguments);};
-naoetu.maps.prototype = {
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    // コンストラクタ
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    initialize : function(){
-        this.naoetumaps = new Array();
-    },
-    //追加
-    add : function(pNaoetuMapObj){
-        this.naoetumaps.push(pNaoetuMapObj);
-    },
-    //実体化
-    initMap : function(){
-        for(var i=0;i < this.naoetumaps.length;i++){
-            this.naoetumaps[i].initMap();
-        }
-    }
-}
-//---------------------------------------------
-//
 // 地図上に図形を描画
 //
 //---------------------------------------------
@@ -793,7 +785,7 @@ naoetu.mapDrawObject.prototype = {
         //点線描画
         this.drawLineDot(BufDotsSrc);
         //アニメーションライン描画
-        //this.drawSymbolAnimation(BufAnimeLineSrc.reverse());
+        this.drawSymbolAnimation(BufAnimeLineSrc.reverse());
     },
     //マーク描画
     drawMark : function(pData){
@@ -911,6 +903,41 @@ naoetu.mapDrawObject.prototype = {
         setTimeout(naoetu.bind(this,animateSymbol),1);
     }
 
+}
+
+//---------------------------------------------
+//
+//NaoetuGPSマップ - naoetu.map用 Ajaxクラス
+//
+//---------------------------------------------
+naoetu.maps = function(){return this.initialize.apply(this,arguments);};
+naoetu.maps.prototype = {
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // コンストラクタ
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    initialize : function(){
+        this.naoetumaps = new Array();
+    },
+    //追加
+    add : function(pNaoetuMapObj){
+        this.naoetumaps.push(pNaoetuMapObj);
+    },
+    //実体化
+    initMap : function(){
+        for(var i=0;i < this.naoetumaps.length;i++){
+            this.naoetumaps[i].initMap();
+        }
+    },
+    //指定したキーのnaoetu.mapオブジェクトを返す
+    getMap : function(pName){
+        for(var i=0;i<this.naoetumaps.length;i++){
+            var buf = this.naoetumaps[i];
+            if(buf.mapName == pName){
+                return buf;
+            }
+        }
+        return false;
+    }
 }
 
 var naoetumaps = new naoetu.maps();
