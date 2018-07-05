@@ -253,7 +253,7 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
         this.response = pRes;
 
-        naoetu.log.out(3,'parameter ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
+        naoetu.log.out(3,'WriteGPS Parameter  ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
 
         //コネクションの確立
         naoetu.log.out(3,'Step connection...start');
@@ -384,7 +384,7 @@ naoetu.clsGps.prototype = {
         this.paramGps = pGps;
         this.response = pRes;
         
-        naoetu.log.out(3,'パラメタ ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.typeId);
+        naoetu.log.out(3,'ReadGPS Parameter ' + 'mode:' + this.paramGps.mode + "/" + 'type:' + this.paramGps.typeId);
 
         //コネクションの確立
         naoetu.log.out(3,'Step Connection...Start');
