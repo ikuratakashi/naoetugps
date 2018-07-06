@@ -233,7 +233,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                             });
                         }
                     }
-                    _bufFunction();
+                    //_bufFunction();
 
                 }
             };
