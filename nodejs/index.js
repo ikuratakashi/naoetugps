@@ -132,14 +132,14 @@ app.get('/',(req,res)=>{
 // GPS情報書き込み
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
-    naoetu.GpsWrite(req,res);
+    naoetu.GpsWrite("http",req,res);
 });
 
 //---------------------------------------------
 // GPS情報読み込み
 //---------------------------------------------
 app.get('/gpsread',(req,res)=>{
-    naoetu.GpsRead(req,res);
+    naoetu.GpsRead("http",req,res);
 });
 
 //========================================================================
@@ -152,8 +152,19 @@ app.get('/gpsread',(req,res)=>{
 // GPS情報書き込み
 //---------------------------------------------
 io.sockets.on('gpswrite',(pData)=>{
-    naoetu.GpsWrite(pData);
-})
+    var setData = new naoetu.socket.Validation(pData);
+    var dmyRequest = new naoetu.socket.Request();
+    naoetu.GpsWrite("socket",setData,dmyRequest);
+});
+
+//---------------------------------------------
+// GPS情報読み込み
+//---------------------------------------------
+app.get('/gpsread',(pData)=>{
+    var setData = new naoetu.socket.Validation(pData);
+    var dmyRequest = new naoetu.socket.Request();
+    naoetu.GpsRead("socket",setData,dmyRequest);
+});
 
 //========================================================================
 //
@@ -166,10 +177,7 @@ io.sockets.on('gpswrite',(pData)=>{
 // 座標情報読み込み処理
 //
 //---------------------------------------------
-naoetu.GpsRead = function(req,res){
-
-    //test
-    naoetu.socket.check().isAopha();
+naoetu.GpsRead = function(pMode,req,res){
 
     var mode = req.query.mode;
     var type = req.query.type;
@@ -188,12 +196,16 @@ naoetu.GpsRead = function(req,res){
 
             //成功時のレスポンス
             gps.onSuccess = function(pData){
-                this.response.json({result:{err:0,description:"GPS情報 読み込み成功",fields:pData}});
+                if(pMode == "http"){
+                    this.response.json({result:{err:0,description:"GPS情報 読み込み成功",fields:pData}});
+                }
             };
 
             //失敗時のレスポンス
             gps.onFaile = function(){
-                this.response.json({result:{err:-2,description:"GPS情報 読み込み失敗"}});
+                if(pMode == "http"){
+                    this.response.json({result:{err:-2,description:"GPS情報 読み込み失敗"}});
+                }
             };
 
             //読み込み実行
@@ -208,7 +220,7 @@ naoetu.GpsRead = function(req,res){
 // 座標情報書き込み処理
 //
 //---------------------------------------------
-naoetu.GpsWrite = function(req,res){
+naoetu.GpsWrite = function(pMode,req,res){
 
     var posLng = req.query.lng;
     var posLat = req.query.lat;
@@ -231,12 +243,16 @@ naoetu.GpsWrite = function(req,res){
 
             //成功時のレスポンス
             gps.onSuccess = function(){
-                this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
+                if(pMode == "http"){
+                    this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
+                }
             };
 
             //失敗時のレスポンス
             gps.onFaile = function(){
-                this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
+                if(pMode == "http"){
+                    this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
+                }
             };
 
             //書き込み実行
@@ -248,59 +264,21 @@ naoetu.GpsWrite = function(req,res){
 
 //---------------------------------------------
 //
-// 座標情報書き込み処理 socket.io版
-//
-//---------------------------------------------
-naoetu.GpsWriteSocket = function(pData){
-
-    var posLng = pData.lng;
-    var posLat = pData.lat;
-    var typeId = pData.type;
-
-    req.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
-    req.check('lat',{'ErrNo':'0001','description':'緯度yが実数ではありません。'}).isFloat();
-    req.check('type',{'ErrNo':'0002','description':'データタイプが数値ではありません。'}).isInt();
-
-    req.getValidationResult().then((result)=>{
-        if(!result.isEmpty()){
-            //エラーあり
-            res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
-        }else{
-            //エラーなし pPosLng,pPosLat,pTypeId,pMode
-            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
-
-            //GPS情報の保存
-            var gps = new naoetu.clsGps();
-
-            //成功時のレスポンス
-            gps.onSuccess = function(){
-                this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
-            };
-
-            //失敗時のレスポンス
-            gps.onFaile = function(){
-                this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
-            };
-
-            //書き込み実行
-            gps.writeGps(paramGps,res);
-
-        }
-    });
-}
-
-//---------------------------------------------
-//
-// socket.ioとhttpの差を吸収する為のクラス
+// socket.ioとhttpの差を吸収する為のクラス群
 //
 //---------------------------------------------
 naoetu.socket = [];
+
+//-----------------------------
+// 引数のチェック
+//-----------------------------
 naoetu.socket.Validation = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.Validation.prototype = {
     initialize : function(pData){
         this.checkItems = new Array();
         this.ErrItems = new Array();
         this.CheckData = pData;
+        this.query = pData;
     },
     //-----------------------------
     // Validationの種類を追加　実際のチェックは naoetu.socket.ValidationItem で実行
@@ -370,11 +348,18 @@ naoetu.socket.ValidationItem.prototype = {
     }
 }
 
-var tmpData = {lat:"1",lng:"2",type:"type1"};
-var tmp = new naoetu.socket.Validation(tmpData);
-tmp.check('lat',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
-tmp.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
-tmp.check('type1',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isAlpha();
+//-----------------------------
+// Request
+//-----------------------------
+naoetu.socket.Request = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Request.prototype = {
+    initialize : function(){
+        this.Data = false;
+    },
+    send : function(pData){
+        this.Data = pData;
+    }
+}
 
 //---------------------------------------------
 //
