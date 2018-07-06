@@ -160,7 +160,7 @@ io.sockets.on('gpswrite',(pData)=>{
 //---------------------------------------------
 // GPS情報読み込み
 //---------------------------------------------
-io.sockets.get('gpsread',(pData)=>{
+io.sockets.on('gpsread',(pData)=>{
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Response();
     naoetu.GpsRead("socket",dmyResponse,dmyResponse);
