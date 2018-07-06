@@ -299,7 +299,7 @@ naoetu.socket.Validation = function(){return this.initialize.apply(this,argument
 naoetu.socket.Validation.prototype = {
     initialize : function(pData){
         this.checkItems = new Array();
-        this.IsEmpty = false;
+        this.ErrItems = new Array();
         this.CheckData = pData;
     },
     //-----------------------------
@@ -313,11 +313,11 @@ naoetu.socket.Validation.prototype = {
     // Validation処理をthis.checkItemsの数分 実行
     //-----------------------------
     getValidationResult : function(){
+        this.IsEmpty = true;
         for(var i=0;i < this.checkItems.length;i++){
             var buf = this.checkItems[i];
             if(buf.isError == true){
-                this.IsEmpty = true;
-                break;
+                this.ErrItems.push(buf);
             }
         }
         return this;
@@ -326,7 +326,11 @@ naoetu.socket.Validation.prototype = {
         pFunction(this);
     },
     isEmpty : function(){
-        return this.IsEmpty;
+        if(this.ErrItems.length > 0){
+            return false;
+        }else{
+            return true;
+        }
     }
 }
 
@@ -343,16 +347,24 @@ naoetu.socket.ValidationItem.prototype = {
         this.isError = false;
     },
     isAlpha : function(){
-        if (this.Value.match(/[^A-Za-z0-9]+/)) {
+        try {
+            if (this.Value.match(/[^A-Za-z0-9]+/)) {
+                this.isError = false;
+            }else{
+                this.isError = true;
+            }
+        } catch (T_T) {
             this.isError = false;
-        }else{
-            this.isError = true;
         }
     },
     isFloat : function(){
-        if(isNaN(this.Value)){
-            this.isError = true;
-        }else{
+        try {
+            if(isNaN(this.Value)){
+                this.isError = true;
+            }else{
+                this.isError = false;
+            }
+        }catch(T_T){
             this.isError = false;
         }
     }

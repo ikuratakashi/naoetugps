@@ -950,4 +950,3 @@ var naoetumaps = new naoetu.maps();
 naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn","","cooperative"));
 //座標送信側
 naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
-
