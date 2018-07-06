@@ -81,9 +81,6 @@ app.use(cors());
 //main
 var http = require('http').Server(app);
 
-//socket.io
-var io = require('socket.io')(http);
-
 //共通設定
 naoetu.ini = {
     ConPool   : "pool",
@@ -629,3 +626,5 @@ http.listen(50001,() => {
     naoetu.log.out(3,'Start server port:50001')
 });
 
+//socket.io
+var io = require('socket.io')(http);

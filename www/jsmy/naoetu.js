@@ -67,6 +67,11 @@ naoetu.map.prototype = {
         this.isViewer = pIsViewer;  //ビューワー機能の有無
         this.MapPanMode = pMapPanMode; //マップの移動モード
 
+        //ソケットの接続
+        this.Socket = false;
+        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
+        this.SocketObj.connection();
+
         this.MapDrawObjects = [];  //地図上に描画しているオブジェクト全て
 
         //地図の初期ズーム番号
@@ -250,7 +255,30 @@ naoetu.map.prototype = {
     // マーカーの描画
     //-----------------------------
     DrawMarker : function(pLat,pLng,pType){
+    },
+
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
+    // Socket.io 関連メソッド
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    //-----------------------------    
+    // コネクション成功時
+    //-----------------------------    
+    SocketSuccessFunction : function(){
+        naoetu.log.out(1,"naoetu.map.SocketSuccessFunction start...");
+        this.Socket = this.SocketObj.Socket;
+        //this.socket;
+        naoetu.log.out(1,"naoetu.map.SocketSuccessFunction end...");
+    },
+    //-----------------------------    
+    // コネクション失敗時(´・ω・`)
+    //-----------------------------    
+    SocketFailedFunction : function(){
+        naoetu.log.out(1,"naoetu.map.SocketFailedFunction start...");
+        naoetu.log.out(1,"naoetu.map.SocketFailedFunction end...");
     }
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
+    // Socket.io 関連メソッド 
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ >
 }
 //---------------------------------------------
 //
@@ -941,8 +969,56 @@ naoetu.maps.prototype = {
             }
         }
         return false;
+    },
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // GoogleMap API Javascript の読み込み完了時
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    googlemapComp : function(){
+        this.initMap();
     }
 }
+
+//---------------------------------------------
+//
+//NaoetuGPS - socket.ioクラス
+//
+//---------------------------------------------
+naoetu.socket = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.prototype = {
+    initialize : function(pMainObj,pSucccessFnction,pFailedFunction){
+        this.MainObj = pMainObj;
+        this.SucccessFnction = pSucccessFnction;
+        this.FaildFunction = pFailedFunction;
+        this.Socket = false;
+        this.SocketData = false;
+        this.SocketFnc = false;
+    },
+    connection : function(){
+        naoetu.log.out(1,"Socket.io connection start ...");
+        if(!this.Socket){
+            var _con = function(){
+                return io.connect();
+            }
+            this.Socket = _con();
+        }
+        this.Socket.on("greeting",naoetu.bind(this,this.onConSucccess));
+        naoetu.log.out(1,"Socket.io connection finish ...");
+    },
+    //接続成功(・_・)/
+    onConSucccess : function(pData,pFnc){
+        naoetu.log.out(1,"Socket.io connection success!!");
+        this.SocketData = pData;
+        this.SocketFnc = pFnc;
+        setTimeout(naoetu.bind(this.MainObj,this.SucccessFnction,1));
+    },
+    //接続失敗(´・ω・`)??
+    onConFailed : function(){
+        naoetu.log.out(1,"Socket.io connection failed");
+        this.Socket = false;
+        setTimeout(naoetu.bind(this.MainObj,this.FaildFunction,1));
+    }
+}
+
 
 var naoetumaps = new naoetu.maps();
 //                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName,pMapPanMode(cooperative：二本指/greedy:一本指)
