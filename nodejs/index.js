@@ -132,42 +132,7 @@ app.get('/',(req,res)=>{
 // GPS情報書き込み
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
-
-    var posLng = req.query.lng;
-    var posLat = req.query.lat;
-    var typeId = req.query.type;
-
-    req.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
-    req.check('lat',{'ErrNo':'0001','description':'緯度yが実数ではありません。'}).isFloat();
-    req.check('type',{'ErrNo':'0002','description':'データタイプが数値ではありません。'}).isInt();
-
-    req.getValidationResult().then((result)=>{
-        if(!result.isEmpty()){
-            //エラーあり
-            res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
-        }else{
-            //エラーなし pPosLng,pPosLat,pTypeId,pMode
-            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
-
-            //GPS情報の保存
-            var gps = new naoetu.clsGps();
-
-            //成功時のレスポンス
-            gps.onSuccess = function(){
-                this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
-            };
-
-            //失敗時のレスポンス
-            gps.onFaile = function(){
-                this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
-            };
-
-            //書き込み実行
-            gps.writeGps(paramGps,res);
-
-        }
-    });
-
+    naoetu.GpsWrite(req,res);
 })
 //---------------------------------------------
 // GPS情報読み込み
@@ -215,6 +180,49 @@ naoetu.GpsRead = function(req,res){
 
             //読み込み実行
             gps.readGps(paramGps,res);
+
+        }
+    });
+}
+
+//---------------------------------------------
+//
+// 座標情報書き込み処理
+//
+//---------------------------------------------
+naoetu.GpsWrite = function(req,res){
+
+    var posLng = req.query.lng;
+    var posLat = req.query.lat;
+    var typeId = req.query.type;
+
+    req.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
+    req.check('lat',{'ErrNo':'0001','description':'緯度yが実数ではありません。'}).isFloat();
+    req.check('type',{'ErrNo':'0002','description':'データタイプが数値ではありません。'}).isInt();
+
+    req.getValidationResult().then((result)=>{
+        if(!result.isEmpty()){
+            //エラーあり
+            res.send({result:{err:-1,description:"パラメタに不正な値が設定されている"}});
+        }else{
+            //エラーなし pPosLng,pPosLat,pTypeId,pMode
+            var paramGps = new naoetu.clsParamGps(posLng,posLat,typeId,"");
+
+            //GPS情報の保存
+            var gps = new naoetu.clsGps();
+
+            //成功時のレスポンス
+            gps.onSuccess = function(){
+                this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
+            };
+
+            //失敗時のレスポンス
+            gps.onFaile = function(){
+                this.response.json({result:{err:-2,description:"GPS情報 登録失敗"}});
+            };
+
+            //書き込み実行
+            gps.writeGps(paramGps,res);
 
         }
     });
