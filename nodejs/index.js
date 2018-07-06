@@ -149,6 +149,13 @@ app.get('/gpsread',(req,res)=>{
 //========================================================================
 
 //---------------------------------------------
+// socket.io コネクション
+//---------------------------------------------
+io.sockets.on("connection",function(pSocket){
+    naoetu.socket.connection(pSocket);
+});
+
+//---------------------------------------------
 // GPS情報書き込み
 //---------------------------------------------
 io.sockets.on('gpswrite',(pData)=>{
@@ -260,105 +267,6 @@ naoetu.GpsWrite = function(pMode,req,res){
 
         }
     });
-}
-
-//---------------------------------------------
-//
-// socket.ioとhttpの差を吸収する為のクラス群
-//
-//---------------------------------------------
-naoetu.socket = [];
-
-//-----------------------------
-// 引数のチェック
-//-----------------------------
-naoetu.socket.Request = function(){return this.initialize.apply(this,arguments);};
-naoetu.socket.Request.prototype = {
-    initialize : function(pData){
-        this.checkItems = new Array();
-        this.ErrItems = new Array();
-        this.CheckData = pData;
-        this.query = pData;
-    },
-    //-----------------------------
-    // Validationの種類を追加　実際のチェックは naoetu.socket.ValidationItem で実行
-    //-----------------------------
-    check : function(pValueName,pMessage){
-        this.checkItems.push(new naoetu.socket.ValidationItem(this.CheckData[pValueName],pMessage));
-        return this.checkItems[this.checkItems.length - 1];
-    },
-    //-----------------------------
-    // Validation処理をthis.checkItemsの数分 実行
-    //-----------------------------
-    getValidationResult : function(){
-        this.IsEmpty = true;
-        for(var i=0;i < this.checkItems.length;i++){
-            var buf = this.checkItems[i];
-            if(buf.isError == true){
-                this.ErrItems.push(buf);
-            }
-        }
-        return this;
-    },
-    then : function(pFunction){
-        pFunction(this);
-    },
-    isEmpty : function(){
-        if(this.ErrItems.length > 0){
-            return false;
-        }else{
-            return true;
-        }
-    }
-}
-
-//-----------------------------
-// Validationアイテム 
-// ※チェック処理はここに実装
-//-----------------------------
-naoetu.socket.ValidationItem = function(){return this.initialize.apply(this,arguments);};
-naoetu.socket.ValidationItem.prototype = {
-    initialize : function(pValue,pMessage){
-        this.Value = pValue;
-        this.Message = pMessage;
-        this.ValiType = ""; 
-        this.isError = false;
-    },
-    isAlpha : function(){
-        try {
-            if (this.Value.match(/[^A-Za-z0-9]+/)) {
-                this.isError = false;
-            }else{
-                this.isError = true;
-            }
-        } catch (T_T) {
-            this.isError = false;
-        }
-    },
-    isFloat : function(){
-        try {
-            if(isNaN(this.Value)){
-                this.isError = true;
-            }else{
-                this.isError = false;
-            }
-        }catch(T_T){
-            this.isError = false;
-        }
-    }
-}
-
-//-----------------------------
-// Request
-//-----------------------------
-naoetu.socket.Response = function(){return this.initialize.apply(this,arguments);};
-naoetu.socket.Response.prototype = {
-    initialize : function(){
-        this.Data = false;
-    },
-    send : function(pData){
-        this.Data = pData;
-    }
 }
 
 //---------------------------------------------
@@ -601,6 +509,115 @@ naoetu.clsGps.prototype = {
     }
 }
 
+//---------------------------------------------
+//
+// socket.ioとhttpの差を吸収する為のクラス群
+//
+//---------------------------------------------
+naoetu.socket = [];
+
+//-----------------------------
+// 引数のチェック
+//-----------------------------
+naoetu.socket.Request = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Request.prototype = {
+    initialize : function(pData){
+        this.checkItems = new Array();
+        this.ErrItems = new Array();
+        this.CheckData = pData;
+        this.query = pData;
+    },
+    //-----------------------------
+    // Validationの種類を追加　実際のチェックは naoetu.socket.ValidationItem で実行
+    //-----------------------------
+    check : function(pValueName,pMessage){
+        this.checkItems.push(new naoetu.socket.ValidationItem(this.CheckData[pValueName],pMessage));
+        return this.checkItems[this.checkItems.length - 1];
+    },
+    //-----------------------------
+    // Validation処理をthis.checkItemsの数分 実行
+    //-----------------------------
+    getValidationResult : function(){
+        this.IsEmpty = true;
+        for(var i=0;i < this.checkItems.length;i++){
+            var buf = this.checkItems[i];
+            if(buf.isError == true){
+                this.ErrItems.push(buf);
+            }
+        }
+        return this;
+    },
+    then : function(pFunction){
+        pFunction(this);
+    },
+    isEmpty : function(){
+        if(this.ErrItems.length > 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
+
+//-----------------------------
+// Validationアイテム 
+// ※チェック処理はここに実装
+//-----------------------------
+naoetu.socket.ValidationItem = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.ValidationItem.prototype = {
+    initialize : function(pValue,pMessage){
+        this.Value = pValue;
+        this.Message = pMessage;
+        this.ValiType = ""; 
+        this.isError = false;
+    },
+    isAlpha : function(){
+        try {
+            if (this.Value.match(/[^A-Za-z0-9]+/)) {
+                this.isError = false;
+            }else{
+                this.isError = true;
+            }
+        } catch (T_T) {
+            this.isError = false;
+        }
+    },
+    isFloat : function(){
+        try {
+            if(isNaN(this.Value)){
+                this.isError = true;
+            }else{
+                this.isError = false;
+            }
+        }catch(T_T){
+            this.isError = false;
+        }
+    }
+}
+
+//-----------------------------
+// Request
+//-----------------------------
+naoetu.socket.Response = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Response.prototype = {
+    initialize : function(){
+        this.Data = false;
+    },
+    send : function(pData){
+        this.Data = pData;
+    }
+}
+
+//-----------------------------
+// Connection
+//-----------------------------
+naoetu.socket.Connection = function(pSocket){
+    naoetu.log.out(3,'socket.io connection successfull');
+    pSocket.emit('greeting',{msg:"connection successfull!!"},function(pData){
+        naoetu.log.out(3,'socket.io greeting from client');
+    });
+}
+
 //========================================================================
 //
 //サーバデプロイ
@@ -610,4 +627,5 @@ naoetu.clsGps.prototype = {
 //サーバ起動
 http.listen(50001,() => {
     naoetu.log.out(3,'Start server port:50001')
-})
+});
+
