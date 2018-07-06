@@ -82,8 +82,6 @@ naoetu.map.prototype = {
 
         //ソケットの接続
         this.Socket = false;
-        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
-        this.SocketObj.connection();
 
         //各種イベントの設定 
         ////座標送信ボタン pNaoetuObj,pLatName,pLngName,pTypeName,pSendName
@@ -98,8 +96,8 @@ naoetu.map.prototype = {
 
             //座標送信側へ中心位置をコピーするボタンのイベントを貼り付ける
             var BtnFunction = function(){
-                var _MainObjSend = naoetumaps.getMap("mapsend-map");
-                var _MainObjView = naoetumaps.getMap("mapviewer-map");
+                var _MainObjSend = NaoetuMain.getMap("mapsend-map");
+                var _MainObjView = NaoetuMain.getMap("mapviewer-map");
 
                 var _CenterPos = false;
                 if(_MainObjView){
@@ -255,31 +253,7 @@ naoetu.map.prototype = {
     // マーカーの描画
     //-----------------------------
     DrawMarker : function(pLat,pLng,pType){
-    },
-
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
-    // Socket.io 関連メソッド
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-    //-----------------------------    
-    // コネクション成功時
-    //-----------------------------    
-    SocketSuccessFunction : function(){
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction start...");
-        this.Socket = this.SocketObj.Socket;
-        this.SocketObj.SocketFnc();
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction end...");
-    },
-    //-----------------------------    
-    // コネクション失敗時(´・ω・`)
-    //-----------------------------    
-    SocketFailedFunction : function(){
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction start...");
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction end...");
     }
-
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
-    // Socket.io 関連メソッド 
-    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ >
 }
 //---------------------------------------------
 //
@@ -943,16 +917,21 @@ naoetu.mapDrawObject.prototype = {
 //NaoetuGPSマップ - naoetu.map用 Ajaxクラス
 //
 //---------------------------------------------
-naoetu.maps = function(){return this.initialize.apply(this,arguments);};
-naoetu.maps.prototype = {
+naoetu.main = function(){return this.initialize.apply(this,arguments);};
+naoetu.main.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // コンストラクタ
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     initialize : function(){
         this.naoetumaps = new Array();
+        this.socket = false;
+        this.SocketObj = false;
     },
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // 地図関連メソッド
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     //追加
-    add : function(pNaoetuMapObj){
+    MapAdd : function(pNaoetuMapObj){
         this.naoetumaps.push(pNaoetuMapObj);
     },
     //実体化
@@ -975,8 +954,43 @@ naoetu.maps.prototype = {
     // GoogleMap API Javascript の読み込み完了時
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     googlemapComp : function(){
+
+        //地図の初期化
         this.initMap();
+
+        //Socket.ioコネクション
+        this.SocketConnect();
+
+    },
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
+    // Socket.io 関連メソッド
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    //Socket.ioのコネクション
+    SocketConnect : function(){
+        this.socket = false;
+        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
+        this.SocketObj.connection();
+    },
+    //-----------------------------    
+    // コネクション成功時
+    //-----------------------------    
+    SocketSuccessFunction : function(){
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction start...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction ...end");
+        this.socket = this.SocketObj.Socket;
+    },
+    //-----------------------------    
+    // コネクション失敗時(´・ω・`)
+    //-----------------------------    
+    SocketFailedFunction : function(){
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction start...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction ...end");
+        this.socket = false;
     }
+
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
+    // Socket.io 関連メソッド 
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ >
 }
 
 //---------------------------------------------
@@ -986,16 +1000,17 @@ naoetu.maps.prototype = {
 //---------------------------------------------
 naoetu.socket = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.prototype = {
-    initialize : function(pMainObj,pSucccessFnction,pFailedFunction){
-        this.MainObj = pMainObj;
+    initialize : function(pParentObj,pSucccessFnction,pFailedFunction){
+        this.ParentObj = pParentObj;
         this.SucccessFnction = pSucccessFnction;
         this.FaildFunction = pFailedFunction;
         this.Socket = false;
         this.SocketData = false;
         this.SocketFnc = false;
     },
+    //接続実行
     connection : function(){
-        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection start ...");
+        naoetu.log.out(1,"Socket.io connection start...");
         if(!this.Socket){
             var _con = function(){
                 return io.connect("http://27.120.99.9:50001");
@@ -1003,28 +1018,28 @@ naoetu.socket.prototype = {
             this.Socket = _con();
         }
         this.Socket.on("greeting",naoetu.bind(this,this.onConSucccess));
-        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection finish ...");
+        naoetu.log.out(1,"Socket.io connection ...finish");
     },
     //接続成功(・_・)/
     onConSucccess : function(pData,pFnc){
-        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection success!!");
+        naoetu.log.out(1,"Socket.io connection success!!");
         naoetu.log.out(1,"Server Result ====> " + pData.msg);
         this.SocketData = pData;
         this.SocketFnc = pFnc;
-        setTimeout(naoetu.bind(this.MainObj,this.SucccessFnction,1));
+        setTimeout(naoetu.bind(this.ParentObj,this.SucccessFnction,1));
     },
     //接続失敗(´・ω・`)??
     onConFailed : function(){
-        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection failed (´・ω・`)??");
+        naoetu.log.out(1,"Socket.io connection failed (´・ω・`)??");
         this.Socket = false;
-        setTimeout(naoetu.bind(this.MainObj,this.FaildFunction,1));
+        setTimeout(naoetu.bind(this.ParentObj,this.FaildFunction,1));
     }
 }
 
 
-var naoetumaps = new naoetu.maps();
+var NaoetuMain = new naoetu.main();
 //                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName,pMapPanMode(cooperative：二本指/greedy:一本指)
 //地図表示側
-naoetumaps.add(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn","","cooperative"));
+NaoetuMain.MapAdd(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn","","cooperative"));
 //座標送信側
-naoetumaps.add(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
+NaoetuMain.MapAdd(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
