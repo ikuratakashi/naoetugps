@@ -151,8 +151,8 @@ app.get('/gpsread',(req,res)=>{
 //---------------------------------------------
 // GPS情報書き込み
 //---------------------------------------------
-io.socket.on('gpswrite',(req,res)=>{
-    naoetu.GpsWrite(req,res);
+io.sockets.on('gpswrite',(pData)=>{
+    naoetu.GpsWrite(pData);
 })
 
 //========================================================================
