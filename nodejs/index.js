@@ -289,36 +289,80 @@ naoetu.GpsWriteSocket = function(pData){
     });
 }
 
+//---------------------------------------------
+//
+// socket.ioとhttpの差を吸収する為のクラス
+//
+//---------------------------------------------
 naoetu.socket = [];
 naoetu.socket.Validation = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.Validation.prototype = {
-    initialize : function(){
+    initialize : function(pData){
         this.checkItems = new Array();
+        this.IsEmpty = false;
+        this.CheckData = pData;
     },
-    check : function(pValue,pMessage){
-        this.checkItems.push(new naoetu.socket.ValidationItem(pValue,pMessage));
+    //-----------------------------
+    // Validationの種類を追加　実際のチェックは naoetu.socket.ValidationItem で実行
+    //-----------------------------
+    check : function(pValueName,pMessage){
+        this.checkItems.push(new naoetu.socket.ValidationItem(this.CheckData[pValueName],pMessage));
         return this.checkItems[this.checkItems.length - 1];
+    },
+    //-----------------------------
+    // Validation処理をthis.checkItemsの数分 実行
+    //-----------------------------
+    getValidationResult : function(){
+        for(var i=0;i < this.checkItems.length;i++){
+            var buf = this.checkItems[i];
+            if(buf.isError == true){
+                this.IsEmpty = true;
+                break;
+            }
+        }
+        return this;
+    },
+    then : function(pFunction){
+        pFunction(this);
+    },
+    isEmpty : function(){
+        return this.IsEmpty;
     }
 }
 
+//-----------------------------
+// Validationアイテム 
+// ※チェック処理はここに実装
+//-----------------------------
 naoetu.socket.ValidationItem = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.ValidationItem.prototype = {
     initialize : function(pValue,pMessage){
         this.Value = pValue;
         this.Message = pMessage;
         this.ValiType = ""; 
-        this.IS_ALPHA = "isAlpha";
-        this.IS_FLOAT = "isFloat";
+        this.isError = false;
     },
     isAlpha : function(){
-        this.ValiType = this.IS_ALPHA;
+        if (this.Value.match(/[^A-Za-z0-9]+/)) {
+            this.isError = false;
+        }else{
+            this.isError = true;
+        }
     },
     isFloat : function(){
-        this.ValiType = this.IS_FLOAT;
+        if(isNaN(this.Value)){
+            this.isError = true;
+        }else{
+            this.isError = false;
+        }
     }
 }
-var tmp = new naoetu.socket.Validation();
+
+var tmpData = {lat:"1",lng:"2",type:"type1"};
+var tmp = new naoetu.socket.Validation(tmpData);
+tmp.check('lat',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
 tmp.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
+tmp.check('type1',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isAlpha();
 
 //---------------------------------------------
 //
