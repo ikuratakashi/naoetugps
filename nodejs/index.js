@@ -225,12 +225,15 @@ naoetu.GpsWrite = function(pMode,req,res){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
 
                     //ソケット接続先へ配信
-                    if(naoetu.socket.socketObj){
-                        var _socket = naoetu.socket.socketObj;
-                        _socket.broadcast.emit('greeting',{msg:"naoetu.GpsWrite broadcast.emit"},function(pData){
-                            naoetu.log.out(3,'socket.io greeting from client');
-                        });
+                    var _bufFunction = function(){
+                        if(naoetu.socket.socketObj){
+                            var _socket = naoetu.socket.socketObj;
+                            _socket.broadcast.emit('greeting',{msg:"naoetu.GpsWrite broadcast.emit"},function(pData){
+                                naoetu.log.out(3,'socket.io greeting from client');
+                            });
+                        }
                     }
+                    _bufFunction();
 
                 }
             };
