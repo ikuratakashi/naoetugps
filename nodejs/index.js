@@ -65,6 +65,7 @@ naoetu.log = new naoetu.clsLog(3,true);
 //
 //========================================================================
 var express = require('express');
+naoetu.log.out(3,'express require');
 var app = express();
 
 //設定ファイルの読み込み
@@ -73,13 +74,16 @@ require('dotenv').config();
 //バリデーション(HTTPパラメタチェック)使用
 var validator = require('express-validator');
 app.use(validator());
+naoetu.log.out(3,'express-validator require');
 
 //クロスサイト制限を外す設定
 var cors = require('cors');
 app.use(cors());
+naoetu.log.out(3,'cors require');
 
 //main
 var http = require('http').Server(app);
+naoetu.log.out(3,'http require');
 
 //共通設定
 naoetu.ini = {
@@ -91,6 +95,7 @@ naoetu.log.out(3,"DB_HOST=" + process.env.DB_HOST);
 
 //mySql使用 
 naoetu.mysql   = require('mysql');
+naoetu.log.out(3,'mysql require');
 naoetu.ConConf = {
     host     : process.env.DB_HOST,
     user     : process.env.DB_USER,
@@ -597,6 +602,7 @@ http.listen(50001,() => {
 
 //socket.io
 var io = require('socket.io')(http);
+naoetu.log.out(3,'socket.io require');
 
 //========================================================================
 //
