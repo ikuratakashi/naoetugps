@@ -169,7 +169,7 @@ io.sockets.on('gpswrite',(pData)=>{
 naoetu.GpsRead = function(req,res){
 
     //test
-    naoetu.socket.check();
+    naoetu.socket.check().isAopha();
 
     var mode = req.query.mode;
     var type = req.query.type;
@@ -288,10 +288,37 @@ naoetu.GpsWriteSocket = function(pData){
         }
     });
 }
+
 naoetu.socket = [];
-naoetu.socket.check = function(){
-    naoetu.log.out(3,'Step check');
+naoetu.socket.Validation = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Validation.prototype = {
+    initialize : function(){
+        this.checkItems = new Array();
+    },
+    check : function(pValue,pMessage){
+        this.checkItems.push(new naoetu.socket.ValidationItem(pValue,pMessage));
+        return this.checkItems[this.checkItems.length - 1];
+    }
 }
+
+naoetu.socket.ValidationItem = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.ValidationItem.prototype = {
+    initialize : function(pValue,pMessage){
+        this.Value = pValue;
+        this.Message = pMessage;
+        this.ValiType = ""; 
+        this.IS_ALPHA = "isAlpha";
+        this.IS_FLOAT = "isFloat";
+    },
+    isAlpha : function(){
+        this.ValiType = this.IS_ALPHA;
+    },
+    isFloat : function(){
+        this.ValiType = this.IS_FLOAT;
+    }
+}
+var tmp = new naoetu.socket.Validation();
+tmp.check('lng',{'ErrNo':'0001','description':'経度Xが実数ではありません。'}).isFloat();
 
 //---------------------------------------------
 //
