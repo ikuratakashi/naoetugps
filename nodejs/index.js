@@ -141,37 +141,6 @@ app.get('/gpsread',(req,res)=>{
 
 //========================================================================
 //
-// ルーティング socket.io
-//
-//========================================================================
-
-//---------------------------------------------
-// socket.io コネクション
-//---------------------------------------------
-io.sockets.on("connection",function(pSocket){
-    naoetu.socket.connection(pSocket);
-});
-
-//---------------------------------------------
-// GPS情報書き込み
-//---------------------------------------------
-io.sockets.on('gpswrite',(pData)=>{
-    var dmyResponse = new naoetu.socket.Response(pData);
-    var dmyResponse = new naoetu.socket.Request();
-    naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
-});
-
-//---------------------------------------------
-// GPS情報読み込み
-//---------------------------------------------
-io.sockets.on('gpsread',(pData)=>{
-    var dmyResponse = new naoetu.socket.Response(pData);
-    var dmyResponse = new naoetu.socket.Response();
-    naoetu.GpsRead("socket",dmyResponse,dmyResponse);
-});
-
-//========================================================================
-//
 // 処理
 //
 //========================================================================
@@ -628,3 +597,34 @@ http.listen(50001,() => {
 
 //socket.io
 var io = require('socket.io')(http);
+
+//========================================================================
+//
+// ルーティング socket.io
+//
+//========================================================================
+
+//---------------------------------------------
+// socket.io コネクション
+//---------------------------------------------
+io.sockets.on("connection",function(pSocket){
+    naoetu.socket.connection(pSocket);
+});
+
+//---------------------------------------------
+// GPS情報書き込み
+//---------------------------------------------
+io.sockets.on('gpswrite',(pData)=>{
+    var dmyResponse = new naoetu.socket.Response(pData);
+    var dmyResponse = new naoetu.socket.Request();
+    naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
+});
+
+//---------------------------------------------
+// GPS情報読み込み
+//---------------------------------------------
+io.sockets.on('gpsread',(pData)=>{
+    var dmyResponse = new naoetu.socket.Response(pData);
+    var dmyResponse = new naoetu.socket.Response();
+    naoetu.GpsRead("socket",dmyResponse,dmyResponse);
+});
