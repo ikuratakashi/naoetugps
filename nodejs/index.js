@@ -152,18 +152,18 @@ app.get('/gpsread',(req,res)=>{
 // GPS情報書き込み
 //---------------------------------------------
 io.sockets.on('gpswrite',(pData)=>{
-    var setData = new naoetu.socket.Validation(pData);
-    var dmyRequest = new naoetu.socket.Request();
-    naoetu.GpsWrite("socket",setData,dmyRequest);
+    var dmyResponse = new naoetu.socket.Response(pData);
+    var dmyResponse = new naoetu.socket.Request();
+    naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
 });
 
 //---------------------------------------------
 // GPS情報読み込み
 //---------------------------------------------
-app.get('/gpsread',(pData)=>{
-    var setData = new naoetu.socket.Validation(pData);
-    var dmyRequest = new naoetu.socket.Request();
-    naoetu.GpsRead("socket",setData,dmyRequest);
+io.sockets.get('gpsread',(pData)=>{
+    var dmyResponse = new naoetu.socket.Response(pData);
+    var dmyResponse = new naoetu.socket.Response();
+    naoetu.GpsRead("socket",dmyResponse,dmyResponse);
 });
 
 //========================================================================
@@ -272,8 +272,8 @@ naoetu.socket = [];
 //-----------------------------
 // 引数のチェック
 //-----------------------------
-naoetu.socket.Validation = function(){return this.initialize.apply(this,arguments);};
-naoetu.socket.Validation.prototype = {
+naoetu.socket.Request = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Request.prototype = {
     initialize : function(pData){
         this.checkItems = new Array();
         this.ErrItems = new Array();
@@ -351,8 +351,8 @@ naoetu.socket.ValidationItem.prototype = {
 //-----------------------------
 // Request
 //-----------------------------
-naoetu.socket.Request = function(){return this.initialize.apply(this,arguments);};
-naoetu.socket.Request.prototype = {
+naoetu.socket.Response = function(){return this.initialize.apply(this,arguments);};
+naoetu.socket.Response.prototype = {
     initialize : function(){
         this.Data = false;
     },
