@@ -608,7 +608,7 @@ var io = require('socket.io')(http);
 // socket.io コネクション
 //---------------------------------------------
 io.sockets.on("connection",function(pSocket){
-    naoetu.socket.connection(pSocket);
+    naoetu.socket.Connection(pSocket);
 });
 
 //---------------------------------------------
