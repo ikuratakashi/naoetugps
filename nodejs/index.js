@@ -78,6 +78,9 @@ app.use(validator());
 var cors = require('cors');
 app.use(cors());
 
+//socket.io
+var io = require('socket.io');
+
 //共通設定
 naoetu.ini = {
     ConPool   : "pool",
@@ -459,6 +462,14 @@ naoetu.clsGps.prototype = {
 //サーバデプロイ
 //
 //========================================================================
-app.listen(50001,() => {
+
+//main
+var http = require('http').Server(app);
+
+//socket.io
+var io = require('socket.io')(http);
+
+//サーバ起動
+http.listen(50001,() => {
     naoetu.log.out(3,'Start server port:50001')
 })
