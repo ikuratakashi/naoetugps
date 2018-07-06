@@ -78,8 +78,11 @@ app.use(validator());
 var cors = require('cors');
 app.use(cors());
 
+//main
+var http = require('http').Server(app);
+
 //socket.io
-var io = require('socket.io');
+var io = require('socket.io')(http);
 
 //共通設定
 naoetu.ini = {
@@ -462,12 +465,6 @@ naoetu.clsGps.prototype = {
 //サーバデプロイ
 //
 //========================================================================
-
-//main
-var http = require('http').Server(app);
-
-//socket.io
-var io = require('socket.io')(http);
 
 //サーバ起動
 http.listen(50001,() => {
