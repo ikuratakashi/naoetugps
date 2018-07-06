@@ -67,11 +67,6 @@ naoetu.map.prototype = {
         this.isViewer = pIsViewer;  //ビューワー機能の有無
         this.MapPanMode = pMapPanMode; //マップの移動モード
 
-        //ソケットの接続
-        this.Socket = false;
-        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
-        this.SocketObj.connection();
-
         this.MapDrawObjects = [];  //地図上に描画しているオブジェクト全て
 
         //地図の初期ズーム番号
@@ -84,6 +79,11 @@ naoetu.map.prototype = {
         this.TypeListName = pTypeListName;  //(Element Id) GPSタイプのリスト
         this.SendBtnName = pSendBtnName;    //(Element Id) 送信ボタン
         this.ResultName  = pResultName;     //(Element Id) 実行結果
+
+        //ソケットの接続
+        this.Socket = false;
+        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
+        this.SocketObj.connection();
 
         //各種イベントの設定 
         ////座標送信ボタン pNaoetuObj,pLatName,pLngName,pTypeName,pSendName
@@ -264,18 +264,18 @@ naoetu.map.prototype = {
     // コネクション成功時
     //-----------------------------    
     SocketSuccessFunction : function(){
-        naoetu.log.out(1,"naoetu.map.SocketSuccessFunction start...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction start...");
         this.Socket = this.SocketObj.Socket;
-        //this.socket;
-        naoetu.log.out(1,"naoetu.map.SocketSuccessFunction end...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction end...");
     },
     //-----------------------------    
     // コネクション失敗時(´・ω・`)
     //-----------------------------    
     SocketFailedFunction : function(){
-        naoetu.log.out(1,"naoetu.map.SocketFailedFunction start...");
-        naoetu.log.out(1,"naoetu.map.SocketFailedFunction end...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction start...");
+        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction end...");
     }
+
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
     // Socket.io 関連メソッド 
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ >
@@ -994,7 +994,7 @@ naoetu.socket.prototype = {
         this.SocketFnc = false;
     },
     connection : function(){
-        naoetu.log.out(1,"Socket.io connection start ...");
+        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection start ...");
         if(!this.Socket){
             var _con = function(){
                 return io.connect("http://27.120.99.9:50001");
@@ -1002,18 +1002,18 @@ naoetu.socket.prototype = {
             this.Socket = _con();
         }
         this.Socket.on("greeting",naoetu.bind(this,this.onConSucccess));
-        naoetu.log.out(1,"Socket.io connection finish ...");
+        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection finish ...");
     },
     //接続成功(・_・)/
     onConSucccess : function(pData,pFnc){
-        naoetu.log.out(1,"Socket.io connection success!!");
+        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection success!!");
         this.SocketData = pData;
         this.SocketFnc = pFnc;
         setTimeout(naoetu.bind(this.MainObj,this.SucccessFnction,1));
     },
     //接続失敗(´・ω・`)??
     onConFailed : function(){
-        naoetu.log.out(1,"Socket.io connection failed");
+        naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection failed (´・ω・`)??");
         this.Socket = false;
         setTimeout(naoetu.bind(this.MainObj,this.FaildFunction,1));
     }
