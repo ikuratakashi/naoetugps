@@ -1,0 +1,262 @@
+[2018/7/6 07:34:50]:DB_HOST=localhost
+[2018/7/6 07:34:50]:Start server port:50001
+[2018/7/6 08:07:12]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:07:12]:Step Connection...Start
+[2018/7/6 08:07:12]:Step Connection...Finish
+[2018/7/6 08:07:12]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:07:12]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:07:12]:Search Result Get Record Count :24
+[2018/7/6 08:07:28]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:07:28]:Step Connection...Start
+[2018/7/6 08:07:28]:Step Connection...Finish
+[2018/7/6 08:07:28]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:07:28]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:07:28]:Search Result Get Record Count :24
+[2018/7/6 08:07:48]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:07:48]:Step Connection...Start
+[2018/7/6 08:07:48]:Step Connection...Finish
+[2018/7/6 08:07:48]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:07:48]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:07:48]:Search Result Get Record Count :24
+[2018/7/6 08:08:07]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:08:07]:Step Connection...Start
+[2018/7/6 08:08:07]:Step Connection...Finish
+[2018/7/6 08:08:07]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:08:07]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:08:07]:Search Result Get Record Count :24
+[2018/7/6 08:08:12]:WriteGPS Parameter  posLat:37.16192151406818/posLng:138.2375099179451/type:undefined
+[2018/7/6 08:08:12]:Step connection...start
+[2018/7/6 08:08:12]:Step Connection...finish
+[2018/7/6 08:08:12]:Step Transaction...Start
+[2018/7/6 08:08:12]:Step Transaction...End
+[2018/7/6 08:08:12]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 08:08:12]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 08:08:12]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 08:08:12]:OK clsGps.writeGps Commit Success.
+[2018/7/6 08:08:17]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:08:17]:Step Connection...Start
+[2018/7/6 08:08:17]:Step Connection...Finish
+[2018/7/6 08:08:17]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:08:17]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:08:17]:Search Result Get Record Count :24
+[2018/7/6 08:08:25]:WriteGPS Parameter  posLat:37.161516091204106/posLng:138.23764149286558/type:undefined
+[2018/7/6 08:08:25]:Step connection...start
+[2018/7/6 08:08:25]:Step Connection...finish
+[2018/7/6 08:08:25]:Step Transaction...Start
+[2018/7/6 08:08:25]:Step Transaction...End
+[2018/7/6 08:08:25]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 08:08:25]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 08:08:25]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 08:08:25]:OK clsGps.writeGps Commit Success.
+[2018/7/6 08:08:37]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:08:37]:Step Connection...Start
+[2018/7/6 08:08:37]:Step Connection...Finish
+[2018/7/6 08:08:37]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:08:37]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:08:37]:Search Result Get Record Count :24
+[2018/7/6 08:09:39]:WriteGPS Parameter  posLat:37.16075954988132/posLng:138.23769988490028/type:undefined
+[2018/7/6 08:09:39]:Step connection...start
+[2018/7/6 08:09:39]:Step Connection...finish
+[2018/7/6 08:09:39]:Step Transaction...Start
+[2018/7/6 08:09:39]:Step Transaction...End
+[2018/7/6 08:09:39]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 08:09:39]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 08:09:39]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 08:09:39]:OK clsGps.writeGps Commit Success.
+[2018/7/6 08:09:44]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:09:44]:Step Connection...Start
+[2018/7/6 08:09:44]:Step Connection...Finish
+[2018/7/6 08:09:44]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:09:44]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:09:44]:Search Result Get Record Count :24
+[2018/7/6 08:10:25]:WriteGPS Parameter  posLat:37.16364341002241/posLng:138.23732184486448/type:undefined
+[2018/7/6 08:10:25]:Step connection...start
+[2018/7/6 08:10:25]:Step Connection...finish
+[2018/7/6 08:10:25]:Step Transaction...Start
+[2018/7/6 08:10:25]:Step Transaction...End
+[2018/7/6 08:10:25]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 08:10:25]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 08:10:25]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 08:10:25]:OK clsGps.writeGps Commit Success.
+[2018/7/6 08:10:29]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:10:29]:Step Connection...Start
+[2018/7/6 08:10:29]:Step Connection...Finish
+[2018/7/6 08:10:29]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:10:29]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:10:29]:Search Result Get Record Count :24
+[2018/7/6 08:10:44]:WriteGPS Parameter  posLat:37.16670829020828/posLng:138.23704047081537/type:undefined
+[2018/7/6 08:10:44]:Step connection...start
+[2018/7/6 08:10:44]:Step Connection...finish
+[2018/7/6 08:10:44]:Step Transaction...Start
+[2018/7/6 08:10:44]:Step Transaction...End
+[2018/7/6 08:10:44]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 08:10:44]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 08:10:44]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 08:10:44]:OK clsGps.writeGps Commit Success.
+[2018/7/6 08:10:48]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:10:48]:Step Connection...Start
+[2018/7/6 08:10:48]:Step Connection...Finish
+[2018/7/6 08:10:48]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:10:48]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:10:48]:Search Result Get Record Count :24
+[2018/7/6 08:11:19]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:11:19]:Step Connection...Start
+[2018/7/6 08:11:19]:Step Connection...Finish
+[2018/7/6 08:11:19]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:11:19]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:11:19]:Search Result Get Record Count :24
+[2018/7/6 08:33:53]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 08:33:53]:Step Connection...Start
+[2018/7/6 08:33:53]:Step Connection...Finish
+[2018/7/6 08:33:53]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 08:33:53]:OK clsGps.readGps SQL Success.
+[2018/7/6 08:33:53]:Search Result Get Record Count :24
+[2018/7/6 12:02:56]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:02:56]:Step Connection...Start
+[2018/7/6 12:02:56]:Step Connection...Finish
+[2018/7/6 12:02:56]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:02:56]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:02:56]:Search Result Get Record Count :24
+[2018/7/6 12:03:10]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:10]:Step Connection...Start
+[2018/7/6 12:03:10]:Step Connection...Finish
+[2018/7/6 12:03:10]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:10]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:10]:Search Result Get Record Count :24
+[2018/7/6 12:03:24]:WriteGPS Parameter  posLat:37.1674753888498/posLng:138.23694714812223/type:undefined
+[2018/7/6 12:03:24]:Step connection...start
+[2018/7/6 12:03:24]:Step Connection...finish
+[2018/7/6 12:03:24]:Step Transaction...Start
+[2018/7/6 12:03:24]:Step Transaction...End
+[2018/7/6 12:03:24]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 12:03:24]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 12:03:24]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 12:03:24]:OK clsGps.writeGps Commit Success.
+[2018/7/6 12:03:38]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:38]:Step Connection...Start
+[2018/7/6 12:03:38]:Step Connection...Finish
+[2018/7/6 12:03:38]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:38]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:38]:Search Result Get Record Count :24
+[2018/7/6 12:03:38]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:38]:Step Connection...Start
+[2018/7/6 12:03:38]:Step Connection...Finish
+[2018/7/6 12:03:38]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:38]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:38]:Search Result Get Record Count :24
+[2018/7/6 12:03:40]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:40]:Step Connection...Start
+[2018/7/6 12:03:40]:Step Connection...Finish
+[2018/7/6 12:03:40]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:40]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:40]:Search Result Get Record Count :24
+[2018/7/6 12:03:45]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:45]:Step Connection...Start
+[2018/7/6 12:03:45]:Step Connection...Finish
+[2018/7/6 12:03:45]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:45]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:45]:Search Result Get Record Count :24
+[2018/7/6 12:03:46]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:03:46]:Step Connection...Start
+[2018/7/6 12:03:46]:Step Connection...Finish
+[2018/7/6 12:03:46]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:03:46]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:03:46]:Search Result Get Record Count :24
+[2018/7/6 12:40:47]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 12:40:47]:Step Connection...Start
+[2018/7/6 12:40:47]:Step Connection...Finish
+[2018/7/6 12:40:47]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 12:40:47]:OK clsGps.readGps SQL Success.
+[2018/7/6 12:40:47]:Search Result Get Record Count :24
+events.js:183
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Connection lost: The server closed the connection.
+    at Protocol.end (/home/kubiki/node_modules/mysql/lib/protocol/Protocol.js:113:13)
+    at Socket.<anonymous> (/home/kubiki/node_modules/mysql/lib/Connection.js:109:28)
+    at emitNone (events.js:111:20)
+    at Socket.emit (events.js:208:7)
+    at endReadableNT (_stream_readable.js:1064:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+[2018/7/6 17:38:45]:DB_HOST=localhost
+[2018/7/6 17:38:45]:Start server port:50001
+[2018/7/6 17:38:53]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 17:38:53]:Step Connection...Start
+[2018/7/6 17:38:54]:Step Connection...Finish
+[2018/7/6 17:38:54]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 17:38:54]:OK clsGps.readGps SQL Success.
+[2018/7/6 17:38:54]:Search Result Get Record Count :24
+[2018/7/6 17:39:25]:WriteGPS Parameter  posLat:37.16797209413363/posLng:138.23689412556973/type:undefined
+[2018/7/6 17:39:25]:Step connection...start
+[2018/7/6 17:39:25]:Step Connection...finish
+[2018/7/6 17:39:25]:Step Transaction...Start
+[2018/7/6 17:39:25]:Step Transaction...End
+[2018/7/6 17:39:25]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 17:39:25]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 17:39:25]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 17:39:25]:OK clsGps.writeGps Commit Success.
+[2018/7/6 17:39:29]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 17:39:29]:Step Connection...Start
+[2018/7/6 17:39:29]:Step Connection...Finish
+[2018/7/6 17:39:29]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 17:39:29]:OK clsGps.readGps SQL Success.
+[2018/7/6 17:39:29]:Search Result Get Record Count :24
+[2018/7/6 17:39:47]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 17:39:47]:Step Connection...Start
+[2018/7/6 17:39:47]:Step Connection...Finish
+[2018/7/6 17:39:47]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 17:39:47]:OK clsGps.readGps SQL Success.
+[2018/7/6 17:39:47]:Search Result Get Record Count :24
+[2018/7/6 17:39:51]:WriteGPS Parameter  posLat:37.1683777682182/posLng:138.23683265077125/type:undefined
+[2018/7/6 17:39:51]:Step connection...start
+[2018/7/6 17:39:51]:Step Connection...finish
+[2018/7/6 17:39:51]:Step Transaction...Start
+[2018/7/6 17:39:51]:Step Transaction...End
+[2018/7/6 17:39:51]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 17:39:51]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 17:39:51]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 17:39:51]:OK clsGps.writeGps Commit Success.
+[2018/7/6 17:39:59]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 17:39:59]:Step Connection...Start
+[2018/7/6 17:39:59]:Step Connection...Finish
+[2018/7/6 17:39:59]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 17:39:59]:OK clsGps.readGps SQL Success.
+[2018/7/6 17:39:59]:Search Result Get Record Count :24
+[2018/7/6 17:40:06]:WriteGPS Parameter  posLat:37.16903527427297/posLng:138.23675688786534/type:undefined
+[2018/7/6 17:40:06]:Step connection...start
+[2018/7/6 17:40:06]:Step Connection...finish
+[2018/7/6 17:40:06]:Step Transaction...Start
+[2018/7/6 17:40:06]:Step Transaction...End
+[2018/7/6 17:40:06]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 17:40:06]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 17:40:06]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 17:40:06]:OK clsGps.writeGps Commit Success.
+[2018/7/6 17:40:29]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 17:40:29]:Step Connection...Start
+[2018/7/6 17:40:29]:Step Connection...Finish
+[2018/7/6 17:40:29]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 17:40:29]:OK clsGps.readGps SQL Success.
+[2018/7/6 17:40:29]:Search Result Get Record Count :24
+[2018/7/6 18:06:08]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 18:06:08]:Step Connection...Start
+[2018/7/6 18:06:08]:Step Connection...Finish
+[2018/7/6 18:06:08]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 18:06:08]:OK clsGps.readGps SQL Success.
+[2018/7/6 18:06:08]:Search Result Get Record Count :24
+[2018/7/6 18:06:22]:WriteGPS Parameter  posLat:37.169493028244275/posLng:138.23662711481586/type:undefined
+[2018/7/6 18:06:22]:Step connection...start
+[2018/7/6 18:06:22]:Step Connection...finish
+[2018/7/6 18:06:22]:Step Transaction...Start
+[2018/7/6 18:06:22]:Step Transaction...End
+[2018/7/6 18:06:22]:OK clsGps.writeGps DB Connect Success.
+[2018/7/6 18:06:22]:OK clsGps.writeGps Transaction Success ... Run SQL Start.
+[2018/7/6 18:06:22]:OK clsGps.writeGps SQL Success ... Run Commit Start
+[2018/7/6 18:06:22]:OK clsGps.writeGps Commit Success.
+[2018/7/6 18:06:27]:ReadGPS Parameter mode:NOMAL/type:1
+[2018/7/6 18:06:27]:Step Connection...Start
+[2018/7/6 18:06:27]:Step Connection...Finish
+[2018/7/6 18:06:27]:OK clsGps.readGps DB Connection Success.
+[2018/7/6 18:06:27]:OK clsGps.readGps SQL Success.
+[2018/7/6 18:06:27]:Search Result Get Record Count :24
