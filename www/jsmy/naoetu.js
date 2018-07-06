@@ -1008,7 +1008,7 @@ naoetu.socket.prototype = {
     //接続成功(・_・)/
     onConSucccess : function(pData,pFnc){
         naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection success!!");
-        naoetu.log.out(1,"Server Result " + pData.msg);
+        naoetu.log.out(1,"Server Result ====> " + pData.msg);
         this.SocketData = pData;
         this.SocketFnc = pFnc;
         setTimeout(naoetu.bind(this.MainObj,this.SucccessFnction,1));

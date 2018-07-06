@@ -223,6 +223,15 @@ naoetu.GpsWrite = function(pMode,req,res){
             gps.onSuccess = function(){
                 if(pMode == "http"){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
+
+                    //ソケット接続先へ配信
+                    if(naoetu.socket.socketObj){
+                        var _socket = naoetu.socket.socketObj;
+                        _socket.broadcast.emit('greeting',{msg:"naoetu.GpsWrite broadcast.emit"},function(pData){
+                            naoetu.log.out(3,'socket.io greeting from client');
+                        });
+                    }
+
                 }
             };
 
@@ -487,6 +496,12 @@ naoetu.clsGps.prototype = {
 //---------------------------------------------
 naoetu.socket = [];
 
+
+//-----------------------------
+// ソケットオブジェクト
+//-----------------------------
+naoetu.socket.socketObj = false;
+
 //-----------------------------
 // 引数のチェック
 //-----------------------------
@@ -615,6 +630,7 @@ naoetu.log.out(3,'socket.io require');
 //---------------------------------------------
 naoetu.log.out(3,'socket.io connection on start...');
 io.sockets.on("connection",function(pSocket){
+    naoetu.socket.socketObj = pSocket;
     naoetu.socket.Connection(pSocket);
 });
 naoetu.log.out(3,'socket.io connection on ...end');
