@@ -167,6 +167,10 @@ io.sockets.on('gpswrite',(pData)=>{
 //
 //---------------------------------------------
 naoetu.GpsRead = function(req,res){
+
+    //test
+    naoetu.socket.check();
+
     var mode = req.query.mode;
     var type = req.query.type;
     req.check('mode',{'ErrNo':'0003','description':'データタイプがアルファベットではありません。'}).isAlpha();
@@ -286,6 +290,7 @@ naoetu.GpsWriteSocket = function(pData){
 }
 naoetu.socket = [];
 naoetu.socket.check = function(){
+    naoetu.log.out(3,'Step check');
 }
 
 //---------------------------------------------
