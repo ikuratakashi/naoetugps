@@ -266,6 +266,7 @@ naoetu.map.prototype = {
     SocketSuccessFunction : function(){
         naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction start...");
         this.Socket = this.SocketObj.Socket;
+        this.SocketObj.SocketFnc();
         naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction end...");
     },
     //-----------------------------    
@@ -1007,6 +1008,7 @@ naoetu.socket.prototype = {
     //接続成功(・_・)/
     onConSucccess : function(pData,pFnc){
         naoetu.log.out(1,this.MainObj.mapName + " Socket.io connection success!!");
+        naoetu.log.out(1,"Server Result " + pData.msg);
         this.SocketData = pData;
         this.SocketFnc = pFnc;
         setTimeout(naoetu.bind(this.MainObj,this.SucccessFnction,1));

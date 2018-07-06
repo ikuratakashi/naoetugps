@@ -584,7 +584,7 @@ naoetu.socket.Response.prototype = {
 //-----------------------------
 naoetu.socket.Connection = function(pSocket){
     naoetu.log.out(3,'socket.io connection successfull');
-    pSocket.emit('greeting',{msg:"connection successfull!!"},function(pData){
+    pSocket.emit('greeting',{msg:"greeting connection successfull!!"},function(pData){
         naoetu.log.out(3,'socket.io greeting from client');
     });
 }
