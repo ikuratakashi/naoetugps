@@ -631,31 +631,31 @@ naoetu.log.out(3,'socket.io require');
 //---------------------------------------------
 // socket.io コネクション
 //---------------------------------------------
-naoetu.log.out(3,'socket.io routing "connection" on start...');
+naoetu.log.out(3,'socket.io routeing "connection" on start...');
 io.sockets.on("connection",function(pSocket){
     naoetu.socket.socketObj = pSocket;
     naoetu.socket.Connection(pSocket);
 });
-naoetu.log.out(3,'socket.io routing "connection" on ...end');
+naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 
 //---------------------------------------------
 // GPS情報書き込み
 //---------------------------------------------
-naoetu.log.out(3,'socket.io routing "gpswrite" on start...');
+naoetu.log.out(3,'socket.io routeing "gpswrite" on start...');
 io.sockets.on('gpswrite',(pData)=>{
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Request();
     naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
 });
-naoetu.log.out(3,'socket.io routing "gpswrite" on ...end');
+naoetu.log.out(3,'socket.io routeing "gpswrite" on ...end');
 
 //---------------------------------------------
 // GPS情報読み込み
 //---------------------------------------------
-naoetu.log.out(3,'socket.io routing "gpsread" on start...');
+naoetu.log.out(3,'socket.io routeing "gpsread" on start...');
 io.sockets.on('gpsread',(pData)=>{
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Response();
     naoetu.GpsRead("socket",dmyResponse,dmyResponse);
 });
-naoetu.log.out(3,'socket.io routing "gpsread" on ...end');
+naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
