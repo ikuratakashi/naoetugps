@@ -102,7 +102,6 @@ naoetu.ConConf = {
     password : process.env.DB_PASS,
     database : process.env.DB_NAME
 };
-naoetu.ConnectionPool = mysql.createPool(naoetu.ConConf);
 
 //========================================================================
 //
