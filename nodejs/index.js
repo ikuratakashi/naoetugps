@@ -325,7 +325,9 @@ naoetu.clsGps.prototype = {
         naoetu.log.out(3,'Step DataBase Connection Error Handle start...');
         var _bufConErrFnc = function(err){
 
+            naoetu.log.out(3,'*********************');
             naoetu.log.out(3,'Error DataBase Connection Error Code => ' + err.code);
+            naoetu.log.out(3,'*********************');
 
             if(err.code === "PROTOCOL_CONNECTION_LOST"){
             //コネクション 消失時 ... 再接続
@@ -683,7 +685,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // GPS情報書き込み
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "gpswrite" on start...');
-IoNaoetuGps.on('gpswrite',(pData)=>{
+IoNaoetuGps.on('gpswrite',function(pData){
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Request();
     naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
@@ -694,7 +696,7 @@ naoetu.log.out(3,'socket.io routeing "gpswrite" on ...end');
 // GPS情報読み込み
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "gpsread" on start...');
-IoNaoetuGps.on('gpsread',(pData)=>{
+IoNaoetuGps.on('gpsread',function(pData){
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Response();
     naoetu.GpsRead("socket",dmyResponse,dmyResponse);
