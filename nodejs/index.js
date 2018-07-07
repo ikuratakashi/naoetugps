@@ -303,7 +303,7 @@ naoetu.clsGps.prototype = {
         naoetu.log.out(3,'WriteGPS Parameter  ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
 
         //コネクションの確立
-        naoetu.log.out(3,'Step connection...start');
+        naoetu.log.out(3,'Step DataBase connection start...');
         this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
         this.masterConnection.connect(function(err) {
             //接続時のエラー
@@ -315,7 +315,7 @@ naoetu.clsGps.prototype = {
                 naoetu.log.out(3,'OK clsGps.writeGps DB Connect Success.');
             }
         });
-        naoetu.log.out(3,'Step Connection...finish');
+        naoetu.log.out(3,'Step DataBase Connection ...finish');
 
         //トランザクション実行後のコールバック <
         var _TranCallback = function(pErr){
@@ -620,6 +620,7 @@ http.listen(50001,() => {
 
 //socket.io
 var io = require('socket.io')(http);
+var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
 //========================================================================
@@ -632,7 +633,7 @@ naoetu.log.out(3,'socket.io require');
 // socket.io コネクション
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
-io.sockets.on("connection",function(pSocket){
+IoNaoetuGps.sockets.on("connection",function(pSocket){
     naoetu.socket.socketObj = pSocket;
     naoetu.socket.Connection(pSocket);
 });
@@ -642,7 +643,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // GPS情報書き込み
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "gpswrite" on start...');
-io.sockets.on('gpswrite',(pData)=>{
+IoNaoetuGps.sockets.on('gpswrite',(pData)=>{
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Request();
     naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
@@ -653,7 +654,7 @@ naoetu.log.out(3,'socket.io routeing "gpswrite" on ...end');
 // GPS情報読み込み
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "gpsread" on start...');
-io.sockets.on('gpsread',(pData)=>{
+IoNaoetuGps.sockets.on('gpsread',(pData)=>{
     var dmyResponse = new naoetu.socket.Response(pData);
     var dmyResponse = new naoetu.socket.Response();
     naoetu.GpsRead("socket",dmyResponse,dmyResponse);
