@@ -102,7 +102,7 @@ naoetu.ConConf = {
     password : process.env.DB_PASS,
     database : process.env.DB_NAME
 };
-
+naoetu.ConnectionPool = mysql.createPool(naoetu.ConConf);
 
 //========================================================================
 //
@@ -293,6 +293,52 @@ naoetu.clsGps.prototype = {
     onFaile : function(){
     },
     //-----------------------------
+    // コネクションの生成
+    //-----------------------------
+    DbConnectin : function(pConnectFunction){
+
+        //-----------------------------
+        //コネクションの確立
+        //-----------------------------
+        //*
+        //* プールした接続だとトランザクションを管理できない為、実行するたびに接続を生成する
+        //*
+        //-----------------------------
+        naoetu.log.out(3,'Step DataBase connection start...');
+        this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
+            //接続時のエラー
+            var _bufConnectFnc = function(err) {
+            if (err) {
+                naoetu.log.out(3,'Error clsGps.writeGps DB Connect Failde.');
+                console.error(err);
+                return;
+            }else{
+                naoetu.log.out(3,'OK clsGps.writeGps DB Connect Success.');
+            }
+        }
+        if(pConnectFunction){
+            _bufConnectFnc = pConnectFunction;
+        }
+        this.masterConnection.connect(naoetu.bind(this,_bufConnectFnc));
+        naoetu.log.out(3,'Step DataBase Connection ...finish');
+
+        //error('PROTOCOL_CONNECTION_LOST')時に再接続
+        naoetu.log.out(3,'Step DataBase Connection Error Handle start...');
+        var _bufConErrFnc = function(err){
+
+            naoetu.log.out(3,'Error DataBase Connection Error Code => ' + err.code);
+
+            if(err.code === "PROTOCOL_CONNECTION_LOST"){
+            //コネクション 消失時 ... 再接続
+                naoetu.log.out(3,'Step DataBase Connection Error Run handleDisconnect.');
+                this.DbConnectin();
+            }
+        }
+        this.masterConnection.on("error",naoetu.bind(this,_bufConErrFnc));
+        naoetu.log.out(3,'Step DataBase Connection Error Handle ...finish');
+
+    },
+    //-----------------------------
     // GPS情報をテーブルへ書き込む
     //-----------------------------
     writeGps : function(pGps,pRes){
@@ -302,24 +348,13 @@ naoetu.clsGps.prototype = {
 
         naoetu.log.out(3,'WriteGPS Parameter  ' + 'posLat:' + this.paramGps.posLat + "/" + 'posLng:' + this.paramGps.posLng + "/" + 'type:' + this.paramGps.type);
 
-        //コネクションの確立
-        naoetu.log.out(3,'Step DataBase connection start...');
-        this.masterConnection = naoetu.mysql.createConnection(naoetu.ConConf);
-        this.masterConnection.connect(function(err) {
-            //接続時のエラー
-            if (err) {
-                naoetu.log.out(3,'Error clsGps.writeGps DB Connect Failde.');
-                console.error(err);
-                return;
-            }else{
-                naoetu.log.out(3,'OK clsGps.writeGps DB Connect Success.');
-            }
-        });
-        naoetu.log.out(3,'Step DataBase Connection ...finish');
+        //DBコネクション生成と生成時の処理実行
+        this.DbConnectin(false);
 
+        //-----------------------------
         //トランザクション実行後のコールバック <
+        //-----------------------------
         var _TranCallback = function(pErr){
-
             if(pErr){
                 naoetu.log.out(3,'Error clsGps.writeGps transaction Failed.');
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
@@ -415,9 +450,13 @@ naoetu.clsGps.prototype = {
                 );
             }
         }
+        //-----------------------------
         //トランザクション実行後のコールバック >
+        //-----------------------------
 
+        //-----------------------------
         //トランザクション開始
+        //-----------------------------
         naoetu.log.out(3,'Step Transaction...Start');
         this.masterConnection.beginTransaction(naoetu.bind(this,_TranCallback));
         naoetu.log.out(3,'Step Transaction...End');
@@ -486,7 +525,9 @@ naoetu.clsGps.prototype = {
             //SQL実行
             this.masterConnection.query(sql,sqlParam,naoetu.bind(this,_callBack));
         };
-        this.masterConnection.connect(naoetu.bind(this,_ConnectionCallBack));
+        //DBコネクション生成と生成時の処理実行
+        this.DbConnectin(_ConnectionCallBack);
+
         naoetu.log.out(3,'Step Connection...Finish');
 
     }
