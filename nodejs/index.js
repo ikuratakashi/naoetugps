@@ -83,7 +83,7 @@ naoetu.log.out(3,'  88888  8  88888 8888888  88888888 ');
 naoetu.log.out(3,'    8    8      8 8               8 ');
 naoetu.log.out(3,'          888888  8        88888888 ');
 naoetu.log.out(3,'');
-naoetu.log.out(3,'... I hope naoetu will be a good city.');
+naoetu.log.out(3,'... I hope NAOETU will be a good city.');
 naoetu.log.out(3,'============================================================');
 
 //========================================================================
