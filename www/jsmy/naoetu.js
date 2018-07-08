@@ -448,18 +448,39 @@ naoetu.mapAjax.prototype = {
         var lat  = document.getElementById(this.LatName).value;
         var lng  = document.getElementById(this.LngName).value;
         var type = document.getElementById(this.TypeName).value;
+        var SendData = {
+            lat:lat,
+            lng:lng,
+            type:type
+        }
 
         var ajaxParam = {};
         ajaxParam = {
             type: 'get',
-            data: {lat:lat,lng:lng,type:type},
+            data: SendData,
             dataType: 'json'
         };
 
-        var ajaxObj = $.ajax('http://27.120.99.9:50001/gpswrite',ajaxParam)
+        var RunMode = "";
+        RunMode = "Socket";
+        //RunMode = "Http";
+
+        //----------
+        //Socketで送信
+        //----------
+        if(RunMode == "Socket"){
+            NaoetuMain.socket.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
+        }
+
+        //----------
+        //Httpで送信
+        //----------
+        if(RunMode == "Http"){
+            var ajaxObj = $.ajax('http://27.120.99.9:50001/gpswrite',ajaxParam)
             .done(naoetu.bind(this,this.onAjaxDoneSendPos)) //成功
             .fail(naoetu.bind(this,this.onAjaxFailSendPos)) //失敗
             .always(naoetu.bind(this,this.onAjaxAlwaysSendPos)); //成功でも失敗でも
+        }
 
     },
     //Ajaxの戻り値 ... 成功時
@@ -975,16 +996,16 @@ naoetu.main.prototype = {
     // コネクション成功時
     //-----------------------------    
     SocketSuccessFunction : function(){
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction start...");
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket SuccessFunction ...end");
+        naoetu.log.out(1,"naoetu.map.Socket SuccessFunction start...");
+        naoetu.log.out(1,"naoetu.map.Socket SuccessFunction ...end");
         this.socket = this.SocketObj.Socket;
     },
     //-----------------------------    
     // コネクション失敗時(´・ω・`)
     //-----------------------------    
     SocketFailedFunction : function(){
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction start...");
-        naoetu.log.out(1,this.mapName + " naoetu.map.Socket FailedFunction ...end");
+        naoetu.log.out(1,"naoetu.map.Socket FailedFunction start...");
+        naoetu.log.out(1,"naoetu.map.Socket FailedFunction ...end");
         this.socket = false;
     }
 
