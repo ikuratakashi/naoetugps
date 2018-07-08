@@ -482,9 +482,9 @@ naoetu.mapAjax.prototype = {
         var lng  = document.getElementById(this.LngName).value;
         var type = document.getElementById(this.TypeName).value;
         var SendData = {
-            lat:lat,
-            lng:lng,
-            type:type
+            "lat":lat,
+            "lng":lng,
+            "type":type
         }
 
         var ajaxParam = {};
@@ -1114,10 +1114,10 @@ naoetu.socket.prototype = {
     connection : function(){
         naoetu.log.out(1,"Socket.io connection start...");
 
-        var _con = function(){
-            return io.connect("http://27.120.99.9:50001/" + this.NameSpace);
+        var _con = function(pNameSpace){
+            return io.connect("http://27.120.99.9:50001/" + pNameSpace);
         }
-        naoetu.SocketObj[this.NameSpace] = _con();
+        naoetu.SocketObj[this.NameSpace] = _con(this.NameSpace);
         naoetu.SocketObj[this.NameSpace].on("greeting",naoetu.bind(this,this.onConSucccess));
 
         naoetu.log.out(1,"Socket.io connection ...finish");

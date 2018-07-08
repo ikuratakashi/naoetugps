@@ -660,15 +660,15 @@ naoetu.socket.ValidationItem.prototype = {
 }
 
 //-----------------------------
-// Request
+// Dmmy Response
 //-----------------------------
 naoetu.socket.Response = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.Response.prototype = {
     initialize : function(){
-        this.Data = false;
+        this.Data = [];
     },
     send : function(pData){
-        this.Data = pData;
+        this.Data["query"] = pData;
     }
 }
 
