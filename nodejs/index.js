@@ -710,6 +710,8 @@ naoetu.log.out(3,'socket.io require');
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
 
+    naoetu.log.line(3);
+
     naoetu.socket.socketObj = pSocket;
     naoetu.socket.Connection(pSocket);
 
