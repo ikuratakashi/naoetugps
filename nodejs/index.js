@@ -133,14 +133,18 @@ app.get('/',(req,res)=>{
 // GPS情報書き込み
 //---------------------------------------------
 app.get('/gpswrite',(req,res)=>{
+    naoetu.log.out(3,'http get: /gpswrite ************************* start...');
     naoetu.GpsWrite("http",req,res);
+    naoetu.log.out(3,'http get: /gpswrite ************************* ...end');
 });
 
 //---------------------------------------------
 // GPS情報読み込み
 //---------------------------------------------
 app.get('/gpsread',(req,res)=>{
+    naoetu.log.out(3,'http get: /gpsread ************************** start...');
     naoetu.GpsRead("http",req,res);
+    naoetu.log.out(3,'http get: /gpsread ************************** ...end');
 });
 
 //========================================================================
@@ -657,7 +661,20 @@ naoetu.socket.Connection = function(pSocket){
 
 //サーバ起動
 http.listen(50001,() => {
-    naoetu.log.out(3,'Start server port:50001')
+    naoetu.log.out(3,'Start server port:50001');
+    naoetu.log.out(3,'===============================================================================================');
+    naoetu.log.out(3,'88     8    88     888888  88888888 88888888 8      8');
+    naoetu.log.out(3,'8 8    8   8  8   8      8 8           88    8      8');
+    naoetu.log.out(3,'8  8   8  8    8  8      8 88888888    88    8      8');
+    naoetu.log.out(3,'8    8 8  888888  8      8 8           88    8      8');
+    naoetu.log.out(3,'8     88 8      8  888888  88888888    88     888888 ');
+    naoetu.log.out(3,'');
+    naoetu.log.out(3,'          8888888 8888888  88888888 ');
+    naoetu.log.out(3,'    8    8        8      8 8        ');
+    naoetu.log.out(3,'  88888  8  88888 8888888  88888888 ');
+    naoetu.log.out(3,'    8    8      8 8               8 ');
+    naoetu.log.out(3,'          888888  8        88888888 ');
+    naoetu.log.out(3,'===============================================================================================');
 });
 
 //socket.io
@@ -676,6 +693,7 @@ naoetu.log.out(3,'socket.io require');
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
+
     naoetu.socket.socketObj = pSocket;
     naoetu.socket.Connection(pSocket);
 
@@ -688,9 +706,11 @@ IoNaoetuGps.on("connection",function(pSocket){
     //-----------------
     naoetu.log.out(3,'socket.io routeing "gpswrite" on start...');
     pSocket.on('gpswrite',function(pData){
+        naoetu.log.out(3,'socket  :  gpswrite ************************* start...');
         var dmyResponse = new naoetu.socket.Response(pData);
         var dmyResponse = new naoetu.socket.Request();
         naoetu.GpsWrite("socket",dmyResponse,dmyResponse);
+        naoetu.log.out(3,'socket  :  gpswrite ************************* ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpswrite" on ...end');
 
@@ -699,12 +719,13 @@ IoNaoetuGps.on("connection",function(pSocket){
     //-----------------
     naoetu.log.out(3,'socket.io routeing "gpsread" on start...');
     pSocket.on('gpsread',function(pData){
+        naoetu.log.out(3,'socket  :  gpsread  ************************* start...');
         var dmyResponse = new naoetu.socket.Response(pData);
         var dmyResponse = new naoetu.socket.Response();
         naoetu.GpsRead("socket",dmyResponse,dmyResponse);
+        naoetu.log.out(3,'socket  :  gpsread  ************************* ...end');
     });
-    naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
-
-
+    naoetu.log.out(3,'socket.io routeing "gpsread" on ...end')
+    ;
 });
 naoetu.log.out(3,'socket.io routeing "connection" on ...end');
