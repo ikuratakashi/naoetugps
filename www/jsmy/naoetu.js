@@ -435,6 +435,10 @@ naoetu.marker.prototype = {
 //
 //NaoetuGPSマップ - naoetu.map用 Ajaxクラス
 //
+//内容：
+// 位置情報の送信
+// 位置情報の取得
+//
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
@@ -498,7 +502,8 @@ naoetu.mapAjax.prototype = {
         //Socketで送信
         //----------
         if(RunMode == "Socket"){
-            NaoetuMain.socket.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
+            //naoetu.SocketObj.naoetugps.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
+            naoetu.SocketObj.naoetugps.emit("gpswrite",SendData);
         }
 
         //----------
@@ -1005,8 +1010,7 @@ naoetu.main.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     initialize : function(){
         this.naoetumaps = new Array();
-        this.socket = false;
-        this.SocketObj = false;
+        this.NaoetuSocket = [];
     },
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // 地図関連メソッド
@@ -1039,18 +1043,32 @@ naoetu.main.prototype = {
         //地図の初期化
         this.initMap();
 
-        //Socket.ioコネクション
-        this.SocketConnect();
+        //---------------------------------------------------------
+        //Socket.ioコネクション 
+        //---------------------------------------------------------
+        //
+        // 引数で指定した名前空間に追加
+        //  this.NaoetuSocket[pNameSpace] = new naoetu.socekt(...);
+        //
+        // グローバルスコープには、実際のSocket.io オブジェクトを設置
+        //  naoetu.SocketObj[pNameSpace] = Socket.ioオブジェクト
+        //
+        //---------------------------------------------------------
+        this.SocketConnect("naoetugps");
+        //this.NaoetuSocket.naoetugps
+        //naoetu.SocketObj.naoetugps
 
     },
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
     // Socket.io 関連メソッド
+    //
+    // 引数：pNameSpace 名前空間
+    //
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     //Socket.ioのコネクション
-    SocketConnect : function(){
-        this.socket = false;
-        this.SocketObj = new naoetu.socket(this,this.SocketSuccessFunction,this.SocketFailedFunction);
-        this.SocketObj.connection();
+    SocketConnect : function(pNameSpace){
+        this.NaoetuSocket[pNameSpace] = new naoetu.socket(pNameSpace,this,this.SocketSuccessFunction,this.SocketFailedFunction);
+        this.NaoetuSocket[pNameSpace].connection();
     },
     //-----------------------------    
     // コネクション成功時
@@ -1058,7 +1076,6 @@ naoetu.main.prototype = {
     SocketSuccessFunction : function(){
         naoetu.log.out(1,"naoetu.map.Socket SuccessFunction start...");
         naoetu.log.out(1,"naoetu.map.Socket SuccessFunction ...end");
-        this.socket = this.SocketObj.Socket;
     },
     //-----------------------------    
     // コネクション失敗時(´・ω・`)
@@ -1066,7 +1083,6 @@ naoetu.main.prototype = {
     SocketFailedFunction : function(){
         naoetu.log.out(1,"naoetu.map.Socket FailedFunction start...");
         naoetu.log.out(1,"naoetu.map.Socket FailedFunction ...end");
-        this.socket = false;
     }
 
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
@@ -1083,13 +1099,14 @@ naoetu.main.prototype = {
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■　
+naoetu.SocketObj = [];
 naoetu.socket = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.prototype = {
-    initialize : function(pParentObj,pSucccessFnction,pFailedFunction){
+    initialize : function(pNameSpace,pParentObj,pSucccessFnction,pFailedFunction){
+        this.NameSpace = pNameSpace;
         this.ParentObj = pParentObj;
         this.SucccessFnction = pSucccessFnction;
         this.FaildFunction = pFailedFunction;
-        this.Socket = false;
         this.SocketData = false;
         this.SocketFnc = false;
     },
@@ -1097,14 +1114,11 @@ naoetu.socket.prototype = {
     connection : function(){
         naoetu.log.out(1,"Socket.io connection start...");
 
-        if(!this.Socket){
-            var _con = function(){
-                return io.connect("http://27.120.99.9:50001/naoetugps");
-            }
-            this.Socket = _con();
+        var _con = function(){
+            return io.connect("http://27.120.99.9:50001/" + this.NameSpace);
         }
-
-        this.Socket.on("greeting",naoetu.bind(this,this.onConSucccess));
+        naoetu.SocketObj[this.NameSpace] = _con();
+        naoetu.SocketObj[this.NameSpace].on("greeting",naoetu.bind(this,this.onConSucccess));
 
         naoetu.log.out(1,"Socket.io connection ...finish");
 
