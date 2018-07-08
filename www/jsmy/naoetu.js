@@ -1013,7 +1013,7 @@ naoetu.socket.prototype = {
         naoetu.log.out(1,"Socket.io connection start...");
         if(!this.Socket){
             var _con = function(){
-                return io.connect("http://27.120.99.9:50001");
+                return io.connect("http://27.120.99.9:50001/naoetugps");
             }
             this.Socket = _con();
         }
