@@ -516,7 +516,7 @@ naoetu.mapAjax.prototype = {
         //----------
         if(RunMode == "Socket"){
             //naoetu.SocketObj.naoetugps.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
-            naoetu.SocketObj.naoetugps.emit("gpswrite",SendData);
+            naoetu.SocketObj.naoetugps.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos);
         }
 
         //----------
