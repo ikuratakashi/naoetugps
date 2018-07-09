@@ -253,15 +253,22 @@ naoetu.GpsWrite = function(pMode,req,res){
 
             //成功時のレスポンス
             gps.onSuccess = function(){
+
+                naoetu.log.out(3,'Step clsGps onSuccess start...');
+
                 if(pMode == "http"){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
                 }
                 if(pMode == "socket"){
                     if(naoetu.socket.socketObj){
+                        naoetu.log.out(3,'Step emit "gpswrite finish" start...');
                         var _socket = naoetu.socket.socketObj;
-                        _socket.broadcast.emit('gpswrite finish',{msg:"naoetu.GpsWrite broadcast.emit"});
+                        _socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
+                        naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
                 }
+
+                naoetu.log.out(3,'Step clsGps onSuccess ...end');
             };
 
             //失敗時のレスポンス
