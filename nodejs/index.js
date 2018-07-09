@@ -660,15 +660,15 @@ naoetu.socket.ValidationItem.prototype = {
 }
 
 //-----------------------------
-// Dmmy Response
+// Dmmy Request
 //-----------------------------
 naoetu.socket.Response = function(){return this.initialize.apply(this,arguments);};
 naoetu.socket.Response.prototype = {
     initialize : function(){
-        this.Data = [];
     },
     send : function(pData){
-        this.Data["query"] = pData;
+        this.Data = pData;
+        this.query = pData;
     }
 }
 
@@ -726,9 +726,9 @@ IoNaoetuGps.on("connection",function(pSocket){
     pSocket.on('gpswrite',function(pData){
         naoetu.log.line(3);
         naoetu.log.out(3,'socket  :  gpswrite start...');
-        var dmyResponse = new naoetu.socket.Response(pData);
-        var dmyRequest = new naoetu.socket.Request();
-        naoetu.GpsWrite("socket",dmyResponse,dmyRequest);
+        var dmyResponse = new naoetu.socket.Response();
+        var dmyRequest = new naoetu.socket.Request(pData);
+        naoetu.GpsWrite("socket",dmyRequest,dmyResponse);
         naoetu.log.out(3,'socket  :  gpswrite ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpswrite" on ...end');
@@ -740,9 +740,9 @@ IoNaoetuGps.on("connection",function(pSocket){
     pSocket.on('gpsread',function(pData){
         naoetu.log.line(3);
         naoetu.log.out(3,'socket  :  gpsread start...');
-        var dmyResponse = new naoetu.socket.Response(pData);
-        var dmyRequest = new naoetu.socket.Response();
-        naoetu.GpsRead("socket",dmyResponse,dmyRequest);
+        var dmyResponse = new naoetu.socket.Response();
+        var dmyRequest = new naoetu.socket.Response(pData);
+        naoetu.GpsRead("socket",dmyRequest,dmyResponse);
         naoetu.log.out(3,'socket  :  gpsread ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
