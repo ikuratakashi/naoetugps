@@ -1154,7 +1154,7 @@ naoetu.main.prototype = {
         var _objMap = NaoetuMain.getMap("mapviewer-map");
         var _ASB = _objMap.mapAjaxSendBtn;
         _ASB.GetDataedToPan = false;
-        _socket.on("gpswrite success",naoetu.bind(this,_ASB.getPosDatas));
+        _socket.on("gpswrite success",naoetu.bind(_ASB,_ASB.getPosDatas));
 
     }
 
