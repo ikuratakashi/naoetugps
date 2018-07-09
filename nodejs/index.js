@@ -656,7 +656,19 @@ naoetu.socket.ValidationItem.prototype = {
         }catch(T_T){
             this.isError = false;
         }
+    },
+    isInt : function(){
+        try {
+            if(isFinite(this.Value)){
+                this.isError = false;
+            }else{
+                this.isError = true;
+            }
+        }catch(T_T){
+            this.isError = false;
+        }
     }
+
 }
 
 //-----------------------------

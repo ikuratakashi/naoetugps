@@ -127,11 +127,21 @@ naoetu.map.prototype = {
 
         }
 
+        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+        //
         //マーカータイプのリスト
+        //
+        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+        //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+
         ///位置の送信用
         if(pIsSend == true){
             this.typeList = new Array();
+
+            //必要な数分を追加
             this.typeList.push({TypeId:"1",Name:"御幸町"});
+
             var eleSelect = document.getElementById(this.TypeListName);
             for(i=0;i<this.typeList.length;i++){
                 var buf = this.typeList[i];
@@ -144,7 +154,10 @@ naoetu.map.prototype = {
         ///位置の表示用
         if(pIsViewer == true){
             this.typeList = new Array();
+
+            //必要な数分を追加
             this.typeList.push({TypeId:"1",Name:"御幸町"});
+
             var eleSelect = document.getElementById(this.TypeListName);
             for(i=0;i<this.typeList.length;i++){
                 var buf = this.typeList[i];
