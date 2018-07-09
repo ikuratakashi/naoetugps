@@ -100,17 +100,46 @@ naoetu.map.prototype = {
         this.Socket = false;
 
         //各種イベントの設定 
-        ////座標送信ボタン pNaoetuObj,pLatName,pLngName,pTypeName,pSendName
+
+        ////******************************************************************
+        ////******************************************************************
+        ////
+        //// 座標送信ボタン
+        ////   new naoetu.mapAjax(pNaoetuObj,pLatName,pLngName,pTypeName,pSendName)
+        ////
+        ////******************************************************************
+        ////******************************************************************
         if(this.isSend){
             this.mapAjaxSendBtn = new naoetu.mapAjax(this,this.outNameLat,this.outNameLng,this.TypeListName,this.SendBtnName);
             this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.SendPos);
         }
-        ////表示関連
+        ////******************************************************************
+        ////******************************************************************
+        ////
+        //// 座標取得ボタン 
+        ////   new naoetu.mapAjax(pNaoetuObj,pLatName,pLngName,pTypeName,pSendName)
+        ////
+        ////******************************************************************
+        ////******************************************************************
         if(this.isViewer){
-            this.mapAjaxSendBtn = new naoetu.mapAjax(this,false,false,this.TypeListName,this.SendBtnName);
-            this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.getPosDatas);
 
-            //座標送信側へ中心位置をコピーするボタンのイベントを貼り付ける
+            this.mapAjaxSendBtn = new naoetu.mapAjax(this,false,false,this.TypeListName,this.SendBtnName);
+
+            //座標取得後に地図を最新の座標へ移動すすかどうか
+            this.mapAjaxSendBtn.GetDataedToPan = true;
+
+            //イベント取得
+            this.mapAjaxSendBtn.SetEvent(this.mapAjaxSendBtn.getPosDatas);
+        }
+
+        ////******************************************************************
+        ////******************************************************************
+        ////
+        //// 座標送信側へ中心位置をコピーするボタンのイベントを貼り付ける
+        ////
+        ////******************************************************************
+        ////******************************************************************
+        if(this.isViewer){
             var BtnFunction = function(){
                 var _MainObjSend = NaoetuMain.getMap("mapsend-map");
                 var _MainObjView = NaoetuMain.getMap("mapviewer-map");
@@ -124,8 +153,8 @@ naoetu.map.prototype = {
                 }
             }
             $("#PosCopyBtn").on("click",naoetu.bind(this,BtnFunction));
-
         }
+
 
         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
@@ -471,6 +500,7 @@ naoetu.mapAjax.prototype = {
         this.SetEventFunction = false;
         this.ResultFunction = false;
         this.PosDataParse = false;
+        this.GetDataedToPan = false;
 
     },
     //-----------------------------
@@ -594,7 +624,7 @@ naoetu.mapAjax.prototype = {
 
         //ちょっとゴチャゴチャっとしてしまった...(´・ω・`)ウゥ
         //他の処理を止めたくなかったからDeferred使って直列処理にしたらthisが不安定になってしまた
-        //その不安定さを回避するのにゴチャゴチャになってしまったゼ
+        //その不安定さを回避するのにゴチャゴチャになってしまった
 
         //直列処理
         ////パース処理
@@ -661,11 +691,13 @@ naoetu.mapAjax.prototype = {
         }
 
         //地図の移動
-        if(isCenterPosGet == true){
-            var bufFnction = function(){
-                this.MainObj.MapObj.panTo(CenterPos);
+        if(this.GetDataedToPan == true){
+            if(isCenterPosGet == true){
+                var bufFnction = function(){
+                    this.MainObj.MapObj.panTo(CenterPos);
+                }
+                setTimeout(naoetu.bind(this,bufFnction),100);
             }
-            setTimeout(naoetu.bind(this,bufFnction),100);
         }
 
     }
@@ -1054,7 +1086,9 @@ naoetu.main.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     googlemapComp : function(){
 
+        //---------------------------------------------------------
         //地図の初期化
+        //---------------------------------------------------------
         this.initMap();
 
         //---------------------------------------------------------
@@ -1071,6 +1105,11 @@ naoetu.main.prototype = {
         this.SocketConnect("naoetugps");
         //this.NaoetuSocket.naoetugps
         //naoetu.SocketObj.naoetugps
+
+        //---------------------------------------------------------
+        //Socket.ioからのイベントを設定
+        //---------------------------------------------------------
+        this.SetSocketOn("naoetugps");
 
     },
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
@@ -1097,6 +1136,26 @@ naoetu.main.prototype = {
     SocketFailedFunction : function(){
         naoetu.log.out(1,"naoetu.map.Socket FailedFunction start...");
         naoetu.log.out(1,"naoetu.map.Socket FailedFunction ...end");
+    },
+    //*****************************
+    //*****************************
+    //*****************************
+    //
+    // Socket.ioのイベント設置
+    //
+    //*****************************
+    //*****************************
+    //*****************************
+    SetSocketOn : function(pNameSpace){
+
+        var _socket = this.NaoetuSocket[pNameSpace].getSocketObj();
+
+        //全ての地図情報の更新
+        var _objMap = NaoetuMain.getMap("mapviewer-map");
+        var _ASB = _objMap.mapAjaxSendBtn;
+        _ASB.GetDataedToPan = false;
+        _socket.on("gpswrite success",naoetu.bind(this,_ASB.getPosDatas));
+
     }
 
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆    
@@ -1150,6 +1209,10 @@ naoetu.socket.prototype = {
         naoetu.log.out(1,"Socket.io connection failed (´・ω・`)??");
         this.Socket = false;
         setTimeout(naoetu.bind(this.ParentObj,this.FaildFunction,1));
+    },
+    //ソケットオブジェクトを返す
+    getSocketObj : function(){
+        return naoetu.SocketObj[this.NameSpace];
     }
 }
 

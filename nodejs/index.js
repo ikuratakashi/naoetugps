@@ -268,6 +268,14 @@ naoetu.GpsWrite = function(pMode,req,res){
                     };
                 }
 
+                //クライアントに座標登録完了を送信
+                if(naoetu.socket.socketObj){
+                    naoetu.log.out(3,'Step broadcast.emit "gpswrite success" start...');
+                    var _socket = naoetu.socket.socketObj;
+                    _socket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"},function(){});
+                   naoetu.log.out(3,'Step broadcast.emit "gpswrite success" ...end');
+                }
+
                 naoetu.log.out(3,'Step clsGps onSuccess ...end');
             };
 
