@@ -272,7 +272,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                 if(naoetu.socket.socketObj){
                     naoetu.log.out(3,'Step broadcast.emit "gpswrite success" start...');
                     var _socket = naoetu.socket.socketObj;
-                    _socket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"},function(){});
+                    _socket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
                     naoetu.log.out(3,'Step broadcast.emit "gpswrite success" ...end');
                 }
 
