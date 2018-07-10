@@ -1223,3 +1223,16 @@ var NaoetuMain = new naoetu.main();
 NaoetuMain.MapAdd(new naoetu.map(false,true,false,false,15,"mapviewer-map","","","TypeListViewer","DataGetBtn","","cooperative"));
 //座標送信側
 NaoetuMain.MapAdd(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
+
+var ioTest = io.connect("http://27.120.99.9:50001/test");
+ioTest.on("connectin finish",function(){
+    alert("接続完了");
+});
+
+ioTest.on("test message",function(msg){
+    alert(msg);
+});
+
+var _onclick = function(){
+    ioTest.emit("send msg","クライアントより送信");
+}

@@ -799,3 +799,22 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 //     naoetu.log.out(3,'socket  :  gpsread ...end');
 // });
 // naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
+
+
+//socket.io
+var IoTest = io.of("/test");
+IoTest.on("connection",function(pSocket){
+    naoetu.log.out(3,'Test Connection Start...');
+    
+    //接続先へ送信
+    pSocket.emit("connectin finish","サーバより");
+
+    pSocket.on("send msg",function(pMsg){
+        naoetu.log.out(3,'Test broadcast Start...');
+        pSocket.broadcast(pMsg);
+        naoetu.log.out(3,'Test broadcast ...End');
+    });
+
+    naoetu.log.out(3,'Test Connection ...End');
+});
+
