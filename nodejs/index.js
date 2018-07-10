@@ -803,7 +803,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 
 //socket.io
 var IoTest = io.of("/test");
-naoetu.line(3);
+naoetu.log.line(3);
 naoetu.log.out(3,'Test Connection Start...');
 IoTest.on("connection",function(pSocket){
 
