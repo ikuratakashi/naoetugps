@@ -816,6 +816,7 @@ IoTest.on("connection",function(pSocket){
     pSocket.on("send msg",function(pMsg){
         naoetu.log.out(3,'Test broadcast Start...');
         pSocket.broadcast.emit("test message",pMsg);
+        pSocket.emit('test message',pMsg);
         naoetu.log.out(3,'Test broadcast ...End');
     });
 
