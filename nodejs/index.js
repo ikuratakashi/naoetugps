@@ -809,6 +809,7 @@ IoTest.on("connection",function(pSocket){
     //接続先へ送信
     pSocket.emit("connectin finish","サーバより");
 
+    //メッセージが送られてきたらブロードキャスト
     pSocket.on("send msg",function(pMsg){
         naoetu.log.out(3,'Test broadcast Start...');
         pSocket.broadcast(pMsg);
