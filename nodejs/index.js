@@ -260,6 +260,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
                 }
                 if(pMode == "socket"){
+                    //クライアントに座標登録完了を送信
                     if(naoetu.socket.socketObj){
                         naoetu.log.out(3,'Step emit "gpswrite finish" start...');
                         var _socket = naoetu.socket.socketObj;
@@ -267,15 +268,14 @@ naoetu.GpsWrite = function(pMode,req,res){
                         naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
                 }
-
-                //クライアントに座標登録完了を送信
-                if(naoetu.socket.socketObj){
-                    naoetu.log.out(3,'Step broadcast.emit "gpswrite success" start...');
-                    var _socket = naoetu.socket.socketObj;
-                    _socket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
-                    //_socket.emit('gpswrite success',{msg:"gpswrite success to one"});
-                    naoetu.log.out(3,'Step broadcast.emit "gpswrite success" ...end');
-                }
+                // //クライアントに座標登録完了を送信
+                // if(naoetu.socket.socketObj){
+                //     naoetu.log.out(3,'Step broadcast.emit "gpswrite success" start...');
+                //     var _socket = naoetu.socket.socketObj;
+                //     _socket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
+                //     //_socket.emit('gpswrite success',{msg:"gpswrite success to one"});
+                //     naoetu.log.out(3,'Step broadcast.emit "gpswrite success" ...end');
+                // }
 
                 naoetu.log.out(3,'Step clsGps onSuccess ...end');
             };
