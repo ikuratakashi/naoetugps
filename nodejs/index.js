@@ -803,8 +803,11 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 
 //socket.io
 var IoTest = io.of("/test");
+naoetu.line(3);
+naoetu.log.out(3,'Test Connection Start...');
 IoTest.on("connection",function(pSocket){
-    naoetu.log.out(3,'Test Connection Start...');
+
+    naoetu.log.out(3,'Test Connection ...finish!');
     
     //接続先へ送信
     pSocket.emit("connectin finish","サーバより");
@@ -816,6 +819,6 @@ IoTest.on("connection",function(pSocket){
         naoetu.log.out(3,'Test broadcast ...End');
     });
 
-    naoetu.log.out(3,'Test Connection ...End');
 });
+naoetu.log.out(3,'Test Connection ...End');
 
