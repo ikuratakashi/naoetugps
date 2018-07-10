@@ -582,6 +582,12 @@ naoetu.mapAjax.prototype = {
         var second = bufDate.getSeconds();
         eleResult.innerHTML = " 送信済 " + ('00' + hour).slice(-2) + ":" + ('00' + minute).slice(-2) + ":" + ('00' + second).slice(-2);
 
+        //位置情報をブロードキャスト配信依頼
+        console.log('send emit "gpsdatas broadcast" start...');
+        naoetu.SocketObj.naoetugps.emit('gpsdatas broadcast');
+        console.log('send emit "gpsdatas broadcast" ...end');
+        
+
         console.log('naoetu.mapAjax.onAjaxDoneSendPos ...finish');
     },
     //Ajaxの戻り値 ... 失敗時
@@ -666,7 +672,7 @@ naoetu.mapAjax.prototype = {
         setTimeout(naoetu.bind(this,bufFunction),1);
 
         console.log('naoetu.mapAjax.onAjaxDoneGetPosData ...end');
-        
+
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailGetPosData : function(pRes){

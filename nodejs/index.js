@@ -264,10 +264,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                     if(naoetu.socket.socketObj){
                         naoetu.log.out(3,'Step emit "gpswrite finish" start...');
                         var _socket = naoetu.socket.socketObj;
-
                         _socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
-                        _socket.broadcast.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit broadcast"});
-                        
                         naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
                 }
@@ -771,6 +768,18 @@ IoNaoetuGps.on("connection",function(pSocket){
         naoetu.log.out(3,'socket  :  gpsread ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
+
+    //-----------------
+    // 位置情報の送信依頼を出す為のブロードキャスト送信
+    //-----------------
+    naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on start...');
+    pSocket.on('gpsdatas broadcast',function(pData){
+        naoetu.log.line(3);
+        naoetu.log.out(3,'socket  :  gpswrite finish broadcast start...');
+        pSocket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
+        naoetu.log.out(3,'socket  :  gpswrite finish broadcast ...end');
+    });
+    naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
 
 });
 naoetu.log.out(3,'socket.io routeing "connection" on ...end');
