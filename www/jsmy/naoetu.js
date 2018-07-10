@@ -520,6 +520,7 @@ naoetu.mapAjax.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
     SendPos : function(){
+        naoetu.log.out(3,"naoetu.mapAjax.SendPos start...");
 
         var lat  = document.getElementById(this.LatName).value;
         var lng  = document.getElementById(this.LngName).value;
@@ -541,6 +542,8 @@ naoetu.mapAjax.prototype = {
         RunMode = "Socket";
         //RunMode = "Http";
 
+        naoetu.log.out(3,"naoetu.mapAjax.SendPos Mode = " + RunMode);
+
         //----------
         //Socketで送信
         //----------
@@ -560,10 +563,13 @@ naoetu.mapAjax.prototype = {
             .always(naoetu.bind(this,this.onAjaxAlwaysSendPos)); //成功でも失敗でも
         }
 
+        naoetu.log.out(3,"naoetu.mapAjax.SendPos ...end");
+
     },
     //Ajaxの戻り値 ... 成功時
     onAjaxDoneSendPos : function(pRes){
-        console.log('AjaxDone' + pRes);
+        console.log('naoetu.mapAjax.onAjaxDoneSendPos start...');
+
         var eleResult = document.getElementById(this.MainObj.ResultName);
 
         //送信時間の表示
@@ -575,6 +581,8 @@ naoetu.mapAjax.prototype = {
         var minute = bufDate.getMinutes();
         var second = bufDate.getSeconds();
         eleResult.innerHTML = " 送信済 " + ('00' + hour).slice(-2) + ":" + ('00' + minute).slice(-2) + ":" + ('00' + second).slice(-2);
+
+        console.log('naoetu.mapAjax.onAjaxDoneSendPos ...finish');
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailSendPos : function(pRes){
@@ -604,6 +612,8 @@ naoetu.mapAjax.prototype = {
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
     getPosDatas : function(){
 
+        console.log('naoetu.mapAjax.getPosDatas start...');
+
         var type = document.getElementById(this.TypeName).value;
         var ajaxParam = {};
         ajaxParam = {
@@ -617,10 +627,12 @@ naoetu.mapAjax.prototype = {
             .fail(naoetu.bind(this,this.onAjaxFailGetPosData)) //失敗
             .always(naoetu.bind(this,this.onAjaxAlwaysGetPosData)); //成功でも失敗でも
 
+        console.log('naoetu.mapAjax.getPosDatas ...finish');
     },
     //Ajaxの戻り値 ... 成功時
     onAjaxDoneGetPosData : function(pRes){
-        console.log('AjaxDone' + pRes);
+
+        console.log('naoetu.mapAjax.onAjaxDoneGetPosData start...');
 
         //ちょっとゴチャゴチャっとしてしまった...(´・ω・`)ウゥ
         //他の処理を止めたくなかったからDeferred使って直列処理にしたらthisが不安定になってしまた
@@ -653,6 +665,8 @@ naoetu.mapAjax.prototype = {
         };
         setTimeout(naoetu.bind(this,bufFunction),1);
 
+        console.log('naoetu.mapAjax.onAjaxDoneGetPosData ...end');
+        
     },
     //Ajaxの戻り値 ... 失敗時
     onAjaxFailGetPosData : function(pRes){
