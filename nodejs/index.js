@@ -776,7 +776,10 @@ IoNaoetuGps.on("connection",function(pSocket){
     pSocket.on('gpsdatas broadcast',function(pData){
         naoetu.log.line(3);
         naoetu.log.out(3,'socket  :  gpswrite finish broadcast start...');
-        pSocket.broadcast.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
+
+        var _socket = naoetu.socket.socketObj;
+        _socket.emit('gpswrite success',{msg:"gpswrite success to broadcast"});
+
         naoetu.log.out(3,'socket  :  gpswrite finish broadcast ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
