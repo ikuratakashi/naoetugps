@@ -778,7 +778,10 @@ IoNaoetuGps.on("connection",function(pSocket){
         naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast start...');
 
         var _socket = naoetu.socket.socketObj;
-        _socket.broadcast.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
+        var _bufFunction = function(){
+            _socket.broadcast.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
+        }
+        _bufFunction();
 
         naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast ...end');
     });
