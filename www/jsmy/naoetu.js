@@ -501,6 +501,7 @@ naoetu.mapAjax.prototype = {
         this.ResultFunction = false;
         this.PosDataParse = false;
         this.GetDataedToPan = false;
+        this.SetOnGpsWriteEvent = false;
 
     },
     //-----------------------------
@@ -550,7 +551,12 @@ naoetu.mapAjax.prototype = {
         if(RunMode == "Socket"){
             //naoetu.SocketObj.naoetugps.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
             naoetu.SocketObj.naoetugps.emit("gpswrite",SendData);
-            naoetu.SocketObj.naoetugps.on("gpswrite finish",naoetu.bind(this,this.onAjaxDoneSendPos));
+
+            if(this.SetOnGpsWriteEvent == false){
+                naoetu.SocketObj.naoetugps.on("gpswrite finish",naoetu.bind(this,this.onAjaxDoneSendPos));
+                this.SetOnGpsWriteEvent = true;
+            }
+            
         }
 
         //----------
