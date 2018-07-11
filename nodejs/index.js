@@ -401,6 +401,7 @@ naoetu.clsGps.prototype = {
         var _TranCallback = function(pErr){
             if(pErr){
                 naoetu.log.out(3,'Error clsGps.writeGps transaction Failed.');
+                naoetu.log.out(3,'Description:' + pErr);
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 //処理失敗時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
@@ -418,7 +419,7 @@ naoetu.clsGps.prototype = {
                         var _masterConnection = function(err) {
                             if(err){
                                 naoetu.log.out(3,'Error clsGps.writeGps Rollback Failed.');
-                                console.error(err);
+                                naoetu.log.out(3,'Description:' + pErr);
                                 //throw err;
                                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                 //処理失敗時の処理実行
@@ -440,12 +441,13 @@ naoetu.clsGps.prototype = {
                         var _commit = function(err) {
                             if (err) { 
                                 naoetu.log.out(3,'Error clsGps.writeGps Commit Failed ... Run Rollback Start.');
+                                naoetu.log.out(3,'Description:' + pErr);
 
                                 //ロールバック時のコールバック定義 <
                                 var _roolback = function(err) {
                                     if(err){
                                         naoetu.log.out(3,'Error clsGps.writeGps RollBack Failed.');
-                                        console.error(err);
+                                        naoetu.log.out(3,'Description:' + pErr);
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                                         //処理失敗時の処理実行
                                         //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
