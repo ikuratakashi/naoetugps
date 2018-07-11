@@ -775,12 +775,12 @@ IoNaoetuGps.on("connection",function(pSocket){
     naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on start...');
     pSocket.on('gpsdatas broadcast',function(pData){
         naoetu.log.line(3);
-        naoetu.log.out(3,'socket  :  gpswrite finish broadcast start...');
+        naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast start...');
 
         var _socket = naoetu.socket.socketObj;
         _socket.broadcast.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
 
-        naoetu.log.out(3,'socket  :  gpswrite finish broadcast ...end');
+        naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
 
