@@ -264,7 +264,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                     if(naoetu.socket.socketObj){
                         naoetu.log.out(3,'Step emit "gpswrite finish" start...');
 
-                        IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
+                        IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 
                         naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
