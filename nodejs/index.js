@@ -479,7 +479,7 @@ naoetu.clsGps.prototype = {
                             //DB接続解除
                             try{
                                 naoetu.log.out(3,'this.masterConnection.destroy() Start...');
-                                this.connection.destroy();
+                                this.masterConnection.destroy();
                                 naoetu.log.out(3,'this.masterConnection.destroy() ...End');
                             }catch(err){
                                 naoetu.log.out(3,'this.masterConnection.destroy() ...Error');
@@ -579,7 +579,7 @@ naoetu.clsGps.prototype = {
                 //DB接続解除
                 try{
                     naoetu.log.out(3,'this.masterConnection.destroy() Start...');
-                    this.connection.destroy();
+                    this.masterConnection.destroy();
                     naoetu.log.out(3,'this.masterConnection.destroy() ...End');
                 }catch(err){
                     naoetu.log.out(3,'this.masterConnection.destroy() ...Error');
