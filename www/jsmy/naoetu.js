@@ -551,12 +551,6 @@ naoetu.mapAjax.prototype = {
         if(RunMode == "Socket"){
             //naoetu.SocketObj.naoetugps.emit("gpswrite",SendData,naoetu.bind(this,this.onAjaxDoneSendPos));
             naoetu.SocketObj.naoetugps.emit("gpswrite",SendData);
-
-            if(this.SetOnGpsWriteEvent == false){
-                naoetu.SocketObj.naoetugps.on("gpswrite finish",naoetu.bind(this,this.onAjaxDoneSendPos));
-                this.SetOnGpsWriteEvent = true;
-            }
-            
         }
 
         //----------
@@ -1218,6 +1212,9 @@ naoetu.socket.prototype = {
         }
         naoetu.SocketObj[this.NameSpace] = _con(this.NameSpace);
         naoetu.SocketObj[this.NameSpace].on("greeting",naoetu.bind(this,this.onConSucccess));
+        
+        var MapSendMap = NaoetuMain.getMap("mapsend-map");
+        naoetu.SocketObj[this.NameSpace].on("gpswrite finish",naoetu.bind(MapSendMap,MapSendMap.onAjaxDoneSendPos));
 
         naoetu.log.out(1,"Socket.io connection ...finish");
 
