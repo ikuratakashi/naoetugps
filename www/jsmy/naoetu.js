@@ -971,6 +971,7 @@ naoetu.mapDrawObject.prototype = {
         this.DrawLinesSolid = new google.maps.Polyline({
             path: pDataGoogleLatLng,
             strokeColor: "blue",
+            geodesic: true,
             strokeWeight: 3,
             map: this.MainObj.MapObj
         });
