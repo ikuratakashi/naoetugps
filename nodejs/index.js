@@ -478,11 +478,11 @@ naoetu.clsGps.prototype = {
 
                             //DB接続解除
                             try{
-                                naoetu.log.out(3,'this.masterConnection.release() Start...');
-                                this.masterConnection.release();
-                                naoetu.log.out(3,'this.masterConnection.release() ...End');
+                                naoetu.log.out(3,'this.masterConnection.destroy() Start...');
+                                this.connection.destroy();
+                                naoetu.log.out(3,'this.masterConnection.destroy() ...End');
                             }catch(err){
-                                naoetu.log.out(3,'this.masterConnection.release() ...Error');
+                                naoetu.log.out(3,'this.masterConnection.destroy() ...Error');
                             }
 
                         }
@@ -578,11 +578,11 @@ naoetu.clsGps.prototype = {
 
                 //DB接続解除
                 try{
-                    naoetu.log.out(3,'this.masterConnection.release() Start...');
-                    this.masterConnection.release();
-                    naoetu.log.out(3,'this.masterConnection.release() ...End');
+                    naoetu.log.out(3,'this.masterConnection.destroy() Start...');
+                    this.connection.destroy();
+                    naoetu.log.out(3,'this.masterConnection.destroy() ...End');
                 }catch(err){
-                    naoetu.log.out(3,'this.masterConnection.release() ...Error');
+                    naoetu.log.out(3,'this.masterConnection.destroy() ...Error');
                 }finally{
                     this.onSuccess(results);
                 }
