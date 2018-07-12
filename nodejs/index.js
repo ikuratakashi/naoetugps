@@ -263,8 +263,8 @@ naoetu.GpsWrite = function(pMode,req,res){
                     //クライアントに座標登録完了を送信
                     if(naoetu.socket.socketObj){
                         naoetu.log.out(3,'Step emit "gpswrite finish" start...');
-                        
-                        IoNaoetuGps.socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
+
+                        IoNaoetuGps.sockets.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
 
                         naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
@@ -777,7 +777,7 @@ IoNaoetuGps.on("connection",function(pSocket){
     pSocket.on('gpsdatas broadcast',function(pData){
         naoetu.log.line(3);
         naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast start...');
-        IoNaoetuGps.socket.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
+        IoNaoetuGps.sockets.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
         naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast ...end');
     });
     naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
