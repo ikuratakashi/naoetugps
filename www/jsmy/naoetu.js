@@ -989,6 +989,7 @@ naoetu.mapDrawObject.prototype = {
         //   };
         this.DrawLinesDot = new google.maps.Polyline({
             path: pDataGoogleLatLng,
+            geodesic: true,
             strokeColor: "blue",
             strokeWeight: 3,
             strokeOpacity: 0.5,
