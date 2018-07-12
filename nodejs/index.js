@@ -266,7 +266,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                         var _socket = naoetu.socket.socketObj;
 
                         _socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"},function(){});
-                        
+
                         naoetu.log.out(3,'Step emit "gpswrite finish" ...end');
                     };
                 }
@@ -698,15 +698,15 @@ naoetu.socket.Response.prototype = {
     }
 }
 
-//-----------------------------
-// Connection
-//-----------------------------
-naoetu.socket.Connection = function(pSocket){
-    naoetu.log.out(3,'socket.io connection successfull');
-    pSocket.emit('greeting',{msg:"greeting connection successfull!!"},function(pData){
-        naoetu.log.out(3,'socket.io greeting from client');
-    });
-}
+// //-----------------------------
+// // Connection
+// //-----------------------------
+// naoetu.socket.Connection = function(pSocket){
+//     naoetu.log.out(3,'socket.io connection successfull');
+//     pSocket.emit('greeting',{msg:"greeting connection successfull!!"},function(pData){
+//         naoetu.log.out(3,'socket.io greeting from client');
+//     });
+// }
 
 //========================================================================
 //
@@ -737,9 +737,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
 
     naoetu.log.line(3);
-
     naoetu.socket.socketObj = pSocket;
-    naoetu.socket.Connection(pSocket);
 
     //---------------------------------------------
     //ソケットに対してイベント処理を追加
@@ -817,25 +815,25 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // naoetu.log.out(3,'socket.io routeing "gpsread" on ...end');
 
 
-//socket.io
-var IoTest = io.of("/test");
-naoetu.log.line(3);
-naoetu.log.out(3,'Test Connection Start...');
-IoTest.on("connection",function(pSocket){
+// //socket.io
+// var IoTest = io.of("/test");
+// naoetu.log.line(3);
+// naoetu.log.out(3,'Test Connection Start...');
+// IoTest.on("connection",function(pSocket){
 
-    naoetu.log.out(3,'Test Connection ...finish!');
+//     naoetu.log.out(3,'Test Connection ...finish!');
     
-    //接続先へ送信
-    pSocket.emit("connectin finish","サーバより");
+//     //接続先へ送信
+//     pSocket.emit("connectin finish","サーバより");
 
-    //メッセージが送られてきたらブロードキャスト
-    pSocket.on("send msg",function(pMsg){
-        naoetu.log.out(3,'Test broadcast Start...');
-        pSocket.broadcast.emit("test message",pMsg);
-        pSocket.emit('test message',pMsg);
-        naoetu.log.out(3,'Test broadcast ...End');
-    });
+//     //メッセージが送られてきたらブロードキャスト
+//     pSocket.on("send msg",function(pMsg){
+//         naoetu.log.out(3,'Test broadcast Start...');
+//         pSocket.broadcast.emit("test message",pMsg);
+//         pSocket.emit('test message',pMsg);
+//         naoetu.log.out(3,'Test broadcast ...End');
+//     });
 
-});
-naoetu.log.out(3,'Test Connection ...End');
+// });
+// naoetu.log.out(3,'Test Connection ...End');
 
