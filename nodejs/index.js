@@ -475,6 +475,16 @@ naoetu.clsGps.prototype = {
                                 this.onSuccess();
 
                             }
+
+                            //DB接続解除
+                            try{
+                                naoetu.log.out(3,'this.masterConnection.release() Start...');
+                                this.masterConnection.release();
+                                naoetu.log.out(3,'this.masterConnection.release() ...End');
+                            }catch(err){
+                                naoetu.log.out(3,'this.masterConnection.release() ...Error');
+                            }
+
                         }
                         //コミット時のコールバック定義 >
 
@@ -565,9 +575,14 @@ naoetu.clsGps.prototype = {
                 //処理成功時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 naoetu.log.out(3,'Search Result Get Record Count :' + results.length);
+
+                //DB接続解除
                 try{
+                    naoetu.log.out(3,'this.masterConnection.release() Start...');
                     this.masterConnection.release();
+                    naoetu.log.out(3,'this.masterConnection.release() ...End');
                 }catch(err){
+                    naoetu.log.out(3,'this.masterConnection.release() ...Error');
                 }finally{
                     this.onSuccess(results);
                 }
