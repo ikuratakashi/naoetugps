@@ -353,7 +353,7 @@ naoetu.clsGps.prototype = {
             var _bufConnectFnc = function(err) {
             if (err) {
                 naoetu.log.out(3,'Error clsGps.writeGps DB Connect Failde.');
-                console.error(err);
+                naoetu.log.out(3,err);
                 return;
             }else{
                 naoetu.log.out(3,'OK clsGps.writeGps DB Connect Success.');
@@ -565,7 +565,12 @@ naoetu.clsGps.prototype = {
                 //処理成功時の処理実行
                 //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
                 naoetu.log.out(3,'Search Result Get Record Count :' + results.length);
-                this.onSuccess(results);
+                try{
+                    this.masterConnection.release();
+                }catch(err){
+                }finally{
+                    this.onSuccess(results);
+                }
 
             };
 
@@ -783,6 +788,12 @@ IoNaoetuGps.on("connection",function(pSocket){
     naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
 
 });
+
+//ソケットの接続が切れた時
+IoNaoetuGps.on('disconnect', function(data) {
+    connected = false;
+});
+
 naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 
 // //-----------------
