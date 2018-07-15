@@ -733,13 +733,30 @@ naoetu.socket.Response.prototype = {
 //
 //========================================================================
 
-//サーバ起動
-http.listen(50001,() => {
-    naoetu.log.out(3,'Start server port:50001');
-});
+//SSL サーバ起動
+var https = require('https');
+var fs = require('fs');
+var ssl_server_key = '../../ssl/server.key';
+var ssl_server_crt = '../../ssl/server.crt';
+var options = {
+        key: fs.readFileSync(ssl_server_key),
+        cert: fs.readFileSync(ssl_server_crt)
+};
+https.createServer(options, function (req,res) {
+        res.writeHead(200, {
+                'Content-Type': 'text/plain'
+        });
+        res.end("Hello, world\n");
+}).listen(50001);
+
+
+//通常 サーバ起動
+//http.listen(50001,() => {
+//    naoetu.log.out(3,'Start server port:50001');
+//});
 
 //socket.io
-var io = require('socket.io')(http);
+var io = require('socket.io')(https);
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
