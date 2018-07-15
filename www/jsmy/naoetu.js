@@ -1079,6 +1079,7 @@ naoetu.main.prototype = {
     initialize : function(){
         this.naoetumaps = new Array();
         this.NaoetuSocket = [];
+        this.GeoObj = false;
     },
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
     // 地図関連メソッド
@@ -1132,6 +1133,11 @@ naoetu.main.prototype = {
         //Socket.ioからのイベントを設定
         //---------------------------------------------------------
         this.SetSocketOn("naoetugps");
+
+        //GPS取得の処理を設定
+        var naoetumap = this.getMap("mapsend-map");
+        this.GeoObj =  new naoetu.geolocation(naoetumap,naoetumap.MapObj,"GeoBtn");
+        this.GeoObj.init(true);
 
     },
     //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ <  
@@ -1241,6 +1247,89 @@ naoetu.socket.prototype = {
     }
 }
 
+//geolocation
+naoetu.geolocation = function(){return this.initialize.apply(this,arguments);};
+naoetu.geolocation.prototype = {
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    // コンストラクタ
+    //◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+    initialize : function(pSendBtnMap,pGoogleMap,pTrigerEleName){
+        this.SendBtnMap = pSendBtnMap;
+        this.GoogleMap = pGoogleMap;
+        this.interval = 3000;
+        this.TrigerEleName = pTrigerEleName;
+        this.isWatch = false;
+        this.timerId = false;
+        this.lastTime = false;
+        this.watchID = false;
+    },
+    init : function(pIsTriger){
+        if(pIsTriger == true){
+            $('#'+this.TrigerEleName).change(naoetu.bind(this,this.WatchTriger));
+        }else{
+            this.WatchTriger();
+        }
+    },
+    //監視開始
+    WatchTriger : function(){
+        if(this.isWatch == false){
+            this.WatchStart();
+            this.isWatch = true;
+        }else{
+            this.WatchStop();
+            this.isWatch = false;
+        }
+    },
+    //監視開始
+    WatchStart : function(){
+        // オプション・オブジェクト
+        var optionObj = {
+            "enableHighAccuracy": false ,
+            "timeout": 1000000 ,
+            "maximumAge": 0 ,
+        } ;
+        this.watchID = navigator.geolocation.watchPosition(naoetu.bind(this,this.WatchFunction), 
+                                                           naoetu.bind(this,this.ErrorFunc) ,
+                                                           optionObj);
+    },
+    //監視処理
+    WatchFunction : function(pos){
+
+        var nowTime = ~~( new Date() / 1000 ) ;
+        if( (this.lastTime + 3) > nowTime )
+        {
+            return false ;
+        }
+        this.lastTime = nowTime;
+
+        //位置情報の取得
+        var CenterPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+        this.GoogleMap.panTo(CenterPos);
+        document.getElementById("posLat").value = pos.coords.latitude;
+        document.getElementById("posLng").value = pos.coords.longitude;
+
+        //位置情報の送信
+        this.SendBtnMap.mapAjaxSendBtn.SendPos();
+
+    },
+    //監視停止
+    WatchStop : function(){
+        navigator.geolocation.clearWatch(this.watchID);
+    },
+    // 失敗した時の関数
+    ErrorFunc : function(error){
+        var errorMessage = {
+            0: "原因不明のエラーが発生しました…。" ,
+            1: "位置情報の取得が許可されませんでした…。" ,
+            2: "電波状況などで位置情報が取得できませんでした…。" ,
+            3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました…。" ,
+        } ;
+        // エラーコードに合わせたエラー内容を表示
+        var description = errorMessage[error.code];
+    }
+
+}
+
 
 var NaoetuMain = new naoetu.main();
 //                             pIsSend,pIsViewer,pDefLat,pDefLng,pDefZoom,pMapName,pOutNameLat,pOutNameLng,pTypeListName,pSendBtnName,pResultName,pMapPanMode(cooperative：二本指/greedy:一本指)
@@ -1249,14 +1338,3 @@ NaoetuMain.MapAdd(new naoetu.map(false,true,false,false,15,"mapviewer-map","",""
 //座標送信側
 NaoetuMain.MapAdd(new naoetu.map(true,false,false,false,18,"mapsend-map","posLat","posLng","TypeList","SendBtn","result1","greedy"));
 
-var ioTest = io.connect("http://27.120.99.9:50001/test");
-ioTest.on("connectin finish",function(pMsg){
-});
-
-ioTest.on("test message",function(msg){
-    alert(msg);
-});
-
-var _onclick = function(pMsg){
-    ioTest.emit("send msg","クライアントより送信:" + pMsg);
-}
