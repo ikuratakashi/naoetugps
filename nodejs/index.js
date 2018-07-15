@@ -743,22 +743,22 @@ var options = {
         key: fs.readFileSync(ssl_server_key),
         cert: fs.readFileSync(ssl_server_crt)
 };
-https.createServer(options, function (req,res) {
-        res.writeHead(200, {
-                'Content-Type': 'text/plain'
-        });
-        res.end("Hello, world\n");
-}).listen(50001);
+// https.createServer(options, function (req,res) {
+//         res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//         });
+//         res.end("Hello, world\n");
+// }).listen(50001);
 naoetu.log.out(1,'SSL Server Deproy ...End');
 
 
 //通常 サーバ起動
-//http.listen(50001,() => {
-//    naoetu.log.out(3,'Start server port:50001');
-//});
+http.listen(50001,() => {
+    naoetu.log.out(3,'Start server port:50001');
+});
 
 //socket.io
-var io = require('socket.io')(https);
+var io = require('socket.io')(http);
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
