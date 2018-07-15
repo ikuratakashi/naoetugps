@@ -734,6 +734,7 @@ naoetu.socket.Response.prototype = {
 //========================================================================
 
 //SSL サーバ起動
+naoetu.log.out(1,'SSL Server Deproy Start...');
 var https = require('https');
 var fs = require('fs');
 var ssl_server_key = '../../ssl/server.key';
@@ -748,6 +749,7 @@ https.createServer(options, function (req,res) {
         });
         res.end("Hello, world\n");
 }).listen(50001);
+naoetu.log.out(1,'SSL Server Deproy ...End');
 
 
 //通常 サーバ起動
