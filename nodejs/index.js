@@ -744,12 +744,7 @@ var options = {
         cert: fs.readFileSync(ssl_server_crt),
         passphrase: process.env.HTTPS_PASS
 };
-https.createServer(options, function (req,res) {
-        res.writeHead(200, {
-                'Content-Type': 'text/plain'
-        });
-        res.end("Hello, world\n");
-}).listen(50001,() => {
+https.createServer(options, app).listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
 });
 naoetu.log.out(1,'SSL Server Deproy ...End');

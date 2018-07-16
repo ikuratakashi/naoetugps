@@ -557,7 +557,7 @@ naoetu.mapAjax.prototype = {
         //Httpで送信
         //----------
         if(RunMode == "Http"){
-            var ajaxObj = $.ajax('http://27.120.99.9:50001/gpswrite',ajaxParam)
+            var ajaxObj = $.ajax('https://arukisoft.com:50001/gpswrite',ajaxParam)
             .done(naoetu.bind(this,this.onAjaxDoneSendPos)) //成功
             .fail(naoetu.bind(this,this.onAjaxFailSendPos)) //失敗
             .always(naoetu.bind(this,this.onAjaxAlwaysSendPos)); //成功でも失敗でも
@@ -628,7 +628,7 @@ naoetu.mapAjax.prototype = {
             dataType: 'json'
         };
 
-        var ajaxObj = $.ajax('http://27.120.99.9:50001/gpsread',ajaxParam)
+        var ajaxObj = $.ajax('https://arukisoft.com:50001/gpsread',ajaxParam)
             .done(naoetu.bind(this,this.onAjaxDoneGetPosData)) //成功
             .fail(naoetu.bind(this,this.onAjaxFailGetPosData)) //失敗
             .always(naoetu.bind(this,this.onAjaxAlwaysGetPosData)); //成功でも失敗でも
@@ -1216,7 +1216,7 @@ naoetu.socket.prototype = {
         naoetu.log.out(1,"Socket.io connection start...");
 
         var _con = function(pNameSpace){
-            return io.connect("http://27.120.99.9:50001/" + pNameSpace);
+            return io.connect("https://arukisoft.com:50001/" + pNameSpace);
         }
         naoetu.SocketObj[this.NameSpace] = _con(this.NameSpace);
         naoetu.SocketObj[this.NameSpace].on("greeting",naoetu.bind(this,this.onConSucccess));
