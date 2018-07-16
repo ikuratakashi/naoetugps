@@ -740,9 +740,9 @@ var options = {
         cert: fs.readFileSync(ssl_server_crt),
         passphrase: process.env.HTTPS_PASS
 };
-https.createServer(options, app).listen(50001,() => {
-    naoetu.log.out(3,'Start https server port:50001');
-});
+var io = require('socket.io').listen(50001, options);
+io.enable('browser client minification');
+
 naoetu.log.out(1,'SSL Server Deproy ...End');
 
 
@@ -751,8 +751,6 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 //     naoetu.log.out(3,'Start http server port:50001');
 // });
 
-//socket.io
-var io = require('socket.io')(https);
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
