@@ -108,10 +108,6 @@ var cors = require('cors');
 app.use(cors());
 naoetu.log.out(3,'cors require');
 
-//main
-var http = require('http').Server(app);
-naoetu.log.out(3,'http require');
-
 //共通設定
 naoetu.ini = {
     ConPool   : "pool",
