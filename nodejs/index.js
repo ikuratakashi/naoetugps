@@ -756,7 +756,7 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 // });
 
 //socket.io
-var io = require('socket.io')(http);
+var io = require('socket.io')(https);
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
