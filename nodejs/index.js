@@ -741,15 +741,15 @@ var ssl_server_key = '../../ssl/server.key';
 var ssl_server_crt = '../../ssl/server.crt';
 var options = {
         key: fs.readFileSync(ssl_server_key),
-        cert: fs.readFileSync(ssl_server_crt)
+        cert: fs.readFileSync(ssl_server_crt),
+        passphrase: process.env.HTTPS_PASS
 };
-https.createServer(options, app);
-// https.createServer(options, function (req,res) {
-//         res.writeHead(200, {
-//                 'Content-Type': 'text/plain'
-//         });
-//         res.end("Hello, world\n");
-// });
+https.createServer(options, function (req,res) {
+        res.writeHead(200, {
+                'Content-Type': 'text/plain'
+        });
+        res.end("Hello, world\n");
+});
 //.listen(50001);
 naoetu.log.out(1,'SSL Server Deproy ...End');
 
