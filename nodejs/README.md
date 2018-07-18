@@ -2,13 +2,13 @@
 
 ## 使用機能
 #### node.js
-・Express
-・express-validator
-・cors
-・dotenv
+・Express  
+・express-validator  
+・cors  
+・dotenv  
 ・https  
 ・socket.io  
-・mysql
+・mysql  
 
 #### DB
-・MariaDB
+・MariaDB  
