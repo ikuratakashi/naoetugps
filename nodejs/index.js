@@ -753,6 +753,8 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 
 //socket.io
 var io = require('socket.io').listen(server);
+var redis = require('socket.io-redis');
+io.adapter(redis({ host: 'localhost', port: 6379 }));
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
