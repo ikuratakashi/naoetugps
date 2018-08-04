@@ -41,7 +41,6 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="container">
-          <h1 class="display-3">NaoetuGPS</h1>
           <div name="mapviewer-map" id="mapviewer-map" style="width:100%;height:300px;"></div>
           <form name="mapsend-navi">
               <div class="form-group">
@@ -51,7 +50,7 @@
               <button type="button" id="DataGetBtn" class="btn btn-primary">更新する</button>
               <button type="button" id="PosCopyBtn" class="btn btn-primary">座標を位置発信側へ</button>
           </form>
-    </div>
+        </div>
       </div>
 
       <div class="container">
@@ -107,7 +106,9 @@
     <!-- Node.js - Socket.io -->
     <script src="https://arukisoft.com:50001/socket.io/socket.io.js"></script>
     <!-- NaoetuGps -->
-    <script src="jsmy/naoetu.js"></script>
+    <script src="jsmy/naoetu.class.js"></script>
+    <script src="jsmy/naoetu.mainmap.js"></script>
+    <script src="jsmy/naoetu.sendmap.js"></script>
 
     <!-- etc JavaScript
     ================================================== -->

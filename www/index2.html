@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Naoetu Plus One Project.</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap sub CSS -->
+    
+    <link href="./css/bootstrap-toggle.css" rel="stylesheet">
+    <style>
+        .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; border:solid 1px #dfdfdf;}
+        .toggle.ios .toggle-handle { border-radius: 20px; }
+        html,body,body > div,body > div > div { height: 100%; }
+        #mapviewer-map {
+            height: calc(100% - 100px);
+        }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="min-height: 70px;">
+        <a class="navbar-brand" href="#">NAOETU+GPS.</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><select class="form-control" id="TypeListViewer"></select></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><button type="button" id="DataGetBtn" class="btn btn-primary">更新</button></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div name="mapviewer-map" id="mapviewer-map" class="mw-100 mh-100"></div>
+    <footer class="fixed-bottom">
+        &copy; Naoetu Plus One Project. since 2018
+    </footer>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!--script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script-->
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/bootstrap-toggle.js"></script>
+
+    <!-- NaoetuGps core JavaScript
+    ================================================== -->
+    <!-- Node.js - Socket.io -->
+    <script src="https://arukisoft.com:50001/socket.io/socket.io.js"></script>
+    <!-- NaoetuGps -->
+    <script src="jsmy/naoetu.class.js"></script>
+    <script src="jsmy/naoetu.mainmap.js"></script>
+
+    <!-- etc JavaScript
+    ================================================== -->
+    <!-- Google Map -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=NaoetuMain.googlemapComp&key=AIzaSyBot8cACK5aXhcn17fJJ4oGklzMD1XKrYg"></script>
+
+  </body>
+</html>
+
