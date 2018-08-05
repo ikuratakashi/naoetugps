@@ -1222,7 +1222,9 @@ naoetu.socket.prototype = {
         naoetu.SocketObj[this.NameSpace].on("greeting",naoetu.bind(this,this.onConSucccess));
         
         var MapSendMap = NaoetuMain.getMap("mapsend-map");
-        naoetu.SocketObj[this.NameSpace].on("gpswrite finish",naoetu.bind(MapSendMap.mapAjaxSendBtn,MapSendMap.mapAjaxSendBtn.onAjaxDoneSendPos));
+        if(MapSendMap){
+            naoetu.SocketObj[this.NameSpace].on("gpswrite finish",naoetu.bind(MapSendMap.mapAjaxSendBtn,MapSendMap.mapAjaxSendBtn.onAjaxDoneSendPos));
+        }
 
         naoetu.log.out(1,"Socket.io connection ...finish");
 
