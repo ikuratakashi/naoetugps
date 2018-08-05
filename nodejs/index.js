@@ -740,9 +740,7 @@ var options = {
         cert: fs.readFileSync(ssl_server_crt),
         passphrase: process.env.HTTPS_PASS
 };
-var server = https.createServer(options, app).listen(50001,() => {
-    naoetu.log.out(3,'Start https server port:50001');
-});
+var server = https.createServer(options, app)();
 naoetu.log.out(1,'SSL Server Deproy ...End');
 
 
@@ -754,8 +752,8 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 //socket.io作成（redis込み）
 var io = require('socket.io')();
 var redis = require('socket.io-redis');
-io.adapter(redis({ host: 'localhost', port: 6379 }));
 io.listen(server);
+io.adapter(redis({ host: 'localhost', port: 6379 }));
 
 //sessionの共有
 var cookieParser = require('cookie-parser')();
@@ -767,6 +765,10 @@ io.use(function(socket, next) {
         if(err) return next(err);
         session(req, res, next);
     });
+});
+
+server.listen(50001,() => {
+    naoetu.log.out(3,'Start https server port:50001');
 });
 
 //名前空間
