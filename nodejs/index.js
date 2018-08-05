@@ -740,7 +740,7 @@ var options = {
         cert: fs.readFileSync(ssl_server_crt),
         passphrase: process.env.HTTPS_PASS
 };
-var server = https.createServer(options, app)();
+var server = https.createServer(options, app);
 naoetu.log.out(1,'SSL Server Deproy ...End');
 
 
