@@ -750,9 +750,11 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 // });
 
 //socket.io作成（redis込み）
-var io = require('socket.io')();
+var socketIo = require('socket.io')();
+var io = socketIo.listen(server);
+
+//スケールアウト
 var redis = require('socket.io-redis');
-io.listen(server);
 io.adapter(redis({ host: 'localhost', port: 6379 }));
 
 //sessionの共有
