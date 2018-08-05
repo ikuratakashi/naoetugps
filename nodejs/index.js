@@ -751,12 +751,25 @@ naoetu.log.out(1,'SSL Server Deproy ...End');
 //     naoetu.log.out(3,'Start http server port:50001');
 // });
 
-//socket.io
+//socket.io作成（redis込み）
 var io = require('socket.io')();
 var redis = require('socket.io-redis');
 io.adapter(redis({ host: 'localhost', port: 6379 }));
 io.listen(server);
 
+//sessionの共有
+var cookieParser = require('cookie-parser')();
+var session = require('cookie-session')({ secret: 'secret key'});
+io.use(function(socket, next) {
+    var req = socket.request;
+    var res = {};
+    cookieParser(req, res, function(err) {
+        if(err) return next(err);
+        session(req, res, next);
+    });
+});
+
+//名前空間
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
 
