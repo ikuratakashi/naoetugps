@@ -254,6 +254,11 @@ naoetu.GpsWrite = function(pMode,req,res){
 
                 if(pMode == "http"){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
+                    naoetu.log.out(3,'Step emit http "gpswrite finish" start...');
+
+                    IoNaoetuGps.emit('gpswrite http finish',{msg:"naoetu.GpsWrite emit"});
+
+                    naoetu.log.out(3,'Step emit http "gpswrite finish" ...end');
                 }
                 if(pMode == "socket"){
                     //クライアントに座標登録完了を送信
