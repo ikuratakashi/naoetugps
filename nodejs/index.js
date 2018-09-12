@@ -785,7 +785,7 @@ server.listen(50001,() => {
 
     naoetu.log.out(3,'Start https server port:50001');
 
-    socketcl = iocl.connect('https://arukisoft.com:50001/naoetugps');
+    socketcl = iocl.connect('https://arukisoft.com:50001');
     socketcl.on("connection",function(pSocket){
         naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
     });
