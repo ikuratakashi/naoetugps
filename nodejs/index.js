@@ -778,18 +778,13 @@ io.use(function(socket, next) {
 });
 
 //socketクライアント
-var iocl = require('socket.io-client');
-var socketcl = false;
+var socketcl = require('socket.io-client')('https://arukisoft.com:50001');
+socketcl.on("connect",function(pSocket){
+    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
+});
 
 server.listen(50001,() => {
-
     naoetu.log.out(3,'Start https server port:50001');
-
-    socketcl = iocl.connect('https://arukisoft.com:50001');
-    socketcl.on("connect",function(pSocket){
-        naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
-    });
-
 });
 
 //名前空間
