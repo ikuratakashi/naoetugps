@@ -911,7 +911,8 @@ socl.on("connect",function(pSocket){
     naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
 });
 socl.on("connect_error",function(e){
-    naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
     naoetu.log.out(3,'socket.io-client - ' + e);
-    
+});
+socl.on("error",function(e){
+    naoetu.log.out(3,'socket.io-client - ' + e);
 });
