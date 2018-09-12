@@ -784,6 +784,9 @@ server.listen(50001,() => {
 //socketクライアント
 var iocl = require('socket.io-client');
 var socketcl = iocl.connect('https://arukisoft.com:50001/naoetugps');
+socketcl.on("connection",function(pSocket){
+    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
+});
 
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
