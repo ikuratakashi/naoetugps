@@ -779,7 +779,8 @@ io.use(function(socket, next) {
 
 //socketクライアント
 var socketcl = require('socket.io-client');
-var socl = socketcl.connect('https://arukisoft.com:50001',{ transports: ["xhr-polling"]});
+var socl = socketcl.connect('https://arukisoft.com:50001');
+socl.adapter(redis({ host: 'localhost', port: 6379 }));
 socl.on("connect",function(pSocket){
     naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
 });
