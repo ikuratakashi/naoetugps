@@ -777,18 +777,6 @@ io.use(function(socket, next) {
     });
 });
 
-//socketクライアント
-var socketcl = require('socket.io-client');
-var socl = socketcl.connect('localhost:50001');
-socl.on("connect",function(pSocket){
-    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
-});
-socl.on("connect_error",function(e){
-    naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
-    naoetu.log.out(3,'socket.io-client - ' + e);
-    
-});
-
 server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
 });
@@ -916,3 +904,14 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // });
 // naoetu.log.out(3,'Test Connection ...End');
 
+//socketクライアント
+var socketcl = require('socket.io-client');
+var socl = socketcl.connect('localhost:50001');
+socl.on("connect",function(pSocket){
+    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
+});
+socl.on("connect_error",function(e){
+    naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
+    naoetu.log.out(3,'socket.io-client - ' + e);
+    
+});
