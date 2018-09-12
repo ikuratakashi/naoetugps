@@ -779,11 +779,11 @@ io.use(function(socket, next) {
 
 //socketクライアント
 var socketcl = require('socket.io-client');
-socketcl.connect('https://arukisoft.com:50001');
-socketcl.on("connect",function(pSocket){
+var socl = socketcl.connect('https://arukisoft.com:50001');
+socl.on("connect",function(pSocket){
     naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
 });
-socketcl.on("connect_error",function(e){
+socl.on("connect_error",function(e){
     naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
     naoetu.log.out(3,'socket.io-client - ' + e);
     
