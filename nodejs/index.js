@@ -782,6 +782,9 @@ var socketcl = require('socket.io-client')('https://arukisoft.com:50001');
 socketcl.on("connect",function(pSocket){
     naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
 });
+socketcl.on("connect_error",function(e){
+    naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
+});
 
 server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
