@@ -780,6 +780,19 @@ server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
 });
 
+//socketクライアント
+var iocl = require('socket.io-client');
+iocl.adapter(redis({ host: 'localhost', port: 6379 }));
+iocl.use(function(socket, next) {
+    var req = socket.request;
+    var res = {};
+    cookieParser(req, res, function(err) {
+        if(err) return next(err);
+        session(req, res, next);
+    });
+});
+var IoNaoetuGpslc = iocl.of("/naoetugps");
+
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
