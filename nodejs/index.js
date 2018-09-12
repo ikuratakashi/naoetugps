@@ -781,8 +781,11 @@ server.listen(50001,() => {
 });
 
 //socketクライアント
-var iocl = require('socket.io-client');
+var socketIocl = require('socket.io-client')();
+var iocl = socketIocl.listen(server);
 iocl.adapter(redis({ host: 'localhost', port: 6379 }));
+
+//sessionの共有
 iocl.use(function(socket, next) {
     var req = socket.request;
     var res = {};
