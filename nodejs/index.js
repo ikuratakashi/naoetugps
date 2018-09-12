@@ -778,7 +778,8 @@ io.use(function(socket, next) {
 });
 
 //socketクライアント
-var socketcl = require('socket.io-client')('https://arukisoft.com',{path:"/naoetugps"});
+var socketcl = require('socket.io-client');
+socketcl.connect('https://arukisoft.com:50001');
 socketcl.on("connect",function(pSocket){
     naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
 });
