@@ -781,20 +781,8 @@ server.listen(50001,() => {
 });
 
 //socketクライアント
-var socketIocl = require('socket.io-client');
-var iocl = socketIocl.listen(server);
-iocl.adapter(redis({ host: 'localhost', port: 6379 }));
-
-//sessionの共有
-iocl.use(function(socket, next) {
-    var req = socket.request;
-    var res = {};
-    cookieParser(req, res, function(err) {
-        if(err) return next(err);
-        session(req, res, next);
-    });
-});
-var IoNaoetuGpslc = iocl.of("/naoetugps");
+var iocl = require('socket.io-client');
+var socketcl = iocl.connect('https://arukisoft.com:50001');
 
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
