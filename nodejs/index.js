@@ -256,7 +256,8 @@ naoetu.GpsWrite = function(pMode,req,res){
                     this.response.json({result:{err:0,description:"GPS情報 登録成功"}});
                     naoetu.log.out(3,'Step emit http "gpswrite finish" start...');
 
-                    IoNaoetuGps.broadcast.emit('gpswrite http finish',{msg:"naoetu.GpsWrite emit"});
+                    naoetu.socket.socketObj.emit('gpswrite http finish',{msg:"naoetu.GpsWrite emit"});
+                    naoetu.socket.socketObj.broadcast.emit('gpswrite http finish',{msg:"naoetu.GpsWrite emit"});
 
                     naoetu.log.out(3,'Step emit http "gpswrite finish" ...end');
                 }
