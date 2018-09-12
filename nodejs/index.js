@@ -784,6 +784,8 @@ socketcl.on("connect",function(pSocket){
 });
 socketcl.on("connect_error",function(e){
     naoetu.log.out(3,'socket.io-client - connection Err!!!!!!!');
+    naoetu.log.out(3,'socket.io-client - ' + e);
+    
 });
 
 server.listen(50001,() => {
