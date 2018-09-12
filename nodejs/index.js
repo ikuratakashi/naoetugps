@@ -781,13 +781,6 @@ server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
 });
 
-//socketクライアント
-var iocl = require('socket.io-client');
-var socketcl = iocl.connect('https://arukisoft.com:50001/naoetugps');
-socketcl.on("connection",function(pSocket){
-    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
-});
-
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
 naoetu.log.out(3,'socket.io require');
@@ -798,11 +791,20 @@ naoetu.log.out(3,'socket.io require');
 //
 //========================================================================
 
+//socketクライアント
+var iocl = require('socket.io-client');
+var socketcl = false;
+
 //---------------------------------------------
 // socket.io コネクション
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
+
+    socketcl = iocl.connect('https://arukisoft.com:50001/naoetugps');
+    socketcl.on("connection",function(pSocket){
+        naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
+    });
 
     naoetu.log.line(3);
     naoetu.socket.socketObj = pSocket;
