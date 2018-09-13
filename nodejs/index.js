@@ -907,7 +907,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 var net = require('net');
 var cl = new net.Socket();
 cl.setEncoding('utf8');
-cl.connect('50001', 'localhost', function(){
+cl.connect('50002', 'localhost', function(){
     cl.write('Who needs a browser to communicate?');
 });
 process.stdin.resume();
