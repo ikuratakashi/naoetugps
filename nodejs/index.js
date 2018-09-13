@@ -777,12 +777,16 @@ io.use(function(socket, next) {
     });
 });
 
-server.listen(50001,() => {
+server.listen(50001,(cl) => {
     naoetu.log.out(3,'Start https server port:50001');
+    cl.sockets.on("connection",function(){
+        naoetu.log.out(3,'server.listen connection');
+    });
 });
 
 //名前空間
-var IoNaoetuGps = io.of("/naoetugps");
+//var IoNaoetuGps = io.of("/naoetugps");
+var IoNaoetuGps = io;
 naoetu.log.out(3,'socket.io require');
 
 //========================================================================
