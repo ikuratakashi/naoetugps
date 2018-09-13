@@ -22,7 +22,14 @@ cl.setEncoding('utf8');
 cl.connect('50001',"localhost", function(socket){
     console.log('client-> connected to server');
     //socket.emit("gpswrite","aaaaa");
-    cl.emit("gpswrite","aaaaa");
+
+    var SendData = {
+        "lat":1.1,
+        "lng":2.1,
+        "type":1
+    }
+
+    cl.emit("gpswrite",SendData);
     console.log('client-> emit end');
 });
 cl.on('error', function(e){
