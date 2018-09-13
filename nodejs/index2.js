@@ -23,6 +23,7 @@ cl.connect('50001',"localhost", function(socket){
     console.log('client-> connected to server');
     //socket.emit("gpswrite","aaaaa");
     cl.emit("gpswrite","aaaaa");
+    console.log('client-> emit end');
 });
 cl.on('data', function(data){
   console.log('client-> ' + data);
