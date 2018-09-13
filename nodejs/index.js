@@ -931,6 +931,6 @@ net.createServer(function(socket){
         naoetu.log.out(3,'net  : error - ' + e);
     });
     socket.write('hello from tcp server');
-}).listen(50002,function(){
+}).listen(50001,function(){
     naoetu.log.out(3,'tcp server is listening on port 50002');
 });
