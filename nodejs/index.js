@@ -926,11 +926,7 @@ net.createServer(function(socket){
 });
 
 var _io = require('socket.io-client');
-var _url = "https://arukisoft.com:50001/naoetugps";
-var _options = {
-    'force new connection':true
-//    ,port:50001
-};
+var _url = "https://localhost:50001/naoetugps";
 var _so = _io.connect(_url, _options);
 _so.on('connect', function (pData){
     naoetu.log.out(3,'io-client  :  connect ' + pData);
