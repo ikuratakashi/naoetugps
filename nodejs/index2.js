@@ -21,7 +21,7 @@ var cl = new net.Socket();
 cl.setEncoding('utf8');
 cl.connect('50001',"localhost", function(socket){
     console.log('client-> connected to server');
-    socket.emit("gpswrite","aaaaa");
+    //socket.emit("gpswrite","aaaaa");
     cl.emit("gpswrite","aaaaa");
 });
 cl.on('data', function(data){
