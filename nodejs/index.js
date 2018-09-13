@@ -905,14 +905,21 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // naoetu.log.out(3,'Test Connection ...End');
 
 //socketクライアント
-var socketcl = require('socket.io-client');
-var socl = socketcl.connect('https://arukisoft.com:50001',{secure: true, reconnect: true});
-socl.on("connect",function(pSocket){
-    naoetu.log.out(3,'socket.io-client - connection OK!!!!!!!');
-});
-socl.on("connect_error",function(e){
-    naoetu.log.out(3,'socket.io-client - ' + e);
-});
-socl.on("error",function(e){
-    naoetu.log.out(3,'socket.io-client - ' + e);
+var net = require('net');
+net.createServer(function(socket){
+    socket.on("data",function(pData){
+        naoetu.log.out(3,'net  :  data get!');
+    });
+    socket.on("end",function(pData){
+        naoetu.log.out(3,'net  :  end!');
+    });
+    socket.on("close",function(pData){
+        naoetu.log.out(3,'net  :  close!');
+    });
+    socket.on("error",function(e){
+        naoetu.log.out(3,'net  : error - ' + e);
+    });
+    socket.write('hello from tcp server');
+}).listen(50002,function(){
+    naoetu.log.out(3,'tcp server is listening on port 50002' + e);
 });
