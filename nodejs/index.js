@@ -782,8 +782,8 @@ server.listen(50001,function(){
 });
 
 //名前空間
-//var IoNaoetuGps = io.of("/naoetugps");
-var IoNaoetuGps = io;
+var IoNaoetuGps = io.of("/naoetugps");
+//var IoNaoetuGps = io;
 naoetu.log.out(3,'socket.io require');
 
 //========================================================================
