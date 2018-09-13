@@ -1,5 +1,6 @@
 var net = require('net');
 
+/*
 var server = net.createServer(function(conn){
   console.log('server-> tcp server created');
 
@@ -13,6 +14,7 @@ var server = net.createServer(function(conn){
 }).listen(3000);
 
 console.log('listening on port 3000');
+*/
 
 //socketクライアント
 var cl = new net.Socket();
