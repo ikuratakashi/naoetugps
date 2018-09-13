@@ -25,7 +25,8 @@ cl.connect('50001', 'localhost', function(){
 });
 process.stdin.resume();
 process.stdin.on('data', function(data){
-    cl.write(data);
+    console.log('client-> on data');
+    //cl.write(data);
 });
 cl.on('data', function(data){
   console.log('client-> ' + data);
