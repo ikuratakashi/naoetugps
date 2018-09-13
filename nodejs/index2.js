@@ -19,7 +19,7 @@ console.log('listening on port 3000');
 //socketクライアント
 var cl = new net.Socket();
 cl.setEncoding('utf8');
-cl.connect('50001',"localhost", function(socket){
+cl.connect('50001',"localhost", function(){
     console.log('client-> connected to server');
     //socket.emit("gpswrite","aaaaa");
 
@@ -29,7 +29,7 @@ cl.connect('50001',"localhost", function(socket){
         "type":1
     }
 
-    cl.write(SendData);
+    cl.write("SendData");
     console.log('client-> emit end');
 });
 cl.on('error', function(e){
