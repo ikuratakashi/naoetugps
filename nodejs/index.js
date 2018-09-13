@@ -905,6 +905,10 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 
 //socketクライアント
 var net = require('net');
+
+var _io = net.listen(server);
+
+/*
 net.createServer(function(socket){
     socket.on("data",function(pData){
 
@@ -927,3 +931,4 @@ net.createServer(function(socket){
 }).listen(50002,function(){
     naoetu.log.out(3,'tcp server is listening on port 50002');
 });
+*/
