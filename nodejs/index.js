@@ -904,7 +904,7 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // naoetu.log.out(3,'Test Connection ...End');
 
 //socketクライアント
-var net = require('net');
+var net = require('net')();
 
 var _io = net.listen(server);
 
