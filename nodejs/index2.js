@@ -23,11 +23,6 @@ cl.connect('50001', 'localhost', function(){
     console.log('client-> connected to server');
     cl.write('Who needs a browser to communicate?');
 });
-process.stdin.resume();
-process.stdin.on('data', function(data){
-    console.log('client-> on data');
-    //cl.write(data);
-});
 cl.on('data', function(data){
   console.log('client-> ' + data);
 });
