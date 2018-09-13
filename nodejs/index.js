@@ -907,8 +907,12 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 var net = require('net');
 net.createServer(function(socket){
     socket.on("data",function(pData){
+
         var line = pData.toString();
-        naoetu.log.out(3,'net  :  data get!...' + line);
+        naoetu.log.out(3,'net  :  data get!...');
+
+        IoNaoetuGps.emit("gpswrite","aaaaa");
+
     });
     socket.on("end",function(){
         naoetu.log.out(3,'net  :  end!');
