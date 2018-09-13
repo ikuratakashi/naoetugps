@@ -19,7 +19,7 @@ console.log('listening on port 3000');
 //socketクライアント
 var cl = new net.Socket();
 cl.setEncoding('utf8');
-cl.connect('50001', 'https://arukisoft.com/naoetugps', function(){
+cl.connect('50001', 'https://arukisoft.com', function(){
     console.log('client-> connected to server');
 
     cl.write('Who needs a browser to communicate?');
