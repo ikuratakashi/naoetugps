@@ -21,7 +21,7 @@ var cl = new net.Socket();
 cl.setEncoding('utf8');
 cl.connect('50001',"localhost", function(){
     console.log('client-> connected to server');
-
+    IoNaoetuGps.emit("gpswrite","aaaaa");
     cl.write('Who needs a browser to communicate?');
 });
 cl.on('data', function(data){
