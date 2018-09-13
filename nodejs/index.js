@@ -910,7 +910,7 @@ net.createServer(function(socket){
     socket.on("data",function(pData){
         var line = data.toStrin();
         naoetu.log.out(3,'net  :  data get!...' + line);
-        
+
         IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 
     });
@@ -925,5 +925,5 @@ net.createServer(function(socket){
     });
     socket.write('hello from tcp server');
 }).listen(50002,function(){
-    naoetu.log.out(3,'tcp server is listening on port 50002' + e);
+    naoetu.log.out(3,'tcp server is listening on port 50002');
 });
