@@ -29,7 +29,7 @@ cl.connect('50001',"localhost", function(socket){
         "type":1
     }
 
-    cl.write("naoetugps/gpswrite",SendData);
+    cl.write(SendData);
     console.log('client-> emit end');
 });
 cl.on('error', function(e){
