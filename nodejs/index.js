@@ -777,19 +777,8 @@ io.use(function(socket, next) {
     });
 });
 
-var _io = require('socket.io-client');
-
 server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
-
-    var _url = "localhost:50001/naoetugps";
-    var _so = _io.connect(_url);
-    _so.on('connect', function (pData){
-        naoetu.log.out(3,'io-client  :  connect ' + pData);
-        IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
-    });
-
-
 });
 
 //名前空間
@@ -931,6 +920,6 @@ net.createServer(function(socket){
         naoetu.log.out(3,'net  : error - ' + e);
     });
     socket.write('hello from tcp server');
-}).listen(50001,function(){
+}).listen(50002,function(){
     naoetu.log.out(3,'tcp server is listening on port 50002');
 });
