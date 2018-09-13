@@ -777,8 +777,19 @@ io.use(function(socket, next) {
     });
 });
 
+var _io = require('socket.io-client');
+
 server.listen(50001,() => {
     naoetu.log.out(3,'Start https server port:50001');
+
+    var _url = "localhost:50001/naoetugps";
+    var _so = _io.connect(_url);
+    _so.on('connect', function (pData){
+        naoetu.log.out(3,'io-client  :  connect ' + pData);
+        IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
+    });
+
+
 });
 
 //名前空間
@@ -842,16 +853,7 @@ IoNaoetuGps.on("connection",function(pSocket){
         IoNaoetuGps.emit('get PosDatas',{msg:"gpswrite success to broadcast"});
         naoetu.log.out(3,'socket  :  gpsdatas broadcast broadcast ...end');
     });
-    naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');
-
-    var _io = require('socket.io-client');
-    var _url = "localhost:50001/naoetugps";
-    var _so = _io.connect(_url);
-    _so.on('connect', function (pData){
-        naoetu.log.out(3,'io-client  :  connect ' + pData);
-        IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
-    });
-    
+    naoetu.log.out(3,'socket.io routeing "gpsdatas broadcast" on ...end');    
  });
 
 //ソケットの接続が切れた時
