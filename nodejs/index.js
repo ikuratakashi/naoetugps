@@ -932,7 +932,7 @@ var _options = {
 //    ,port:50001
 };
 var _so = _io.connect(_url, _options);
-socket.on('connect', function (pData){
+_so.on('connect', function (pData){
     naoetu.log.out(3,'io-client  :  connect ' + pData);
     IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 });
