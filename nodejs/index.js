@@ -912,7 +912,7 @@ net.createServer(function(socket){
         naoetu.log.out(3,'net  :  data get!...' + line);
         
         var _io = require('socket.io-client');
-        var _url = "https://arukisoft.com";
+        var _url = "https://arukisoft.com:50001/naoetugps";
         var _options = {
             'force new connection':true,
             port:50001
