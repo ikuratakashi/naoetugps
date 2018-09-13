@@ -1,7 +1,17 @@
-var _io = require('socket.io-client');
-var _url = "https://localhost:50001/naoetugps";
-var _so = _io.connect(_url,{secure: true, reconnect: true});
-_so.on('connect', function (pData){
-    naoetu.log.out(3,'io-client  :  connect ' + pData);
-    IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
+//socketクライアント
+var net = require('net');
+var cl = new net.Socket();
+cl.setEncoding('utf8');
+cl.connect('50001', 'localhost', function(){
+    cl.write('Who needs a browser to communicate?');
+});
+process.stdin.resume();
+process.stdin.on('data', function(data){
+    cl.write(data);
+});
+cl.on('data', function(data){
+  console.log('client-> ' + data);
+});
+cl.on('close', function(){
+  console.log('client-> connection is closed');
 });

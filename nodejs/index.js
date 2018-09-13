@@ -903,23 +903,6 @@ naoetu.log.out(3,'socket.io routeing "connection" on ...end');
 // });
 // naoetu.log.out(3,'Test Connection ...End');
 
-//socketクライアント
-var net = require('net');
-var cl = new net.Socket();
-cl.setEncoding('utf8');
-cl.connect('50001', 'localhost', function(){
-    cl.write('Who needs a browser to communicate?');
-});
-process.stdin.resume();
-process.stdin.on('data', function(data){
-    cl.write(data);
-});
-cl.on('data', function(data){
-  console.log('client-> ' + data);
-});
-cl.on('close', function(){
-  console.log('client-> connection is closed');
-});
 
 /*
 net.createServer(function(socket){
