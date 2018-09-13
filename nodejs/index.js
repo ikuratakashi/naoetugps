@@ -910,19 +910,6 @@ net.createServer(function(socket){
     socket.on("data",function(pData){
         var line = pData.toString();
         naoetu.log.out(3,'net  :  data get!...' + line);
-        
-        var _io = require('socket.io-client');
-        var _url = "https://arukisoft.com:50001/naoetugps";
-        var _options = {
-            'force new connection':true,
-            port:50001
-        };
-        var _so = _io.connect(_url, _options);
-        socket.on('connect', function (pData){
-            naoetu.log.out(3,'io-client  :  connect ' + pData);
-            IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
-        });
-
     });
     socket.on("end",function(){
         naoetu.log.out(3,'net  :  end!');
@@ -936,4 +923,16 @@ net.createServer(function(socket){
     socket.write('hello from tcp server');
 }).listen(50002,function(){
     naoetu.log.out(3,'tcp server is listening on port 50002');
+});
+
+var _io = require('socket.io-client');
+var _url = "https://arukisoft.com:50001/naoetugps";
+var _options = {
+    'force new connection':true
+//    ,port:50001
+};
+var _so = _io.connect(_url, _options);
+socket.on('connect', function (pData){
+    naoetu.log.out(3,'io-client  :  connect ' + pData);
+    IoNaoetuGps.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 });
