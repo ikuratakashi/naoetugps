@@ -19,10 +19,10 @@ console.log('listening on port 3000');
 //socketクライアント
 var cl = new net.Socket();
 cl.setEncoding('utf8');
-cl.connect('50001',"localhost", function(){
+cl.connect('50001',"localhost", function(socket){
     console.log('client-> connected to server');
-    IoNaoetuGps.emit("gpswrite","aaaaa");
-    cl.write('Who needs a browser to communicate?');
+    socket.emit("gpswrite","aaaaa");
+    cl.emit("gpswrite","aaaaa");
 });
 cl.on('data', function(data){
   console.log('client-> ' + data);
