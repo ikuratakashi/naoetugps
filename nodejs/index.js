@@ -805,6 +805,10 @@ IoNaoetuGps.on("connection",function(pSocket){
     //ソケットに対してイベント処理を追加
     //---------------------------------------------
 
+    pSocket.on("message",function(msg){
+        naoetu.log.out(3,'message - ' + msg);
+    });
+
     //-----------------
     // GPS情報書き込み
     //-----------------
