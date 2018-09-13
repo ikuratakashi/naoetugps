@@ -777,11 +777,8 @@ io.use(function(socket, next) {
     });
 });
 
-server.listen(50001,(cl) => {
+server.listen(50001,function(){
     naoetu.log.out(3,'Start https server port:50001');
-    cl.on("connection",function(){
-        naoetu.log.out(3,'server.listen connection');
-    });
 });
 
 //名前空間
