@@ -779,7 +779,7 @@ io.use(function(socket, next) {
 
 server.listen(50001,(cl) => {
     naoetu.log.out(3,'Start https server port:50001');
-    cl.sockets.on("connection",function(){
+    cl.on("connection",function(){
         naoetu.log.out(3,'server.listen connection');
     });
 });
