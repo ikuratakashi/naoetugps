@@ -4,6 +4,7 @@ var app = express();
 //クロスサイト制限を外す設定
 var cors = require('cors');
 app.use(cors());
+
 app.get('/', function(req, res) {
 	res.render('index.ejs', {
 		layout : false,
