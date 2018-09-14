@@ -1,22 +1,6 @@
-var net = require('net');
-
 /*
-var server = net.createServer(function(conn){
-  console.log('server-> tcp server created');
-
-  conn.on('data', function(data){
-    console.log('server-> ' + data + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
-    conn.write('server -> Repeating: ' + data);
-  });
-  conn.on('close', function(){
-    console.log('server-> client closed connection');
-  });
-}).listen(3000);
-
-console.log('listening on port 3000');
-*/
-
 //socketクライアント
+var net = require('net');
 var cl = new net.Socket();
 cl.setEncoding('utf8');
 cl.connect('50001',"localhost", function(){
@@ -40,4 +24,20 @@ cl.on('data', function(data){
 });
 cl.on('close', function(){
   console.log('client-> connection is closed');
+});
+*/
+var io = require('socket.io-client');
+var socket = io.connect('localhost:8080/naoetugps');
+ 
+socket.on('connect',function(){
+  console.log("connect!!");
+});
+
+socket.on('connect_error',function(e){
+  console.log("error!! - " + e);
+});
+
+socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other evenr', {my: 'data'});
 });
