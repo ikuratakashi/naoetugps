@@ -13,6 +13,9 @@ app.get('/', function(req, res) {
 	});
 });
 
+//設定ファイルの読み込み
+require('dotenv').config();
+
 //SSL サーバ起動
 var https = require('https');
 var fs = require('fs');
@@ -25,7 +28,7 @@ var options = {
 };
 var server = https.createServer(options, app);
 server.listen(3000,function(){
-    naoetu.log.out(3,'Start https server port:50001');
+    console.log(3,'Start https server port:3000');
 });
 
 //socket.io作成（redis込み）
