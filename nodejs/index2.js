@@ -27,7 +27,7 @@ cl.on('close', function(){
 });
 */
 var io = require('socket.io-client');
-var socket = io.connect('localhost:8080');
+var socket = io.connect('localhost:50001/naoetugps');
  
 socket.on('connect',function(){
   console.log("connect!!");
