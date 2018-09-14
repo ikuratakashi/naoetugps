@@ -7,10 +7,7 @@ app.use(cors());
 
 app.get('/', function(req, res) {
 	res.render('index.ejs', {
-		layout : false,
-		locals : {
-			name : req.param('name') || 'anonymous'
-		}
+		layout : false
 	});
 });
 
