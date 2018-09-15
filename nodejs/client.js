@@ -9,6 +9,7 @@ var ssl_server_crt = '../../ssl/server.crt';
 var options = {
     key: fs.readFileSync(ssl_server_key),
     cert: fs.readFileSync(ssl_server_crt),
+    pfx: fs.readFileSync(ssl_server_crt),
     passphrase: process.env.HTTPS_PASS
 };
 
