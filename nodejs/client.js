@@ -13,7 +13,7 @@ var options = {
 
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
-var socket = client.connect('https://localhost:30000',options);
+var socket = client.connect('https://localhost:30000/namehoge',options);
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
