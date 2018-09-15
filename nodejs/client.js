@@ -13,7 +13,8 @@ var options = {
 };
 
 var client = require('socket.io-client');
-var socket = client.connect('https://arukisoft.com:3000',options);
+var socket = client.connect('https://arukisoft.com',options);
+
 socket.on('connect',function(){
     console.log('yea!!');
     socket.send('how are you?');
