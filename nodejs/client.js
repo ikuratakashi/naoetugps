@@ -7,10 +7,9 @@ var fs = require('fs');
 var ssl_server_key = '../../ssl/server.key';
 var ssl_server_crt = '../../ssl/server.crt';
 var options = {
-        key: fs.readFileSync(ssl_server_key),
-        cert: fs.readFileSync(ssl_server_crt),
-        passphrase: process.env.HTTPS_PASS,
-        port: 3000
+    key: fs.readFileSync(ssl_server_key),
+    cert: fs.readFileSync(ssl_server_crt),
+    passphrase: process.env.HTTPS_PASS
 };
 
 var client = require('socket.io-client');
