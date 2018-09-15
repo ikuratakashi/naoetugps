@@ -9,7 +9,7 @@
     </form>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
-      var socket = io.connect("namehoge");
+      var socket = io.connect("https://arukisoft.com:30000/namehoge");
       socket.on('message', function(msg) {
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(msg));
