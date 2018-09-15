@@ -14,7 +14,7 @@ app.get('/', function(req, res) {
 //設定ファイルの読み込み
 require('dotenv').config();
 
-//SSL サーバ起動
+//SSL サーバ作成
 var https = require('https');
 var fs = require('fs');
 var ssl_server_key = '../../ssl/server.key';
@@ -25,17 +25,35 @@ var options = {
         passphrase: process.env.HTTPS_PASS
 };
 var server = https.createServer(options, app);
-server.listen(3000,function(){
-    console.log(3,'Start https server port:3000');
-});
 
-//socket.io作成（redis込み）
+//socket.ioインスタンス作成
 var socketIo = require('socket.io')();
 var io = socketIo.listen(server);
 
-console.log('Server running at https://127.0.0.1:3000/');
+//socket.ioスケールアウト
+var redis = require('socket.io-redis');
+io.adapter(redis({ host: 'localhost', port: 6379 }));
 
-io.sockets.on('connection', function(client) {
+//スケールアウトの為sessionの共有
+var cookieParser = require('cookie-parser')();
+var session = require('cookie-session')({ secret: 'secret key'});
+io.use(function(socket, next) {
+    var req = socket.request;
+    var res = {};
+    cookieParser(req, res, function(err) {
+        if(err) return next(err);
+        session(req, res, next);
+    });
+});
+
+//サーバ起動
+server.listen(30000,function(){
+    console.log('Start https server port:30000');
+});
+
+//名前空間
+var io_name = io.of("/namehoge");
+io_name.on('connection', function(client) {
 	client.on('message', function(msg) {
 		client.send(msg);
 		client.broadcast.emit('message', msg);
