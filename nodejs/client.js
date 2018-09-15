@@ -14,7 +14,7 @@ var options = {
 };
 
 var client = require('socket.io-client');
-var socket = client.connect('localhost',options);
+var socket = client.connect('https://arukisoft.com',options);
 
 socket.on('connect',function(){
     console.log('yea!!');
