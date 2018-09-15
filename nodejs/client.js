@@ -4,7 +4,7 @@
 require('dotenv').config();
 
 var fs = require('fs');
-var ssl_server_key = '../../ssl/server.key';
+var ssl_server_key = '../../ssl/new_server.key';
 var ssl_server_crt = '../../ssl/server.crt';
 var options = {
     key: fs.readFileSync(ssl_server_key),
