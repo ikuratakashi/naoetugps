@@ -14,7 +14,7 @@ var options = {
 };
 
 var client = require('socket.io-client');
-var socket = client.connect('https://localhost:3000',options);
+var socket = client.connect('https://localhost',options);
 
 socket.on('connect',function(){
     console.log('yea!!');
