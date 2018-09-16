@@ -3,7 +3,7 @@ var net = require('net');
 var client = new net.Socket();
 client.setEncoding('utf8');
 
-client.connect('30000', 'localhost', function(){
+client.connect('30000', 'https://localhost', function(){
   console.log('client-> connected to server');
   client.write('Who needs a browser to communicate?');
 });
