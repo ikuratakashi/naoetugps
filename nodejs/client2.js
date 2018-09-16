@@ -10,7 +10,7 @@ var opt = {
 
 //console.log("client.connect=" + client.connect);
 
-client.connect(30000,"https://arukisoft.com", function(){
+client.connect("30000","https://arukisoft.com", function(){
   console.log('client-> connected to server');
   client.write('Who needs a browser to communicate?');
 });
