@@ -24,6 +24,6 @@ socket.on('connect',function(){
     process.exit(0);
 });
 
-socket.on('error',function(e){
-    console.log('e=' + e);
+socket.on('connect_error',function(e){
+    console.log('connect_error e=' + e);
 });
