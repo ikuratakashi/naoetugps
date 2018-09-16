@@ -4,7 +4,6 @@ var client = new net.Socket();
 client.setEncoding('utf8');
 
 var opt = {
-    port:443,
     host:"https://arukisoft.com:30000/namehoge"
 };
 
