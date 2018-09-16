@@ -3,7 +3,12 @@ var net = require('net');
 var client = new net.Socket();
 client.setEncoding('utf8');
 
-client.connect('30000', 'https://localhost', function(){
+var opt = {
+    port:30000,
+    host:"https://localhost"
+};
+
+client.connect(opt, function(){
   console.log('client-> connected to server');
   client.write('Who needs a browser to communicate?');
 });
