@@ -5,7 +5,7 @@ client.setEncoding('utf8');
 
 var opt = {
     port:30000,
-    host:"https://localhost"
+    host:"https://arukisoft.com"
 };
 
 client.connect(opt, function(){
