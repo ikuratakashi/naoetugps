@@ -5,11 +5,10 @@ client.setEncoding('utf8');
 
 var opt = {
     port:30000,
-    host:"https://arukisoft.com",
-    namespace:"namehoge"
+    host:"https://arukisoft.com"
 };
 
-console.log("client.connect=" + client.connect);
+//console.log("client.connect=" + client.connect);
 
 client.connect(opt, function(){
   console.log('client-> connected to server');
