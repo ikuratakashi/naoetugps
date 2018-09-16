@@ -18,11 +18,14 @@ process.stdin.on('data', function(data){
         console.log('on data : error = [' + e + ']');
     }
 });
-
+client.on('error', function(error){
+    console.log('client error-> ' + error);
+  });
+  
 client.on('data', function(data){
-  console.log('client-> ' + data);
+  console.log('client data-> ' + data);
 });
 
 client.on('close', function(){
-  console.log('client-> connection is closed');
+  console.log('client close-> connection is closed');
 });
