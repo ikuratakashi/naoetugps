@@ -52,7 +52,7 @@ server.listen(30000,function(){
 });
 
 //名前空間
-var io_name = io.of("/namehoge");
+var io_name = io.of("/namespace");
 io_name.on('connection', function(client) {
 	client.on('message', function(msg) {
 		client.send(msg);
