@@ -58,4 +58,12 @@ io_name.on('connection', function(client) {
 		client.send(msg);
 		client.broadcast.emit('message', msg);
 	});
+	client.on('data', function(data){
+		console.log('server-> ' + data + ' from ' + client.remoteAddress + ':' + client.remotePort);
+		client.send('server -> Repeating: ' + data);
+	});
+	client.on('close', function(){
+		console.log('server-> client closed connection');
+	});
+
 });

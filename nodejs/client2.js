@@ -11,7 +11,12 @@ client.connect('30000', 'localhost', function(){
 process.stdin.resume();
 
 process.stdin.on('data', function(data){
-  client.write(data);
+    console.log('client.write(data) : data = [' + data + ']');
+    try{
+        client.write(data);
+    }catch(e){
+        console.log('on data : error = [' + e + ']');
+    }
 });
 
 client.on('data', function(data){
