@@ -4,7 +4,9 @@ var client = new net.Socket();
 client.setEncoding('utf8');
 
 var opt = {
-    host:"https://arukisoft.com:30000/namehoge"
+    port:30000,
+    host:"https://arukisoft.com",
+    namespace:"namehoge"
 };
 
 client.connect(opt, function(){
