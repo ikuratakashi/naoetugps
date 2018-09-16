@@ -9,6 +9,8 @@ var opt = {
     namespace:"namehoge"
 };
 
+console.log("client.connect=" + client.connect);
+
 client.connect(opt, function(){
   console.log('client-> connected to server');
   client.write('Who needs a browser to communicate?');
