@@ -17,7 +17,6 @@ var server = net.createServer(function(conn){
     //処理
     socket.on('connect',function(){
         console.log('connect: https://localhost:30000/namespace');
-        socket.send('how are you?');
         //socket.disconnect();
         //process.exit(0);
     });
@@ -28,6 +27,7 @@ var server = net.createServer(function(conn){
 
     conn.on('data', function(data){
         var line = data.toString();
+        socket.send('how are you you you you you?');
         console.log('server->[' + line + ']');
         console.log('server->' + 'remoteAddress[' + conn.remoteAddress + ']');
         console.log('server->' + 'remotePort[' + conn.remotePort + ']');
