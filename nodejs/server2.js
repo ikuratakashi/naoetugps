@@ -27,7 +27,7 @@ var server = net.createServer(function(conn){
 
     conn.on('data', function(data){
         var line = data.toString();
-        socket.send('how are you you you you you?');
+        socket.send(line);
         console.log('server->[' + line + ']');
         console.log('server->' + 'remoteAddress[' + conn.remoteAddress + ']');
         console.log('server->' + 'remotePort[' + conn.remotePort + ']');
