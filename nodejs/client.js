@@ -23,10 +23,8 @@ var nsp = socket;
 //connectしたら'how are you?'とメッセージを送信する
 nsp.on('connect',function(){
     console.log('yea!!');
-
-    nsp.id = self.generateId("/namespace");
+    nsp.id = this.generateId("/namespace");
     nsp.send('how are you?');
-
     nsp.disconnect();
     process.exit(0);
 });
