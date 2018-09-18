@@ -21,9 +21,9 @@ var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
-nsp('/namespace').on('connect',function(){
+nsp.on('connect',function(){
     console.log('yea!!');
-    nsp.send('how are you?');
+    nsp('/namespace').send('how are you?');
     nsp.disconnect();
     process.exit(0);
 });
