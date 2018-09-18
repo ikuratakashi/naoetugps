@@ -11,8 +11,7 @@ var options = {
 //    passphrase: process.env.HTTPS_PASS,
     secure:true,
     reconnect: true,
-    rejectUnauthorized : false,
-    namespace : "namespace"
+    rejectUnauthorized : false
 };
 
 //socket.io-clientでサーバへ接続
@@ -22,13 +21,13 @@ var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
-nsp.on('connect',function(){
+nsp('/namespace').on('connect',function(){
     console.log('yea!!');
     nsp.send('how are you?');
     nsp.disconnect();
     process.exit(0);
 });
 
-nsp.on('connect_error',function(e){
+nsp('/namespace').on('connect_error',function(e){
     console.log('connect_error e=' + e);
 });
