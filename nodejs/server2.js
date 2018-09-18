@@ -4,7 +4,6 @@ var client = require('socket.io-client');
 var server = net.createServer(function(conn){
 
     console.log('server-> tcp server created');
-    conn.setEncoding("utf8");  // as String
 
     var options = {
         secure:true,
@@ -26,8 +25,9 @@ var server = net.createServer(function(conn){
         console.log('connect_error e=' + e);
     });
 
+    conn.setEncoding("utf8");  // as String
     conn.on('data', function(data){
-        var line = data.toString();
+        var line = data;
         socket.send(line);
         console.log('server->[' + line + ']');
         console.log('server->' + 'remoteAddress[' + conn.remoteAddress + ']');
