@@ -11,13 +11,14 @@ var options = {
 //    passphrase: process.env.HTTPS_PASS,
     secure:true,
     reconnect: true,
-    rejectUnauthorized : false
+    rejectUnauthorized : false,
+    path : "/namespace"
 };
 
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
 var socket = client.connect('https://arukisoft.com:30000',options);
-var nsp = socket.of("/namespace");
+var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
