@@ -5,7 +5,6 @@ var server = net.createServer(function(conn){
 
     console.log('server-> tcp server created');
 
-    /*
     var options = {
         secure:true,
         reconnect: true,
@@ -26,7 +25,6 @@ var server = net.createServer(function(conn){
     socket.on('connect_error',function(e){
         console.log('connect_error e=' + e);
     });
-    */
 
     conn.on('data', function(data){
         console.log('server-> ' + data + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
