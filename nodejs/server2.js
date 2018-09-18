@@ -29,7 +29,8 @@ var server = net.createServer(function(conn){
     conn.on('data', function(data){
         var line = data.toString();
         console.log('server->[' + line + ']');
-        console.log('server->' + 'from ' + conn.remoteAddress + ':' + conn.remotePort);
+        console.log('server->' + 'remoteAddress[' + conn.remoteAddress + ']');
+        console.log('server->' + 'remotePort[' + conn.remotePort + ']');
         //conn.write('server -> Repeating: ' + data);
     });
 
