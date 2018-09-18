@@ -16,7 +16,7 @@ var options = {
 
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
-var socket = client.connect('https://arukisoft.com:30000/namespace',options);
+var socket = client.connect('https://arukisoft.com:30000',options);
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
