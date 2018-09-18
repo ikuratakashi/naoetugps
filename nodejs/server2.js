@@ -27,9 +27,11 @@ var server = net.createServer(function(conn){
     });
 
     conn.on('data', function(data){
-        //console.log('server-> ' + data + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
+        var line = data.toString();
+        console.log('server-> ' + line + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
         //conn.write('server -> Repeating: ' + data);
     });
+    
     conn.on('close', function(){
         console.log('server-> client closed connection');
     });
