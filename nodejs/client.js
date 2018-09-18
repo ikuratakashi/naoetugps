@@ -16,13 +16,13 @@ var options = {
 
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
-var socket = client.connect('https://arukisoft.com:30001',options);
+var socket = client.connect('https://arukisoft.com:30000',options);
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
 socket.on('connect',function(){
     console.log('yea!!');
-    socket.send('how are you?');
+    socket.of('namespace').send('how are you?');
     socket.disconnect();
     process.exit(0);
 });
