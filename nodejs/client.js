@@ -22,7 +22,6 @@ var socket = client.connect('https://arukisoft.com:30000/namespace',options);
 //connectしたら'how are you?'とメッセージを送信する
 socket.on('connect',function(){
     console.log('yea!!');
-    console.log('socket.id='+socket.id);
     socket.send('how are you2?');
     //socket.disconnect();
     //process.exit(0);
