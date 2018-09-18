@@ -17,18 +17,17 @@ var options = {
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
 var socket = client.connect('https://arukisoft.com:30000/namespace',options);
-var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
-nsp.on('connect',function(){
+socket.on('connect',function(){
     console.log('yea!!');
-    console.log('nsp.id='+nsp.id);
-    nsp.send('how are you?');
-    nsp.disconnect();
+    console.log('socket.id='+socket.id);
+    socket.send('how are you2?');
+    socket.disconnect();
     process.exit(0);
 });
 
-nsp.on('connect_error',function(e){
+socket.on('connect_error',function(e){
     console.log('connect_error e=' + e);
 });
