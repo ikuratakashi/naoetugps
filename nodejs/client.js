@@ -12,7 +12,7 @@ var options = {
     secure:true,
     reconnect: true,
     rejectUnauthorized : false,
-    path : "/namespace"
+    namespace : "namespace"
 };
 
 //socket.io-clientでサーバへ接続
