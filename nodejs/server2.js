@@ -4,6 +4,7 @@ var client = require('socket.io-client');
 var server = net.createServer(function(conn){
 
     console.log('server-> tcp server created');
+    conn.setEncoding("utf8");  // as String
 
     var options = {
         secure:true,
