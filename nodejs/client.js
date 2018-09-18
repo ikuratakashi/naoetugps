@@ -24,8 +24,8 @@ var nsp = socket;
 nsp.on('connect',function(){
     console.log('yea!!');
     nsp.send('how are you?');
-    nsp.disconnect();
-    process.exit(0);
+    //nsp.disconnect();
+    //process.exit(0);
 });
 
 nsp.on('connect_error',function(e){
