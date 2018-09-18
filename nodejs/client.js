@@ -23,7 +23,7 @@ var nsp = socket;
 //connectしたら'how are you?'とメッセージを送信する
 nsp.on('connect',function(pSocket){
     console.log('yea!!');
-    pSocket('/namespace').send('how are you?');
+    pSocket.to('/namespace').send('how are you?');
     nsp.disconnect();
     process.exit(0);
 });
