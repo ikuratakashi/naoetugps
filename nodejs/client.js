@@ -16,14 +16,14 @@ var options = {
 
 //socket.io-clientでサーバへ接続
 var client = require('socket.io-client');
-var socket = client.connect('https://arukisoft.com:30000',options);
+var socket = client.connect('https://arukisoft.com:30000/namespace',options);
 var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
 nsp.on('connect',function(pSocket){
     console.log('yea!!');
-    pSocket.to('/namespace').send('how are you?');
+    pSocket.send('how are you?');
     nsp.disconnect();
     process.exit(0);
 });
