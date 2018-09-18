@@ -24,8 +24,8 @@ socket.on('connect',function(){
     console.log('yea!!');
     console.log('socket.id='+socket.id);
     socket.send('how are you2?');
-    socket.disconnect();
-    process.exit(0);
+    //socket.disconnect();
+    //process.exit(0);
 });
 
 socket.on('connect_error',function(e){
