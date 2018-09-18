@@ -17,7 +17,7 @@ var server = net.createServer(function(conn){
     //処理
     socket.on('connect',function(){
         console.log('connect: https://localhost:30000/namespace');
-        //socket.send('how are you?');
+        socket.send('how are you?');
         //socket.disconnect();
         //process.exit(0);
     });
