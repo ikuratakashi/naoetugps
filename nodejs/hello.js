@@ -55,12 +55,13 @@ server.listen(30000,function(){
 var io_name = io.of("/namespace");
 io_name.on('connection', function(client) {
 	client.on('message', function(msg) {
+		console.log('server msg -> ' + msg + ' from ' + client.remoteAddress + ':' + client.remotePort);
 		client.send(msg);
 		client.broadcast.emit('message', msg);
 	});
 	client.on('data', function(data){
-		console.log('server-> ' + data + ' from ' + client.remoteAddress + ':' + client.remotePort);
-		client.send('server -> Repeating: ' + data);
+		console.log('server data -> ' + data + ' from ' + client.remoteAddress + ':' + client.remotePort);
+		client.send('server-> Repeating: ' + data);
 	});
 	client.on('close', function(){
 		console.log('server-> client closed connection');
