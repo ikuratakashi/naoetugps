@@ -24,7 +24,7 @@ socket.on('connect',function(){
     console.log('yea!!');
     socket.send('how are you2?');
     //socket.disconnect();
-    //process.exit(0);
+    process.exit(0);
 });
 
 socket.on('connect_error',function(e){
