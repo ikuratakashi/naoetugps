@@ -21,13 +21,13 @@ var nsp = socket;
 
 //処理
 //connectしたら'how are you?'とメッセージを送信する
-nsp.on('connect',function(){
+nsp.on('connect',function(pSocket){
     console.log('yea!!');
-    nsp('/namespace').send('how are you?');
+    pSocket('/namespace').send('how are you?');
     nsp.disconnect();
     process.exit(0);
 });
 
-nsp('/namespace').on('connect_error',function(e){
+nsp.on('connect_error',function(e){
     console.log('connect_error e=' + e);
 });
