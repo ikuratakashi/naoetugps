@@ -842,6 +842,8 @@ server.listen(50001,function(){
 
 //socket.io-client
 naoetu.client = new naoetu.clsClient("https://arukisoft.com:50001/naoetugps");
+//socket.io-clientのコネクション実行
+naoetu.client.DoConnect();
 
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
@@ -859,9 +861,6 @@ naoetu.log.out(3,'socket.io require');
 //---------------------------------------------
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
-
-    //socket.io-clientのコネクション実行
-    naoetu.client.DoConnect();
     
     naoetu.log.line(3);
     naoetu.socket.socketObj = pSocket;
