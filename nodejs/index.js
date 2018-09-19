@@ -166,6 +166,7 @@ naoetu.clsClient.prototype = {
             reconnect: true,
             rejectUnauthorized : false
         };
+        this.isConnect = false;
         this.socket = false;
     },
     //コネクション実行
@@ -175,16 +176,19 @@ naoetu.clsClient.prototype = {
         this.socket.on('connect',function(){
             //thisはsocketの空間になるので注意
             naoetu.log.out(3,'clsClient: connect finish');
+            this.isConnect = true;
         });
         //接続エラー時
         this.socket.on('connect_error',function(e){
             //thisはsocketの空間になるので注意
             naoetu.log.out(3,'clsClient: connect error :'+ e);
+            this.isConnect = false;
         });
         //接続解除時
         this.socket.on('disconnect',function(pRes){
             //thisはsocketの空間になるので注意
             naoetu.log.out(3,'clsClient: disconnect :'+ pRes);
+            this.isConnect = false;
         });
     }
 }
@@ -311,6 +315,8 @@ naoetu.GpsWrite = function(pMode,req,res){
                     naoetu.log.out(3,'Step emit http "gpswrite finish" start...');
 
                     naoetu.log.out(3,'emit http id > ' + naoetu.client.socket.id);
+                    naoetu.log.out(3,'emit http isConnect > ' + naoetu.client.isConnect);
+                    
 
                     naoetu.client.socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 
