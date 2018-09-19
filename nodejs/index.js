@@ -316,7 +316,6 @@ naoetu.GpsWrite = function(pMode,req,res){
 
                     naoetu.log.out(3,'emit http id > ' + naoetu.client.socket.id);
                     naoetu.log.out(3,'emit http isConnect > ' + naoetu.client.isConnect);
-                    
 
                     naoetu.client.socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
 
@@ -839,10 +838,6 @@ io.use(function(socket, next) {
 
 server.listen(50001,function(){
     naoetu.log.out(3,'Start https server port:50001');
-    
-    //socket.io-clientのコネクション実行
-    naoetu.client.DoConnect();
-    
 });
 
 //socket.io-client
@@ -865,6 +860,9 @@ naoetu.log.out(3,'socket.io require');
 naoetu.log.out(3,'socket.io routeing "connection" on start...');
 IoNaoetuGps.on("connection",function(pSocket){
 
+    //socket.io-clientのコネクション実行
+    naoetu.client.DoConnect();
+    
     naoetu.log.line(3);
     naoetu.socket.socketObj = pSocket;
 
