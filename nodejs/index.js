@@ -148,6 +148,44 @@ naoetu.ConConf = {
 
 //========================================================================
 //
+// socket.io-client
+//
+//========================================================================
+
+//---------------------------------------------
+// socket.io-client クラス定義
+//---------------------------------------------
+naoetu.clsClient = function(){return this.initialize.apply(this,arguments);};
+naoetu.clsClient.prototype = {
+    //引数1 pUrl:接続するURL（例：https://hotge.com:99999/namespace）
+    initialize : function(pUrl){
+        this.url = pUrl;
+        this.client = require('socket.io-client');
+        this.options = {
+            secure:true,
+            reconnect: true,
+            rejectUnauthorized : false
+        };
+    },
+    //コネクション実行
+    DoCnnection : function(){
+        this.socket = this.client.connect(this.url,this.options);
+        //接続完了時
+        this.socket.on('connect',function(){
+            //thisはsocketの空間になるので注意
+            naoetu.log.out(3,'clsClient: connect finish');
+        });
+        //接続エラー時
+        this.socket.on('connect_error',function(e){
+            //thisはsocketの空間になるので注意
+            naoetu.log.out(3,'clsClient: connect error :'+ e);
+        });
+    }
+}
+naoetu.client = new clsClient("https://localhost:30000/namespace");
+
+//========================================================================
+//
 // ルーティング app
 //
 //========================================================================
@@ -184,6 +222,8 @@ app.get('/gpsread',(req,res)=>{
 // 処理
 //
 //========================================================================
+
+
 
 //---------------------------------------------
 //
