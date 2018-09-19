@@ -166,9 +166,10 @@ naoetu.clsClient.prototype = {
             reconnect: true,
             rejectUnauthorized : false
         };
+        this.socket = false;
     },
     //コネクション実行
-    DoCnnection : function(){
+    DoConnect : function(){
         this.socket = this.client.connect(this.url,this.options);
         //接続完了時
         this.socket.on('connect',function(){
@@ -182,7 +183,6 @@ naoetu.clsClient.prototype = {
         });
     }
 }
-naoetu.client = new clsClient("https://localhost:30000/namespace");
 
 //========================================================================
 //
@@ -819,7 +819,14 @@ io.use(function(socket, next) {
 
 server.listen(50001,function(){
     naoetu.log.out(3,'Start https server port:50001');
+    
+    //socket.io-clientのコネクション実行
+    naoetu.client.DoConnect();
+    
 });
+
+//socket.io-client
+naoetu.client = new clsClient("https://localhost:50001/naoetugps");
 
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
