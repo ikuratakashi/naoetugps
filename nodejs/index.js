@@ -840,7 +840,7 @@ server.listen(50001,function(){
 });
 
 //socket.io-client
-naoetu.client = new naoetu.clsClient("https://localhost:50001/naoetugps");
+naoetu.client = new naoetu.clsClient("https://arukisoft.com:50001/naoetugps");
 
 //名前空間
 var IoNaoetuGps = io.of("/naoetugps");
