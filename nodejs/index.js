@@ -181,6 +181,11 @@ naoetu.clsClient.prototype = {
             //thisはsocketの空間になるので注意
             naoetu.log.out(3,'clsClient: connect error :'+ e);
         });
+        //接続解除時
+        this.socket.on('disconnect',function(pRes){
+            //thisはsocketの空間になるので注意
+            naoetu.log.out(3,'clsClient: disconnect :'+ pRes);
+        });
     }
 }
 
