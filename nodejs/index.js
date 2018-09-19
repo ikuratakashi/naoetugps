@@ -175,7 +175,7 @@ naoetu.clsClient.prototype = {
         //接続完了時
         this.socket.on('connect',function(){
             //thisはsocketの空間になるので注意
-            naoetu.log.out(3,'clsClient: connect finish');
+            naoetu.log.out(3,'clsClient: connect finish id:' + this.socket.id);
             this.isConnect = true;
         });
         //接続エラー時
