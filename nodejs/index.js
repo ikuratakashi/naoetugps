@@ -317,7 +317,7 @@ naoetu.GpsWrite = function(pMode,req,res){
                     naoetu.log.out(3,'emit http id > ' + naoetu.client.socket.id);
                     naoetu.log.out(3,'emit http isConnect > ' + naoetu.client.isConnect);
 
-                    naoetu.client.socket.emit('gpswrite finish',{msg:"naoetu.GpsWrite emit"});
+                    naoetu.client.socket.emit('gpsdatas broadcast',{msg:"naoetu.GpsWrite emit"});
 
                     naoetu.log.out(3,'Step emit http "gpswrite finish" ...end');
 
