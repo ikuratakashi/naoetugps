@@ -37,9 +37,10 @@ POST及びGETで送信されるGPSを記録する
 /gpswrite?lng={10進経度}&lat={10進緯度}&type={1固定}
 
 ##### node.js
-名前空間：naetugps
-メソッド：gpswrite
-パラメタ：
+
+名前空間：naetugps  
+メソッド：gpswrite  
+パラメタ：  
 {
   lng:[10進 経度],
   lat:[10進 緯度],
