@@ -9,7 +9,7 @@ ArukiSoft.
 
 ※現在作成中  
 
-### サーバ起動方法 
+### ◆サーバ起動方法 
 
 カレントパスは、naoetugps/nodejs
 
@@ -28,10 +28,23 @@ nodeサーバの永続化が行われる
 
 サーバ起動完了
 
-### nodeサーバの機能
+### ◆nodeサーバの機能
 
 #### １．GPS記録
 POST及びGETで送信されるGPSを記録する
+
+##### http
+/gpswrite?lng={10進経度}&lat={10進緯度}&type={1固定}
+
+##### node.js
+名前空間：naetugps
+メソッド：gpswrite
+パラメタ：
+{
+  lng:[10進 経度],
+  lat:[10進 緯度],
+  type:[1固定]
+}
 
 #### ２．GPS履歴読込
 記録されたGPSの履歴を取得する
