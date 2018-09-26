@@ -13,17 +13,40 @@ ArukiSoft.
 
 カレントパスは、naoetugps/nodejs
 
-１．redis-server 起動 
+#### １．redis-server 起動 
 ``` 
 $ redis-server
 ``` 
 ポート6379でredis-serverが起動する。
 このサーバ無いとsocket.ioのスケールアウトができない。
 
-２． nodeサーバの起動
+#### ２． nodeサーバの起動
 ``` 
 $ nohup node index.js &
 ``` 
 nodeサーバの永続化が行われる
 
 サーバ起動完了
+
+### nodeサーバの機能
+
+#### １．GPS記録
+POST及びGETで送信されるGPSを記録する
+
+#### ２．GPS履歴読込
+記録されたGPSの履歴を取得する
+取得される件数は、以下の部分で設定されている
+
+index.js - naoetu.clsGps - readGpsメソッド
+```
+//通常取得
+var sql = "";
+var sqlParam = {};
+if(this.paramGps.mode == this.MODE_NOMAL){
+    sqlParam = {typeId : this.paramGps.typeId};
+    sql = "Select * from TBL_GPS Where ? Order By add_date DESC LIMIT 24"; //上位6件の取得
+}else{
+    sqlParam = {typeId : this.paramGps.typeId};
+    sql = "Select * from TBL_GPS Where ? ";
+}
+```
