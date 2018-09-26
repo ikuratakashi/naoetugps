@@ -33,10 +33,10 @@ nodeサーバの永続化が行われる
 #### １．GPS記録
 POST及びGETで送信されるGPSを記録する
 
-##### http
+##### ・http
 /gpswrite?lng=[10進経度]&lat=[10進緯度]&type=[1固定]
 
-##### node.js
+##### ・node.js
 
 名前空間：naetugps  
 メソッド：gpswrite  
@@ -50,10 +50,10 @@ POST及びGETで送信されるGPSを記録する
 #### ２．GPS履歴読込
 記録されたGPSの履歴を取得する
 
-##### http
+##### ・http
 /gpsread?mode=[NOMAL]&type=[1固定]
 
-##### node.js
+##### ・node.js
 
 名前空間：naetugps  
 メソッド：gpsread  
