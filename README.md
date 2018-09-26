@@ -11,12 +11,19 @@ ArukiSoft.
 
 ### サーバ起動方法 
 
-1. redis-server 起動 
-  
+カレントパスは、naoetugps/nodejs
+
+１．redis-server 起動 
 ``` 
 $ redis-server
 ``` 
 ポート6379でredis-serverが起動する。
+このサーバ無いとsocket.ioのスケールアウトができない。
 
-1. redis-server
-1. redis-server
+２． nodeサーバの起動
+``` 
+$ nohup node index.js &
+``` 
+nodeサーバの永続化が行われる
+
+サーバ起動完了
