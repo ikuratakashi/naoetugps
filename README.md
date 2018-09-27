@@ -78,3 +78,20 @@ if(this.paramGps.mode == this.MODE_NOMAL){
     sql = "Select * from TBL_GPS Where ? ";
 }
 ```
+
+### ◆その他
+
+  
+#### gitで管理していないファイル  
+DBへアクセスする為の設定やその他の設定が記載されています。  
+
+nodejs  
+└.env  
+
+```
+DB_HOST="DBホスト"
+DB_USER="DBユーザ名"
+DB_PASS="DBパスワード"
+DB_NAME="DB名"
+HTTPS_PASS="httpsパスフレーズ"
+```
