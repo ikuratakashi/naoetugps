@@ -83,7 +83,7 @@ if(this.paramGps.mode == this.MODE_NOMAL){
 
   
 #### １． gitで管理していないファイル  
-DBへアクセスする為の設定やその他の設定が記載されています。  
+DBへアクセスする為の設定やその他の設定が記載されている  
 
 nodejs  
 └.env  
