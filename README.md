@@ -79,10 +79,9 @@ if(this.paramGps.mode == this.MODE_NOMAL){
 }
 ```
 
-### ◆その他
-
+# GITにコミットされていないファイルについて
   
-#### １． gitで管理していないファイル  
+### １． .env 
 DBへアクセスする為の設定やその他の設定が記載されている  
 
 nodejs  
