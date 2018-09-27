@@ -82,7 +82,7 @@ if(this.paramGps.mode == this.MODE_NOMAL){
 ### ◆その他
 
   
-#### gitで管理していないファイル  
+#### １． gitで管理していないファイル  
 DBへアクセスする為の設定やその他の設定が記載されています。  
 
 nodejs  
